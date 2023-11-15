@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 
 export const EditCell = ({ getValue, row, column, table }) => {
@@ -6,21 +6,30 @@ export const EditCell = ({ getValue, row, column, table }) => {
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
     const columnMeta = column.columnDef.meta;
-    const tableMeta = table.options.meta;
+    // const tableMeta = table.options.meta;
     const [clicked, setClicked] = useState(false);
 
     const editValue = () => {
         setClicked(old => !old);
 
         // 초기 값과 수정된 값을 비교하여 수정된 로우 표시 가능
-        console.log(`초기 값 : ${initialValue}`);
-        console.log(`수정 값 : ${value}`);
         if (initialValue !== value) {
-            console.log(row.original.name);
-            columnMeta?.setEditRows(old => [...old, row.original]);
+            // 변경된 로우의 key에 해당하는 값을 변경
+            // setEditRows()을 통해 변경된 row를 1개씩 적재
+            const currentKey = column.id;
+
+            const updateRow = (old) =>
+                old.map((oldRow, index) => {
+                    if (index === row.index) {
+                        return {
+                            ...old[row.index],
+                            [currentKey]: value
+                        };
+                    }
+                    return oldRow;
+                });
+            columnMeta?.setEditRows(updateRow);
         }
-        // 변경된 로우의 original 데이터를 배열에 담아서 전달
-        // setEditRows()을 통해 변경된 row를 1개씩 적재
     };
 
 
@@ -34,7 +43,7 @@ export const EditCell = ({ getValue, row, column, table }) => {
                 onChange={e => setValue(e.target.value)}
                 onBlur={editValue}
                 autoFocus
-                className="w-10" />,
+            />,
             'select': <select></select>,
             'checkbox': <input type='checkbox'></input>,
             'date': <input type='date'></input>
