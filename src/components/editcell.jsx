@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 export const EditCell = ({ getValue, row, column, table }) => {
@@ -32,6 +32,10 @@ export const EditCell = ({ getValue, row, column, table }) => {
         }
     };
 
+    useEffect(() => {
+        setValue(initialValue);
+        if(initialValue.length === 0) setClicked(true);
+    }, [initialValue]);
 
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
@@ -54,7 +58,7 @@ export const EditCell = ({ getValue, row, column, table }) => {
 
     if (columnMeta?.readOnly) return <span>{value}</span>;
 
-    return clicked ?
+    return clicked || value.length === 0 ?
         editTag(columnMeta?.type) :
         <span onClick={editValue}> {value} </span>;
 };

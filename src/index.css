@@ -46,7 +46,7 @@ td,
   right: 0;
   top: 0;
   height: 100%;
-  width: 5px;
+  width: 10px;
   /* background: rgba(0, 0, 0, 0.5); */
   cursor: col-resize;
   user-select: none;

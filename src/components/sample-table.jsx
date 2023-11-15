@@ -1,14 +1,28 @@
 import {
     createColumnHelper,
-    ColumnResizeMode,
     flexRender,
     getCoreRowModel,
     useReactTable
 } from '@tanstack/react-table';
 import { EditCell } from './editcell';
 import { CheckCell } from './checkcell';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { styled } from 'styled-components';
 
+
+const SampleButton = styled.button`
+    border-radius: 10px;
+    padding: 5px 15px 5px 15px;
+    margin: 0px 5px 10px 0px;
+    color: white;
+    background-color: darkblue;
+    
+    &:hover{
+        transition: transform 0.2s linear;
+        transform: scale(1.07);
+        background-color: #0000ff;
+    }
+`;
 
 export const SampleTable = () => {
     const [data, setData] = useState([
@@ -24,12 +38,7 @@ export const SampleTable = () => {
     ]);
     const [deleteRows, setDeleteRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
-
     const [columnResizeMode, setColumnResizeMode] = useState('onChange');
-
-    useEffect(() => {
-        console.log(deleteRows);
-    }, [deleteRows]);
 
     const columnHelper = createColumnHelper();
 
@@ -43,10 +52,20 @@ export const SampleTable = () => {
             }
         }),
         columnHelper.accessor('name', {
-            header: '이름'
+            header: '이름',
+            cell: EditCell,
+            meta: {
+                type: 'text',
+                setEditRows: setData
+            }
         }),
         columnHelper.accessor('age', {
-            header: '나이'
+            header: '나이',
+            cell: EditCell,
+            meta: {
+                type: 'text',
+                setEditRows: setData
+            }
         }),
         columnHelper.accessor('gender', {
             header: '성별',
@@ -72,8 +91,44 @@ export const SampleTable = () => {
         columnResizeMode,
         getCoreRowModel: getCoreRowModel()
     });
+
+    // 테이블 데이터 원래대로 복구
+    const resetRow = () => {
+        setData(originalRows);
+        setDeleteRows([]);
+    }
+
+    // 추가
+    const addRow = () => {
+        const newRow = {
+            name: '', age: '', gender: '', city: ''
+        };
+
+        setData((old) => [...old, newRow]);
+    };
+
+    // 삭제
+    const removeRow = () => {
+        const newRow = data.filter(row => !deleteRows.includes(row));
+
+        if(deleteRows.length === 0) return;
+
+        setData(newRow);
+        setDeleteRows([]);
+        setOriginalRows(newRow);
+    };
+
+    // 변경/추가 저장
+    const saveRow = () => {
+        setOriginalRows(data);
+    }
+
     return (
         <div className='p-2'>
+            <SampleButton onClick={resetRow}>새로고침</SampleButton>
+            <SampleButton onClick={addRow}>추가</SampleButton>
+            <SampleButton onClick={removeRow}>삭제</SampleButton>
+            <SampleButton onClick={saveRow}>저장</SampleButton>
             <table className='w-[800px]'>
                 <thead
                     // 테이블 사이즈 획득
