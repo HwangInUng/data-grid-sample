@@ -71,10 +71,6 @@ export const FlexTable = () => {
         { name: 'test8', age: 19, gender: '남자', city: '강북구' }
     ]);
 
-    const onClick = (e) => {
-        console.log(e.defaultPrevented);
-    }
-
     useEffect(() => {
 
     }, []);

@@ -8,6 +8,7 @@ import { EditCell } from './editcell';
 import { CheckCell } from './checkcell';
 import { useState } from 'react';
 import { styled } from 'styled-components';
+import { TableMenu } from './tablemenu';
 
 
 const SampleButton = styled.button`
@@ -25,6 +26,11 @@ const SampleButton = styled.button`
 `;
 
 export const SampleTable = () => {
+    const [openMenu, setOpenMenu] = useState({
+        flag: false,
+        left: 0,
+        top: 0
+    });
     const [data, setData] = useState([
         { name: 'test', age: 21, gender: '남자', city: '동작구' },
         { name: 'test1', age: 24, gender: '남자', city: '강동구' },
@@ -111,7 +117,7 @@ export const SampleTable = () => {
     const removeRow = () => {
         const newRow = data.filter(row => !deleteRows.includes(row));
 
-        if(deleteRows.length === 0) return;
+        if (deleteRows.length === 0) return;
 
         setData(newRow);
         setDeleteRows([]);
@@ -123,33 +129,39 @@ export const SampleTable = () => {
         setOriginalRows(data);
     }
 
+    const openTableMenu = (e) => {
+        if (e.button === 2) {
+            setOpenMenu(old => ({
+                ...old,
+                flag: !old.flag,
+                left: e.clientX,
+                top: e.clientY
+            }));
+        }
+    }
+
     return (
-        <div className='p-2'>
+        <div className='p-2 w-full h-screen' onClick={() => setOpenMenu(false)}>
+            {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} /> : null}
             <SampleButton onClick={resetRow}>새로고침</SampleButton>
             <SampleButton onClick={addRow}>추가</SampleButton>
             <SampleButton onClick={removeRow}>삭제</SampleButton>
             <SampleButton onClick={saveRow}>저장</SampleButton>
-            <table className='w-[800px]' onMouseDown={console.log('test')}>
-                <thead
-                    // 테이블 사이즈 획득
-                    {...{
-                        style: {
-                            width: table.getCenterTotalSize(),
-                        },
-                    }}
-                >
+            {/* 테이블 시작 */}
+            <table
+                onMouseDown={(e) => openTableMenu(e)}
+                onContextMenu={(e) => e.preventDefault()}
+                onClick={() => setOpenMenu(false)}
+            >
+                <thead style={{width: table.getCenterTotalSize()}}>
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id}>
                             {headerGroup.headers.map(header => (
                                 <th
                                     // th의 각 사이즈를 획득
-                                    {...{
-                                        key: header.id,
-                                        colSpan: header.colSpan,
-                                        style: {
-                                            width: header.getSize(),
-                                        },
-                                    }}
+                                    key={header.id}
+                                    colSpan={header.colSpan}
+                                    style={{ width: header.getSize() }}
                                 >
                                     {header.isPlaceholder ?
                                         null :
@@ -159,17 +171,15 @@ export const SampleTable = () => {
                                         )}
                                     {/* resize 모드 */}
                                     <div
-                                        {...{
-                                            onMouseDown: header.getResizeHandler(),
-                                            onTouchStart: header.getResizeHandler(),
-                                            className: `resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`,
-                                            style: {
-                                                transform:
-                                                    columnResizeMode === 'onEnd' &&
-                                                        header.column.getIsResizing() ?
-                                                        `translateX(${table.getState().columnSizingInfo.deltaOffset}px)` :
-                                                        '',
-                                            }
+                                        onMouseDown={header.getResizeHandler()}
+                                        onTouchStart={header.getResizeHandler()}
+                                        className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+                                        style={{
+                                            transform:
+                                                columnResizeMode === 'onEnd' &&
+                                                    header.column.getIsResizing() ?
+                                                    `translateX(${table.getState().columnSizingInfo.deltaOffset}px)` :
+                                                    '',
                                         }}
                                     />
                                     {/* /.resize 모드 */}
@@ -183,12 +193,8 @@ export const SampleTable = () => {
                         <tr key={row.id}>
                             {row.getVisibleCells().map(cell => (
                                 <td
-                                    {...{
-                                        key: cell.id,
-                                        style: {
-                                            width: cell.column.getSize(),
-                                        },
-                                    }}
+                                    key={cell.id}
+                                    style={{ width: cell.column.getSize() }}
                                 >
                                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                 </td>
@@ -197,6 +203,7 @@ export const SampleTable = () => {
                     ))}
                 </tbody>
             </table>
+            {/* /.테이블 종료 */}
         </div>
     );
 };
