@@ -129,7 +129,7 @@ export const SampleTable = () => {
             <SampleButton onClick={addRow}>추가</SampleButton>
             <SampleButton onClick={removeRow}>삭제</SampleButton>
             <SampleButton onClick={saveRow}>저장</SampleButton>
-            <table className='w-[800px]'>
+            <table className='w-[800px]' onMouseDown={console.log('test')}>
                 <thead
                     // 테이블 사이즈 획득
                     {...{
