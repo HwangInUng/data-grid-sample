@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
 
 const FlexTableWrapper = styled.div`
@@ -24,6 +24,11 @@ const FlexTableHeader = styled.div`
 `;
 
 const FlexTableBody = styled.div`
+    flex-wrap: wrap;
+    flex: 0 0 100%;
+`;
+
+const FlexTableRow = styled.div`
     display: flex;
     flex: 0 0 100%;
     
@@ -31,21 +36,27 @@ const FlexTableBody = styled.div`
         background-color: black;
         color: white;
     }
-    `;
+`;
 
 const FlexTableCell = styled.div`
-    flex: 0 0 100px;
+    flex: 0 1 ${props => props.size || 100}%;
     padding: 0 6px;
     border: 1px solid black;
     box-sizing: border-box;
+    overflow: hidden;
+    white-space: nowrap;
 `;
 
 export const FlexTable = () => {
     // 컬럼 정보에 대한 객체 배열을 생성
     // 해당 컬럼 정보의 target과 body에 노출할 value를 매핑
     // cell 속성을 부여하여 해당 컬럼에서 사용할 cell 속성을 정의
-    const columns = [
-        {},
+    const headers = [
+        { target: 'check', size: 10, type: 'check' },
+        { target: 'name', size: 20, type: 'text' },
+        { target: 'age', size: 20, type: 'text' },
+        { target: 'gender', size: 20, type: 'text' },
+        { target: 'city', size: 30, type: 'text' },
     ];
 
     const [data, setData] = useState([
@@ -64,36 +75,45 @@ export const FlexTable = () => {
         console.log(e.defaultPrevented);
     }
 
+    useEffect(() => {
+
+    }, []);
+
     return (
-        <FlexTableWrapper>
+        <FlexTableWrapper id="wrapper">
             <FlexTableHeader>
-                <FlexTableCell className="inner">check</FlexTableCell>
-                {data[0] && Object.keys(data[0]).map((key, index) => {
+                {headers && headers.map((header, index) => {
                     return (
-                        <FlexTableCell className="inner" key={index}>{key}</FlexTableCell>
+                        <FlexTableCell className="inner" key={index} size={header.size}>{header.target}</FlexTableCell>
                     );
                 })}
             </FlexTableHeader>
-            {data && data.map((row, index) => {
-                return (
-                    <FlexTableBody key={index}>
-                        <FlexTableCell><input type="checkbox" /></FlexTableCell>
-                        {
-                            Object.keys(row).map((key, id) => {
-                                return (
-                                    <FlexTableCell
-                                        key={id}
-                                        onMouseDown={(e) => onClick(e)}
-                                        onContextMenu={(e) => e.preventDefault()} // 마우스 우클릭 방지
-                                    >
-                                        {row[key]}
-                                    </FlexTableCell>
-                                );
-                            })
-                        }
-                    </FlexTableBody>
-                );
-            })}
+            <FlexTableBody>
+                {data && data.map((row, index) => {
+                    return (
+                        <FlexTableRow key={index}>
+                            {
+                                headers.map((header, id) => {
+                                    return (
+                                        <FlexTableCell
+                                            size={header.size}
+                                            key={id}
+                                            onMouseDown={(e) => onClick(e)}
+                                            onContextMenu={(e) => e.preventDefault()} // 마우스 우클릭 방지
+                                        >
+                                            {
+                                                header.type === 'check' ?
+                                                    <input type='checkbox' key={id}></input> :
+                                                    <span>{row[header.target]}</span>
+                                            }
+                                        </FlexTableCell>
+                                    );
+                                })
+                            }
+                        </FlexTableRow>
+                    );
+                })}
+            </FlexTableBody>
         </FlexTableWrapper>
     );
 }
