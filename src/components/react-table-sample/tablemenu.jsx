@@ -1,4 +1,4 @@
-import tw, {styled} from "twin.macro";
+import tw, { styled } from "twin.macro";
 
 const MenuBox = styled.div`
     width: 200px;
@@ -11,18 +11,30 @@ const MenuBox = styled.div`
     z-index: 999;
 `;
 
-export const TableMenu = ({left, top}) => {
-    return(
+const MenuItem = styled.div`
+    cursor: pointer;
+
+    &:hover{
+        background-color: lightgray;
+    }
+`;
+
+export const TableMenu = ({ left, top, setOpenModal }) => {
+
+    const onClick = () => {
+        setOpenModal(true);
+    }
+    return (
         <MenuBox left={left} top={top} onContextMenu={(e) => e.preventDefault()}>
-            <div>열고정</div>
-            <div>열고정 해제</div>
+            <MenuItem onClick={onClick}>열고정</MenuItem>
+            <MenuItem onClick={onClick}>열고정 해제</MenuItem>
             <hr></hr>
-            <div>필터</div>
-            <div>필터해제</div>
+            <MenuItem>필터</MenuItem>
+            <MenuItem>필터해제</MenuItem>
             <hr></hr>
-            <div>컬럼숨기기/보이기</div>
+            <MenuItem>컬럼숨기기/보이기</MenuItem>
             <hr></hr>
-            <div>새로고침</div>
+            <MenuItem>새로고침</MenuItem>
         </MenuBox>
     );
 };

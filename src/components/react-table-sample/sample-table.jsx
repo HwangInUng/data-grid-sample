@@ -8,7 +8,9 @@ import { EditCell } from './editcell';
 import { CheckCell } from './checkcell';
 import { useState } from 'react';
 import { styled } from 'styled-components';
-import { TableMenu } from './tablemenu';
+import { TableMenu } from './TableMenu';
+import { SampleModal } from '../common/modal';
+import { DataTable } from './DataTable';
 
 
 const SampleButton = styled.button`
@@ -26,6 +28,7 @@ const SampleButton = styled.button`
 `;
 
 export const SampleTable = () => {
+    const [openModal, setOpenModal] = useState(false);
     const [openMenu, setOpenMenu] = useState({
         flag: false,
         left: 0,
@@ -130,7 +133,9 @@ export const SampleTable = () => {
     }
 
     const openTableMenu = (e) => {
-        if (e.button === 2) {
+        const rightButton = 2;
+
+        if (e.button === rightButton) {
             setOpenMenu(old => ({
                 ...old,
                 flag: !old.flag,
@@ -140,70 +145,23 @@ export const SampleTable = () => {
         }
     }
 
-    return (
+    return (<>
+        <SampleButton onClick={resetRow}>새로고침</SampleButton>
+        <SampleButton onClick={addRow}>추가</SampleButton>
+        <SampleButton onClick={removeRow}>삭제</SampleButton>
+        <SampleButton onClick={saveRow}>저장</SampleButton>
         <div className='p-2 w-full h-screen' onClick={() => setOpenMenu(false)}>
-            {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} /> : null}
-            <SampleButton onClick={resetRow}>새로고침</SampleButton>
-            <SampleButton onClick={addRow}>추가</SampleButton>
-            <SampleButton onClick={removeRow}>삭제</SampleButton>
-            <SampleButton onClick={saveRow}>저장</SampleButton>
-            {/* 테이블 시작 */}
-            <table
-                onMouseDown={(e) => openTableMenu(e)}
-                onContextMenu={(e) => e.preventDefault()}
-                onClick={() => setOpenMenu(false)}
-            >
-                <thead style={{width: table.getCenterTotalSize()}}>
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map(header => (
-                                <th
-                                    // th의 각 사이즈를 획득
-                                    key={header.id}
-                                    colSpan={header.colSpan}
-                                    style={{ width: header.getSize() }}
-                                >
-                                    {header.isPlaceholder ?
-                                        null :
-                                        flexRender(
-                                            header.column.columnDef.header,
-                                            header.getContext()
-                                        )}
-                                    {/* resize 모드 */}
-                                    <div
-                                        onMouseDown={header.getResizeHandler()}
-                                        onTouchStart={header.getResizeHandler()}
-                                        className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
-                                        style={{
-                                            transform:
-                                                columnResizeMode === 'onEnd' &&
-                                                    header.column.getIsResizing() ?
-                                                    `translateX(${table.getState().columnSizingInfo.deltaOffset}px)` :
-                                                    '',
-                                        }}
-                                    />
-                                    {/* /.resize 모드 */}
-                                </th>
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <td
-                                    key={cell.id}
-                                    style={{ width: cell.column.getSize() }}
-                                >
-                                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {/* /.테이블 종료 */}
+            {openModal ? <SampleModal setOpenModal={setOpenModal} /> : null}
+            {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} setOpenModal={setOpenModal} /> : null}
+            <DataTable
+                data={data}
+                columns={columns}
+                setDeleteRows={setDeleteRows}
+                newRow={{
+                    name: '', age: '', gender: '', city: ''
+                }}
+            />
         </div>
+    </>
     );
 };
