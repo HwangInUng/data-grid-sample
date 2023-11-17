@@ -4,8 +4,8 @@ import {
     getCoreRowModel,
     useReactTable
 } from '@tanstack/react-table';
-import { EditCell } from './editcell';
-import { CheckCell } from './checkcell';
+import { EditCell } from './EditCell';
+import { CheckCell } from './CheckCell';
 import { useState } from 'react';
 import { styled } from 'styled-components';
 import { TableMenu } from './TableMenu';
@@ -87,19 +87,13 @@ export const SampleTable = () => {
         columnHelper.accessor('city', {
             header: '사는곳',
             cell: EditCell,
+            enableSorting: true,
             meta: {
                 type: 'text',
                 setEditRows: setData
             }
         })
     ];
-
-    const table = useReactTable({
-        data,
-        columns,
-        columnResizeMode,
-        getCoreRowModel: getCoreRowModel()
-    });
 
     // 테이블 데이터 원래대로 복구
     const resetRow = () => {

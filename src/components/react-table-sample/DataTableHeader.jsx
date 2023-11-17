@@ -28,6 +28,7 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
             <TableHeader
                 size={header.getSize()}
                 colSpan={header.column.columnDef.colSpan}
+                onClick={header.column.getToggleSortingHandler()}
             >
                 {header.isPlaceholder ?
                     null :
@@ -36,6 +37,10 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                         header.getContext()
                     )
                 }
+                
+                {/* sorting start */}
+                {/* sorting end */}
+
                 {/* resizer start */}
                 <Resizer
                     onMouseDown={header.getResizeHandler()}

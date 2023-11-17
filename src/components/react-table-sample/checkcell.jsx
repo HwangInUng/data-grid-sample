@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
-export const CheckCell = ({getValue, row, column }) => {
+export const CheckCell = ({getValue, row, column, table }) => {
     // 체크 여부에 따라 삭제 대상 여부를 추가 및 제거
     const initialValue = getValue();
     const [checked, setChecked] = useState(false);
     const columnMeta = column.columnDef.meta;
+    const tableMeta = table.options.meta;
     
     useEffect(() => {
         const newRow = row.original;

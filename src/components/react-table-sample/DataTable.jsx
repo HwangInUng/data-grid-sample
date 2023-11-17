@@ -1,27 +1,40 @@
 import tw, { styled } from "twin.macro";
 import { DataTableHeader } from "./DataTableHeader";
-import { getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import { useState } from "react";
 import { DataTableCell } from "./DataTableCell";
 
 const Table = styled.table`
     ${tw`
-        w-fit
+        w-[700px]
     `}
 `;
 
 export const DataTable = (props) => {
-    const [data, setData] = useState([...props.data]);
+    const { data, setData, columns, setDeleteRows, newRow } = props;
     const [backupData, setBackupData] = useState([...props.data]);
-    const { columns, setDeleteRows, newRow } = props;
     const [columnResizeMode, setColumnResizeMode] = useState('onChange');
+    const [selectRow, setSelectRow] = useState('');
 
     const table = useReactTable({
         data,
         columns,
         columnResizeMode,
-        getCoreRowModel: getCoreRowModel()
+        getCoreRowModel: getCoreRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        enableRowSelection: true,
+        meta: {
+            // 해당 부분이 필요한지 체크 필요
+            removeSelectedRows: (selectRows) => {
+                const setRemoveRows = (old) => old.filter((row, index) => !selectRows.includes(index));
+
+                setDeleteRows(old => [...old, data.filter((row, index) => selectRows.includes(index))]);
+                setData(setRemoveRows);
+                setBackupData(setRemoveRows);
+            }
+        }
     });
+    
     return (
         <>
             <Table
@@ -43,7 +56,10 @@ export const DataTable = (props) => {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
+                        <tr
+                            key={row.id}
+                            onClick={() => selectRow === row ? setSelectRow('') : setSelectRow(row)}
+                        >
                             {row.getVisibleCells().map(cell => (
                                 <DataTableCell
                                     key={cell.id}
