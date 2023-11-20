@@ -8,6 +8,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { DataTableCell } from "./DataTableCell";
+import { ToggleSwitch } from "../common/ToggleSwitch";
 
 const Table = styled.table`
     ${tw`
@@ -16,10 +17,11 @@ const Table = styled.table`
 `;
 
 export const DataTable = (props) => {
-    const { data, setData, columns, setDeleteRows, newRow } = props;
+    const { data, setData, columns, newRow } = props;
     const [backupData, setBackupData] = useState([...props.data]);
-    const [columnResizeMode, ] = useState('onChange');
+    const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
+    const [filterFlag, setFilterFlag] = useState(false);
 
     const table = useReactTable({
         data,
@@ -32,15 +34,16 @@ export const DataTable = (props) => {
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        enableColumnFilters: true,
-        enableFilters: true,
-        meta: {
-
-        }
+        enableFilters: filterFlag,
     });
+
+    const handleFilterFlag = () => {
+        setFilterFlag(old => !old);
+    };
 
     return (
         <>
+            <ToggleSwitch title="필터" onChange={handleFilterFlag}/>
             <Table
                 onContextMenu={(e) => e.preventDefault()}
             >

@@ -42,9 +42,8 @@ export const SampleTable = () => {
         { name: 'test7', age: '18', gender: '여자', city: '강서구' },
         { name: 'test8', age: '19', gender: '남자', city: '강북구' }
     ]);
-    const [deleteRows, setDeleteRows] = useState([]);
+    const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
-    const [columnResizeMode, setColumnResizeMode] = useState('onChange');
 
     const columnHelper = createColumnHelper();
 
@@ -54,7 +53,7 @@ export const SampleTable = () => {
             header: 'check',
             cell: CheckCell,
             meta: {
-                setDeleteRows: setDeleteRows
+                setCheckedRows: setCheckedRows
             }
         }),
         columnHelper.accessor('name', {
@@ -94,7 +93,7 @@ export const SampleTable = () => {
     // 테이블 데이터 원래대로 복구
     const resetRow = () => {
         setData(originalRows);
-        setDeleteRows([]);
+        setCheckedRows([]);
     }
 
     // 추가
@@ -108,12 +107,12 @@ export const SampleTable = () => {
 
     // 삭제
     const removeRow = () => {
-        const newRow = data.filter(row => !deleteRows.includes(row));
+        const newRow = data.filter(row => !checkedRows.includes(row));
 
-        if (deleteRows.length === 0) return;
+        if (checkedRows.length === 0) return;
 
         setData(newRow);
-        setDeleteRows([]);
+        setCheckedRows([]);
         setOriginalRows(newRow);
     };
 
@@ -122,21 +121,21 @@ export const SampleTable = () => {
         setOriginalRows(data);
     }
 
-    return (<>
-        <SampleButton onClick={resetRow}>새로고침</SampleButton>
-        <SampleButton onClick={addRow}>추가</SampleButton>
-        <SampleButton onClick={removeRow}>삭제</SampleButton>
-        <SampleButton onClick={saveRow}>저장</SampleButton>
-        <div className='p-2 w-full h-screen' onClick={() => setOpenMenu(false)}>
-            {openModal ? <SampleModal setOpenModal={setOpenModal} /> : null}
-            {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} setOpenModal={setOpenModal} /> : null}
-            <DataTable
-                data={data}
-                columns={columns}
-                setDeleteRows={setDeleteRows}
-                newRow={{ name: '', age: '', gender: '', city: '' }}
-            />
-        </div>
-    </>
+    return (
+        <>
+            <SampleButton onClick={resetRow}>새로고침</SampleButton>
+            <SampleButton onClick={addRow}>추가</SampleButton>
+            <SampleButton onClick={removeRow}>삭제</SampleButton>
+            <SampleButton onClick={saveRow}>저장</SampleButton>
+            <div className='p-2 w-full h-screen' onClick={() => setOpenMenu(false)}>
+                {openModal ? <SampleModal setOpenModal={setOpenModal} /> : null}
+                {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} setOpenModal={setOpenModal} /> : null}
+                <DataTable
+                    data={data}
+                    columns={columns}
+                    newRow={{ name: '', age: '', gender: '', city: '' }}
+                />
+            </div>
+        </>
     );
 };

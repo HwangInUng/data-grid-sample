@@ -24,56 +24,61 @@ const Resizer = styled.div`
     }
 `;
 export const DataTableHeader = ({ table, header, columnResizeMode }) => {
+    const { column } = header;
     // filter
     const onFilterChange = (value) => {
         if (value === 'null') {
-            header.column.setFilterValue(null);
+            column.setFilterValue(null);
         } else {
-            header.column.setFilterValue(value);
+            column.setFilterValue(value);
         }
     };
+
+    const getSortIcons = () => {
+        const sortIcons = {
+            asc: <BiSortUp />,
+            desc: <BiSortDown />
+        };
+
+        return sortIcons[column.getIsSorted()];
+    }
+
+    const isSortReady = () => {
+        return column.getCanSort() && !column.getIsSorted() ? <BiSortAlt2 /> : null;
+    }
+
+    const openFilterArea = () => {
+        return column.getCanFilter() ?
+            <input
+                onChange={({ currentTarget: { value } }) => onFilterChange(value)}
+                className="text-black"
+            /> :
+            null;
+    }
 
     return (
         <>
             <TableHeader
                 size={header.getSize()}
-                colSpan={header.column.columnDef.colSpan}
+                colSpan={column.columnDef.colSpan}
             >
                 {/* sorting start */}
                 <div
                     className="flex items-center justify-center cursor-pointer"
-                    onClick={header.column.getToggleSortingHandler()}
+                    onClick={column.getToggleSortingHandler()}
                 >
                     {header.isPlaceholder ?
                         null :
                         flexRender(
-                            header.column.columnDef.header,
+                            column.columnDef.header,
                             header.getContext()
                         )}
-                    {
-                        {
-                            asc: <BiSortUp />,
-                            desc: <BiSortDown />
-                        }
-                        [header.column.getIsSorted()]
-                    }
-                    {
-                        header.column.getCanSort() && !header.column.getIsSorted() ?
-                            <BiSortAlt2 /> :
-                            null
-                    }
-                    {/* sorting end */}
+                    {getSortIcons()}
+                    {isSortReady()}
                 </div>
+                {/* sorting end */}
                 {/* filter start */}
-                {header.column.getCanFilter() ?
-                    (
-                        <input
-                            onChange={({ currentTarget: { value } }) => onFilterChange(value)}
-                            className="text-black"
-                        />
-                    ) :
-                    null
-                }
+                {openFilterArea()}
                 {/* filter end */}
 
 
@@ -81,11 +86,11 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                 <Resizer
                     onMouseDown={header.getResizeHandler()}
                     onTouchStart={header.getResizeHandler()}
-                    className={header.column.getIsResizing() ? 'isResizing' : ''}
+                    className={column.getIsResizing() ? 'isResizing' : ''}
                     style={{
                         transform:
                             columnResizeMode === 'onEnd' &&
-                                header.column.getIsResizing() ?
+                                column.getIsResizing() ?
                                 `translateX(${table.getState().columnSizingInfo.deltaOffset}px)` :
                                 '',
                     }}
