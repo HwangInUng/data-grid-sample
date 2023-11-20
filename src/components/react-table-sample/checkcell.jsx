@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 
-export const CheckCell = ({getValue, row, column, table }) => {
+export const CheckCell = ({row, column, table }) => {
     // 체크 여부에 따라 삭제 대상 여부를 추가 및 제거
-    const initialValue = getValue();
     const [checked, setChecked] = useState(false);
     const columnMeta = column.columnDef.meta;
     const tableMeta = table.options.meta;
     
     useEffect(() => {
-        const newRow = row.original;
+        const targetRow = row.original;
         if(checked){
-            columnMeta?.setDeleteRows((old) => [...old, newRow]);
+            columnMeta?.setDeleteRows((old) => [...old, targetRow]);
         } else {
-            columnMeta?.setDeleteRows((old) => old.filter((oldRow) => newRow !== oldRow));
+            columnMeta?.setDeleteRows((old) => old.filter((oldRow) => targetRow !== oldRow));
         }
     }, [checked]);
 

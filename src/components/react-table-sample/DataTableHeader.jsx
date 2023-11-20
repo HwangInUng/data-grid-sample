@@ -1,5 +1,6 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
+import { BiSortDown, BiSortUp, BiSortAlt2 } from "react-icons/bi";
 
 const TableHeader = styled.th`
     width: ${props => props.size}px;
@@ -23,23 +24,58 @@ const Resizer = styled.div`
     }
 `;
 export const DataTableHeader = ({ table, header, columnResizeMode }) => {
+    // filter
+    const onFilterChange = (value) => {
+        if (value === 'null') {
+            header.column.setFilterValue(null);
+        } else {
+            header.column.setFilterValue(value);
+        }
+    };
+
     return (
         <>
             <TableHeader
                 size={header.getSize()}
                 colSpan={header.column.columnDef.colSpan}
-                onClick={header.column.getToggleSortingHandler()}
             >
-                {header.isPlaceholder ?
-                    null :
-                    flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                    )
-                }
-                
                 {/* sorting start */}
-                {/* sorting end */}
+                <div
+                    className="flex items-center justify-center cursor-pointer"
+                    onClick={header.column.getToggleSortingHandler()}
+                >
+                    {header.isPlaceholder ?
+                        null :
+                        flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                        )}
+                    {
+                        {
+                            asc: <BiSortUp />,
+                            desc: <BiSortDown />
+                        }
+                        [header.column.getIsSorted()]
+                    }
+                    {
+                        header.column.getCanSort() && !header.column.getIsSorted() ?
+                            <BiSortAlt2 /> :
+                            null
+                    }
+                    {/* sorting end */}
+                </div>
+                {/* filter start */}
+                {header.column.getCanFilter() ?
+                    (
+                        <input
+                            onChange={({ currentTarget: { value } }) => onFilterChange(value)}
+                            className="text-black"
+                        />
+                    ) :
+                    null
+                }
+                {/* filter end */}
+
 
                 {/* resizer start */}
                 <Resizer

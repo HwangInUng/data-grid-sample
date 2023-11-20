@@ -1,6 +1,11 @@
 import tw, { styled } from "twin.macro";
 import { DataTableHeader } from "./DataTableHeader";
-import { getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import {
+    getCoreRowModel,
+    getFilteredRowModel,
+    getSortedRowModel,
+    useReactTable,
+} from "@tanstack/react-table";
 import { useState } from "react";
 import { DataTableCell } from "./DataTableCell";
 
@@ -13,28 +18,27 @@ const Table = styled.table`
 export const DataTable = (props) => {
     const { data, setData, columns, setDeleteRows, newRow } = props;
     const [backupData, setBackupData] = useState([...props.data]);
-    const [columnResizeMode, setColumnResizeMode] = useState('onChange');
-    const [selectRow, setSelectRow] = useState('');
+    const [columnResizeMode, ] = useState('onChange');
+    const [sorting, setSorting] = useState([]);
 
     const table = useReactTable({
         data,
         columns,
         columnResizeMode,
+        state: {
+            sorting
+        },
         getCoreRowModel: getCoreRowModel(),
+        onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
-        enableRowSelection: true,
+        getFilteredRowModel: getFilteredRowModel(),
+        enableColumnFilters: true,
+        enableFilters: true,
         meta: {
-            // 해당 부분이 필요한지 체크 필요
-            removeSelectedRows: (selectRows) => {
-                const setRemoveRows = (old) => old.filter((row, index) => !selectRows.includes(index));
 
-                setDeleteRows(old => [...old, data.filter((row, index) => selectRows.includes(index))]);
-                setData(setRemoveRows);
-                setBackupData(setRemoveRows);
-            }
         }
     });
-    
+
     return (
         <>
             <Table
@@ -56,10 +60,7 @@ export const DataTable = (props) => {
                 </thead>
                 <tbody>
                     {table.getRowModel().rows.map(row => (
-                        <tr
-                            key={row.id}
-                            onClick={() => selectRow === row ? setSelectRow('') : setSelectRow(row)}
-                        >
+                        <tr key={row.id}>
                             {row.getVisibleCells().map(cell => (
                                 <DataTableCell
                                     key={cell.id}

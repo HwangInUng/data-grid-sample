@@ -1,8 +1,5 @@
 import {
     createColumnHelper,
-    flexRender,
-    getCoreRowModel,
-    useReactTable
 } from '@tanstack/react-table';
 import { EditCell } from './EditCell';
 import { CheckCell } from './CheckCell';
@@ -35,15 +32,15 @@ export const SampleTable = () => {
         top: 0
     });
     const [data, setData] = useState([
-        { name: 'test', age: 21, gender: '남자', city: '동작구' },
-        { name: 'test1', age: 24, gender: '남자', city: '강동구' },
-        { name: 'test2', age: 25, gender: '여자', city: '강남구' },
-        { name: 'test3', age: 17, gender: '남자', city: '서초구' },
-        { name: 'test4', age: 26, gender: '여자', city: '관악구' },
-        { name: 'test5', age: 21, gender: '남자', city: '노원구' },
-        { name: 'test6', age: 30, gender: '남자', city: '동작구' },
-        { name: 'test7', age: 18, gender: '여자', city: '강서구' },
-        { name: 'test8', age: 19, gender: '남자', city: '강북구' }
+        { name: 'test', age: '21', gender: '남자', city: '동작구' },
+        { name: 'test1', age: '24', gender: '남자', city: '강동구' },
+        { name: 'test2', age: '25', gender: '여자', city: '강남구' },
+        { name: 'test3', age: '17', gender: '남자', city: '서초구' },
+        { name: 'test4', age: '26', gender: '여자', city: '관악구' },
+        { name: 'test5', age: '21', gender: '남자', city: '노원구' },
+        { name: 'test6', age: '30', gender: '남자', city: '동작구' },
+        { name: 'test7', age: '18', gender: '여자', city: '강서구' },
+        { name: 'test8', age: '19', gender: '남자', city: '강북구' }
     ]);
     const [deleteRows, setDeleteRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
@@ -87,7 +84,6 @@ export const SampleTable = () => {
         columnHelper.accessor('city', {
             header: '사는곳',
             cell: EditCell,
-            enableSorting: true,
             meta: {
                 type: 'text',
                 setEditRows: setData
@@ -126,19 +122,6 @@ export const SampleTable = () => {
         setOriginalRows(data);
     }
 
-    const openTableMenu = (e) => {
-        const rightButton = 2;
-
-        if (e.button === rightButton) {
-            setOpenMenu(old => ({
-                ...old,
-                flag: !old.flag,
-                left: e.clientX,
-                top: e.clientY
-            }));
-        }
-    }
-
     return (<>
         <SampleButton onClick={resetRow}>새로고침</SampleButton>
         <SampleButton onClick={addRow}>추가</SampleButton>
@@ -151,9 +134,7 @@ export const SampleTable = () => {
                 data={data}
                 columns={columns}
                 setDeleteRows={setDeleteRows}
-                newRow={{
-                    name: '', age: '', gender: '', city: ''
-                }}
+                newRow={{ name: '', age: '', gender: '', city: '' }}
             />
         </div>
     </>
