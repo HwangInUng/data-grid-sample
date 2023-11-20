@@ -1,9 +1,29 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
-import { BiSortDown, BiSortUp, BiSortAlt2 } from "react-icons/bi";
+import { BiSortDown, BiSortUp, BiFilter } from "react-icons/bi";
+import { CheckCell } from "./CheckCell";
+import { DataTableFilter } from "./DataTableFilter";
 
 const TableHeader = styled.th`
+    ${tw`
+        relative
+        font-bold
+        text-center
+        p-0
+    `}
     width: ${props => props.size}px;
+    height: 35px;
+    border: 1px solid lightgray;
+    border-top: 0px;
+
+    .content-box{
+        ${tw`
+            flex
+            items-center
+            justify-center
+            cursor-pointer
+        `}
+    }
 `;
 
 const Resizer = styled.div`
@@ -44,33 +64,30 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     }
 
     const isSortReady = () => {
-        return column.getCanSort() && !column.getIsSorted() ? <BiSortAlt2 /> : null;
+        return column.getCanSort() && !column.getIsSorted() ? <BiFilter /> : null;
     }
 
     const openFilterArea = () => {
         return column.getCanFilter() ?
-            <input
-                onChange={({ currentTarget: { value } }) => onFilterChange(value)}
-                className="text-black"
-            /> :
-            null;
+            <DataTableFilter onChange={onFilterChange} /> : null;
     }
 
     return (
         <>
             <TableHeader
-                size={header.getSize()}
+                size={column.columnDef.cell === CheckCell ? 5 : header.getSize()}
                 colSpan={column.columnDef.colSpan}
             >
                 {/* sorting start */}
                 <div
-                    className="flex items-center justify-center cursor-pointer"
+                    className="content-box"
                     onClick={column.getToggleSortingHandler()}
                 >
                     {header.isPlaceholder ?
                         null :
                         flexRender(
-                            column.columnDef.header,
+                            // column이 CheckCell이면 아이콘으로 표시
+                            column.columnDef.cell === CheckCell ? column.columnDef.meta.icon : column.columnDef.header,
                             header.getContext()
                         )}
                     {getSortIcons()}

@@ -3,6 +3,8 @@ import tw, { styled } from "twin.macro";
 
 const TableCell = styled.td`
     width: ${props => props.size};
+    height: 35px;
+    border: 1px solid lightgray;
 `;
 
 export const DataTableCell = ({ cell }) => {

@@ -12,23 +12,38 @@ import { ToggleSwitch } from "../common/ToggleSwitch";
 
 const Table = styled.table`
     ${tw`
-        w-[700px]
+        w-full
     `}
+
+    .data-thead{
+        ${tw`
+            bg-blue-50
+        `}
+        width: ${props => props.size}px;
+    }
+
+    .data-tbody{
+        &:hover{
+            ${tw`
+                bg-slate-100
+            `}
+        }
+    }
 `;
 
 export const DataTable = (props) => {
-    const { data, setData, columns, newRow } = props;
+    const { data, setData, columns} = props;
     const [backupData, setBackupData] = useState([...props.data]);
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
-
+    
     const table = useReactTable({
         data,
         columns,
         columnResizeMode,
         state: {
-            sorting
+            sorting,
         },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
@@ -41,39 +56,42 @@ export const DataTable = (props) => {
         setFilterFlag(old => !old);
     };
 
+
     return (
         <>
-            <ToggleSwitch title="필터" onChange={handleFilterFlag}/>
-            <Table
-                onContextMenu={(e) => e.preventDefault()}
-            >
-                <thead style={{ width: table.getCenterTotalSize() }}>
-                    {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id}>
-                            {headerGroup.headers.map(header => (
-                                <DataTableHeader
-                                    key={header.id}
-                                    table={table}
-                                    header={header}
-                                    columnResizeMode={columnResizeMode}
-                                />
-                            ))}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr key={row.id}>
-                            {row.getVisibleCells().map(cell => (
-                                <DataTableCell
-                                    key={cell.id}
-                                    cell={cell}
-                                />
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            <div className="mb-1 w-[1000px] flex justify-end">
+                <ToggleSwitch title="필터" onChange={handleFilterFlag} />
+            </div>
+            <div className="border-t-[1px] border-t-black">
+                <Table onContextMenu={(e) => e.preventDefault()}>
+                    <thead size={{ width: table.getCenterTotalSize() }}>
+                        {table.getHeaderGroups().map(headerGroup => (
+                            <tr key={headerGroup.id}  className="data-thead">
+                                {headerGroup.headers.map(header => (
+                                    <DataTableHeader
+                                        key={header.id}
+                                        table={table}
+                                        header={header}
+                                        columnResizeMode={columnResizeMode}
+                                    />
+                                ))}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody>
+                        {table.getRowModel().rows.map(row => (
+                            <tr key={row.id} className="data-tbody">
+                                {row.getVisibleCells().map(cell => (
+                                    <DataTableCell
+                                        key={cell.id}
+                                        cell={cell}
+                                    />
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </div>
         </>
     );
 };

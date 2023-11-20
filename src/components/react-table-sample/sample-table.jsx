@@ -4,33 +4,12 @@ import {
 import { EditCell } from './EditCell';
 import { CheckCell } from './CheckCell';
 import { useState } from 'react';
-import { styled } from 'styled-components';
-import { TableMenu } from './TableMenu';
-import { SampleModal } from '../common/modal';
+import tw, { styled } from 'twin.macro';
 import { DataTable } from './DataTable';
-
-
-const SampleButton = styled.button`
-    border-radius: 10px;
-    padding: 5px 15px 5px 15px;
-    margin: 0px 5px 10px 0px;
-    color: white;
-    background-color: darkblue;
-    
-    &:hover{
-        transition: transform 0.2s linear;
-        transform: scale(1.07);
-        background-color: #0000ff;
-    }
-`;
+import { CommonButton } from '../common/CommonButton';
+import { BiCheckCircle } from "react-icons/bi";
 
 export const SampleTable = () => {
-    const [openModal, setOpenModal] = useState(false);
-    const [openMenu, setOpenMenu] = useState({
-        flag: false,
-        left: 0,
-        top: 0
-    });
     const [data, setData] = useState([
         { name: 'test', age: '21', gender: '남자', city: '동작구' },
         { name: 'test1', age: '24', gender: '남자', city: '강동구' },
@@ -53,7 +32,8 @@ export const SampleTable = () => {
             header: 'check',
             cell: CheckCell,
             meta: {
-                setCheckedRows: setCheckedRows
+                setCheckedRows: setCheckedRows,
+                icon: <BiCheckCircle/>
             }
         }),
         columnHelper.accessor('name', {
@@ -123,17 +103,14 @@ export const SampleTable = () => {
 
     return (
         <>
-            <SampleButton onClick={resetRow}>새로고침</SampleButton>
-            <SampleButton onClick={addRow}>추가</SampleButton>
-            <SampleButton onClick={removeRow}>삭제</SampleButton>
-            <SampleButton onClick={saveRow}>저장</SampleButton>
-            <div className='p-2 w-full h-screen' onClick={() => setOpenMenu(false)}>
-                {openModal ? <SampleModal setOpenModal={setOpenModal} /> : null}
-                {openMenu.flag ? <TableMenu left={openMenu.left} top={openMenu.top} setOpenModal={setOpenModal} /> : null}
+            <CommonButton onClick={resetRow} title="새로고침"/>
+            <CommonButton onClick={addRow} title="추가"/>
+            <CommonButton onClick={removeRow} title="삭제"/>
+            <CommonButton onClick={saveRow} title="저장"/>
+            <div className='p-2 w-full h-screen'>
                 <DataTable
                     data={data}
                     columns={columns}
-                    newRow={{ name: '', age: '', gender: '', city: '' }}
                 />
             </div>
         </>

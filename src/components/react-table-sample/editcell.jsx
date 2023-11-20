@@ -1,12 +1,21 @@
 import { useEffect, useState } from "react";
+import tw, {styled} from "twin.macro";
 
+const CellWrapper = styled.div`
+    ${tw`
+        overflow-hidden
+        whitespace-nowrap
+        flex
+        items-center
+        justify-center
+    `}
+`;
 
-export const EditCell = ({ getValue, row, column, table }) => {
+export const EditCell = ({ getValue, row, column}) => {
     const initialValue = getValue();
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
     const columnMeta = column.columnDef.meta;
-    // const tableMeta = table.options.meta;
     const [clicked, setClicked] = useState(false);
 
     const editValue = () => {
@@ -47,6 +56,7 @@ export const EditCell = ({ getValue, row, column, table }) => {
                 onChange={e => setValue(e.target.value)}
                 onBlur={editValue}
                 autoFocus
+                className="w-full"
             />,
             'select': <select></select>,
             'checkbox': <input type='checkbox'></input>,
@@ -60,5 +70,5 @@ export const EditCell = ({ getValue, row, column, table }) => {
 
     return clicked || value.length === 0 ?
         editTag(columnMeta?.type) :
-        <span onClick={editValue}> {value} </span>;
+        <CellWrapper onClick={editValue}> {value} </CellWrapper>;
 };
