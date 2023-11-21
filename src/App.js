@@ -6,7 +6,7 @@ function App() {
   return (
     <>
       <GlobalStyle/>
-      <div className="App">
+      <div>
         <SampleTable />
       </div>
     </>

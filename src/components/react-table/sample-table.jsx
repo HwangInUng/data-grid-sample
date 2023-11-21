@@ -34,7 +34,7 @@ export const SampleTable = () => {
             meta: {
                 deleteRows: deleteRows,
                 setCheckedRows: setCheckedRows,
-                icon: <StatusIcon/>
+                icon: <StatusIcon />
             }
         }),
         columnHelper.accessor('name', {
@@ -104,17 +104,15 @@ export const SampleTable = () => {
 
     return (
         <>
-            <CommonButton onClick={resetRow} title="새로고침"/>
-            <CommonButton onClick={addRow} title="추가"/>
-            <CommonButton onClick={removeRow} title="삭제"/>
-            <CommonButton onClick={saveRow} title="저장"/>
-            <div className='p-2 w-full h-screen'>
-                <DataTable
-                    data={data}
-                    columns={columns}
-                    backupData={originalRows}
-                />
-            </div>
+            <CommonButton onClick={resetRow} title="새로고침" />
+            <CommonButton onClick={addRow} title="추가" />
+            <CommonButton onClick={removeRow} title="삭제" />
+            <CommonButton onClick={saveRow} title="저장" />
+            <DataTable
+                data={data}
+                columns={columns}
+                backupData={originalRows}
+            />
         </>
     );
 };

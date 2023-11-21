@@ -5,14 +5,13 @@ import { BiSolidAddToQueue, BiSolidEditAlt, BiSolidMinusSquare } from "react-ico
 const StatusWrapper = styled.div`
     ${tw`
         flex
-        w-full
         justify-center
     `}
 
     & svg{
         ${tw`
-            w-5
-            h-5
+            w-[5px]
+            h-[5px]
         `}
     }
 `;

@@ -12,15 +12,10 @@ import { ToggleSwitch } from "../common/ToggleSwitch";
 import { BiSearchAlt } from "react-icons/bi";
 
 const Table = styled.table`
-    ${tw`
-        w-full
-    `}
-
     .data-thead{
         ${tw`
             bg-blue-50
         `}
-        width: ${props => props.size}px;
     }
 
     .data-tbody{
@@ -72,13 +67,13 @@ export const DataTable = (props) => {
     }
 
     return (
-        <>
+        <div className="w-full">
             <div className="mb-1 w-full flex justify-end">
                 <ToggleSwitch title={<BiSearchAlt />} onChange={handleFilterFlag} />
             </div>
-            <div className="border-t-[1px] border-t-black">
-                <Table onContextMenu={(e) => e.preventDefault()}>
-                    <thead size={{ width: table.getCenterTotalSize() }}>
+            <div className="w-full">
+                <Table style={{width: table.getCenterTotalSize()}}>
+                    <thead>
                         {table.getHeaderGroups().map(headerGroup => (
                             <tr key={headerGroup.id} className="data-thead">
                                 {headerGroup.headers.map(header => (
@@ -110,6 +105,6 @@ export const DataTable = (props) => {
                     </tbody>
                 </Table>
             </div>
-        </>
+        </div>
     );
 };

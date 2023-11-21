@@ -8,25 +8,27 @@ const TableHeader = styled.th`
     ${tw`
         relative
         font-bold
-        text-center
         p-0
     `}
+
     width: ${props => props.size}px;
     height: 35px;
     border: 1px solid lightgray;
-    border-top: 0px;
 
     .content-box{
         ${tw`
             flex
             items-center
             justify-center
+            m-auto
             cursor-pointer
         `}
     }
 
-    .header-icon{
+    & svg{
         ${tw`
+            p-0
+            m-0
             w-[20px]
             h-[20px]
         `}
@@ -63,8 +65,8 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
 
     const getSortIcons = () => {
         const sortIcons = {
-            asc: <BiSortUp className="header-icon" />,
-            desc: <BiSortDown className="header-icon" />
+            asc: <BiSortUp />,
+            desc: <BiSortDown />
         };
 
         return sortIcons[column.getIsSorted()];
@@ -77,7 +79,7 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     return (
         <>
             <TableHeader
-                size={column.columnDef.cell === StatusCell ? 5 : header.getSize()}
+                size={header.getSize()}
                 colSpan={column.columnDef.colSpan}
             >
                 {/* sorting start */}
@@ -93,7 +95,7 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                             header.getContext()
                         )}
                     {getSortIcons()}
-                    {isSortReady() ? <BiFilter className="header-icon" /> : null}
+                    {isSortReady() ? <BiFilter /> : null}
                 </div>
                 {/* sorting end */}
                 {/* filter start */}

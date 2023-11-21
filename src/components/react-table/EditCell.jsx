@@ -4,7 +4,6 @@ import tw, { styled } from "twin.macro";
 const CellWrapper = styled.div`
     ${tw`
         overflow-hidden
-        whitespace-nowrap
         flex
         items-center
         justify-center
