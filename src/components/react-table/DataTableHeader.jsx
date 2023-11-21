@@ -1,8 +1,8 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 import { BiSortDown, BiSortUp, BiFilter } from "react-icons/bi";
-import { CheckCell } from "./CheckCell";
 import { DataTableFilter } from "./DataTableFilter";
+import { StatusCell } from "./StatusCell";
 
 const TableHeader = styled.th`
     ${tw`
@@ -77,7 +77,7 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     return (
         <>
             <TableHeader
-                size={column.columnDef.cell === CheckCell ? 5 : header.getSize()}
+                size={column.columnDef.cell === StatusCell ? 5 : header.getSize()}
                 colSpan={column.columnDef.colSpan}
             >
                 {/* sorting start */}
@@ -89,7 +89,7 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                         null :
                         flexRender(
                             // column이 CheckCell이면 아이콘으로 표시
-                            column.columnDef.cell === CheckCell ? column.columnDef.meta.icon : column.columnDef.header,
+                            column.columnDef.cell === StatusCell ? column.columnDef.meta.icon : column.columnDef.header,
                             header.getContext()
                         )}
                     {getSortIcons()}

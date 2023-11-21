@@ -2,13 +2,12 @@ import {
     createColumnHelper,
 } from '@tanstack/react-table';
 import { EditCell } from './EditCell';
-import { CheckCell } from './CheckCell';
+import { StatusCell } from './StatusCell';
 import { useState } from 'react';
 import tw, { styled } from 'twin.macro';
 import { DataTable } from './DataTable';
 import { CommonButton } from '../common/CommonButton';
-import { BiCheckCircle } from "react-icons/bi";
-import { CheckIcon } from './CheckIcon';
+import { StatusIcon } from './StatusIcon';
 
 export const SampleTable = () => {
     const [data, setData] = useState([
@@ -31,10 +30,10 @@ export const SampleTable = () => {
     const columns = [
         columnHelper.display({
             header: 'check',
-            cell: CheckCell,
+            cell: StatusCell,
             meta: {
                 setCheckedRows: setCheckedRows,
-                icon: <CheckIcon/>
+                icon: <StatusIcon/>
             }
         }),
         columnHelper.accessor('name', {

@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { GlobalStyle } from "./GlobalStyle";
-import { SampleTable } from "./components/react-table-sample/sample-table";
+import { SampleTable } from "./components/react-table/sample-table";
 
 function App() {
   return (
@@ -7,7 +8,6 @@ function App() {
       <GlobalStyle/>
       <div className="App">
         <SampleTable />
-        {/* <FlexTable/> */}
       </div>
     </>
   );

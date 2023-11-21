@@ -8,6 +8,8 @@ const CellWrapper = styled.div`
         flex
         items-center
         justify-center
+        text-sm
+        font-normal
     `}
 `;
 

@@ -38,6 +38,7 @@ export const DataTable = (props) => {
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
 
     const table = useReactTable({
         data,
@@ -45,6 +46,8 @@ export const DataTable = (props) => {
         columnResizeMode,
         state: {
             sorting,
+            selectedRows,
+            setSelectedRows
         },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
@@ -57,6 +60,15 @@ export const DataTable = (props) => {
         setFilterFlag(old => !old);
     };
 
+    const handleSelectRow = (selectedRow) => {
+        if (selectedRows.includes(selectedRow)) {
+            setSelectedRows(old => old.filter(row => row !== selectedRow));
+        }
+
+        if (!selectedRows.includes(selectedRow)) {
+            setSelectedRows(old => [...old, selectedRow]);
+        }
+    }
 
     return (
         <>
@@ -81,7 +93,11 @@ export const DataTable = (props) => {
                     </thead>
                     <tbody>
                         {table.getRowModel().rows.map(row => (
-                            <tr key={row.id} className="data-tbody">
+                            <tr
+                                key={row.id}
+                                className={`data-tbody ${selectedRows.includes(row) ? 'bg-slate-100' : null}`}
+                                onClick={() => handleSelectRow(row)}
+                            >
                                 {row.getVisibleCells().map(cell => (
                                     <DataTableCell
                                         key={cell.id}
