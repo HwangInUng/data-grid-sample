@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
 
+const CheckWrapper = styled.div`
+    ${tw`
+        flex
+        w-full
+        justify-center
+    `}
+`;
+
 const CheckInput = styled.input`
     ${tw`
         appearance-none
@@ -32,12 +40,12 @@ export const CheckCell = ({ row, column }) => {
     }, [row]);
 
     return (
-        <div className="flex w-full justify-center">
+        <CheckWrapper>
             <CheckInput
                 type='checkbox'
                 onChange={() => setChecked(old => !old)}
                 checked={checked}
             />
-        </div>
+        </CheckWrapper>
     );
 };

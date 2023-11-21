@@ -1,4 +1,4 @@
-import tw, {styled} from "twin.macro";
+import tw, { styled } from "twin.macro";
 
 
 const FilterWrapper = styled.div`
@@ -16,20 +16,26 @@ const FilterInput = styled.input`
     ${tw`
         appearance-none
         border
-        border-blue-950
+        border-gray-400
         w-full
         outline-none
         rounded-lg
-        px-3
+        px-2
+
+        text-sm
     `}
+
+    &:focus-visible{
+        border: 1px solid gray;
+    }
 `;
 
 
 // 컬럼의 유형에 맞는 필터 태그 적용 구현 필요
-export const DataTableFilter = ({onChange}) => {
+export const DataTableFilter = ({ onChange }) => {
     return (
         <FilterWrapper>
-            <FilterInput type="text" onChange={(e) => onChange(e.target.value)}/>
+            <FilterInput type="text" onChange={(e) => onChange(e.target.value)} />
         </FilterWrapper>
     );
 }

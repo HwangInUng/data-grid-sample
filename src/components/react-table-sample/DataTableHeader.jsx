@@ -24,6 +24,13 @@ const TableHeader = styled.th`
             cursor-pointer
         `}
     }
+
+    .header-icon{
+        ${tw`
+            w-[20px]
+            h-[20px]
+        `}
+    }
 `;
 
 const Resizer = styled.div`
@@ -56,20 +63,15 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
 
     const getSortIcons = () => {
         const sortIcons = {
-            asc: <BiSortUp />,
-            desc: <BiSortDown />
+            asc: <BiSortUp className="header-icon" />,
+            desc: <BiSortDown className="header-icon" />
         };
 
         return sortIcons[column.getIsSorted()];
     }
 
     const isSortReady = () => {
-        return column.getCanSort() && !column.getIsSorted() ? <BiFilter /> : null;
-    }
-
-    const openFilterArea = () => {
-        return column.getCanFilter() ?
-            <DataTableFilter onChange={onFilterChange} /> : null;
+        return column.getCanSort() && !column.getIsSorted() ? true : false;
     }
 
     return (
@@ -91,11 +93,12 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                             header.getContext()
                         )}
                     {getSortIcons()}
-                    {isSortReady()}
+                    {isSortReady() ? <BiFilter className="header-icon" /> : null}
                 </div>
                 {/* sorting end */}
                 {/* filter start */}
-                {openFilterArea()}
+                {column.getCanFilter() ?
+                    <DataTableFilter onChange={onFilterChange} /> : null}
                 {/* filter end */}
 
 

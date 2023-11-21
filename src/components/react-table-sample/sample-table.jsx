@@ -8,6 +8,7 @@ import tw, { styled } from 'twin.macro';
 import { DataTable } from './DataTable';
 import { CommonButton } from '../common/CommonButton';
 import { BiCheckCircle } from "react-icons/bi";
+import { CheckIcon } from './CheckIcon';
 
 export const SampleTable = () => {
     const [data, setData] = useState([
@@ -33,7 +34,7 @@ export const SampleTable = () => {
             cell: CheckCell,
             meta: {
                 setCheckedRows: setCheckedRows,
-                icon: <BiCheckCircle/>
+                icon: <CheckIcon/>
             }
         }),
         columnHelper.accessor('name', {

@@ -1,11 +1,15 @@
+import { GlobalStyle } from "./GlobalStyle";
 import { SampleTable } from "./components/react-table-sample/sample-table";
 
 function App() {
   return (
-    <div className="App p-0">
-      <SampleTable/>
-      {/* <FlexTable/> */}
-    </div>
+    <>
+      <GlobalStyle/>
+      <div className="App">
+        <SampleTable />
+        {/* <FlexTable/> */}
+      </div>
+    </>
   );
 }
 

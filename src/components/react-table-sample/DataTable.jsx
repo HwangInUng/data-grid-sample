@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { DataTableCell } from "./DataTableCell";
 import { ToggleSwitch } from "../common/ToggleSwitch";
+import { BiSearchAlt } from "react-icons/bi";
 
 const Table = styled.table`
     ${tw`
@@ -32,12 +33,12 @@ const Table = styled.table`
 `;
 
 export const DataTable = (props) => {
-    const { data, setData, columns} = props;
+    const { data, setData, columns } = props;
     const [backupData, setBackupData] = useState([...props.data]);
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
-    
+
     const table = useReactTable({
         data,
         columns,
@@ -59,14 +60,14 @@ export const DataTable = (props) => {
 
     return (
         <>
-            <div className="mb-1 w-[1000px] flex justify-end">
-                <ToggleSwitch title="필터" onChange={handleFilterFlag} />
+            <div className="mb-1 w-full flex justify-end">
+                <ToggleSwitch title={<BiSearchAlt />} onChange={handleFilterFlag} />
             </div>
             <div className="border-t-[1px] border-t-black">
                 <Table onContextMenu={(e) => e.preventDefault()}>
                     <thead size={{ width: table.getCenterTotalSize() }}>
                         {table.getHeaderGroups().map(headerGroup => (
-                            <tr key={headerGroup.id}  className="data-thead">
+                            <tr key={headerGroup.id} className="data-thead">
                                 {headerGroup.headers.map(header => (
                                     <DataTableHeader
                                         key={header.id}
