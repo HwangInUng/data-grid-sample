@@ -3,7 +3,7 @@ import tw, { styled } from "twin.macro";
 
 const FilterWrapper = styled.div`
     ${tw`
-        w-[30%]
+        w-full
         flex
         justify-center
         items-center
@@ -17,11 +17,11 @@ const FilterInput = styled.input`
         appearance-none
         border
         border-gray-400
-        w-full
+        w-[50%]
         outline-none
         rounded-lg
         px-2
-
+        font-normal
         text-sm
     `}
 

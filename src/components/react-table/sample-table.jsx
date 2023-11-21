@@ -4,7 +4,6 @@ import {
 import { EditCell } from './EditCell';
 import { StatusCell } from './StatusCell';
 import { useState } from 'react';
-import tw, { styled } from 'twin.macro';
 import { DataTable } from './DataTable';
 import { CommonButton } from '../common/CommonButton';
 import { StatusIcon } from './StatusIcon';
@@ -23,6 +22,7 @@ export const SampleTable = () => {
     ]);
     const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
+    const [deleteRows, setDeleteRows] = useState([]);
 
     const columnHelper = createColumnHelper();
 
@@ -32,6 +32,7 @@ export const SampleTable = () => {
             header: 'check',
             cell: StatusCell,
             meta: {
+                deleteRows: deleteRows,
                 setCheckedRows: setCheckedRows,
                 icon: <StatusIcon/>
             }
@@ -74,6 +75,7 @@ export const SampleTable = () => {
     const resetRow = () => {
         setData(originalRows);
         setCheckedRows([]);
+        setDeleteRows([]);
     }
 
     // 추가
@@ -87,18 +89,17 @@ export const SampleTable = () => {
 
     // 삭제
     const removeRow = () => {
-        const newRow = data.filter(row => !checkedRows.includes(row));
-
         if (checkedRows.length === 0) return;
 
-        setData(newRow);
+        setDeleteRows(checkedRows);
         setCheckedRows([]);
-        setOriginalRows(newRow);
     };
 
     // 변경/추가 저장
     const saveRow = () => {
-        setOriginalRows(data);
+        const newRow = data.filter(row => !deleteRows.includes(row));
+        setData(newRow);
+        setOriginalRows(newRow);
     }
 
     return (
@@ -111,6 +112,7 @@ export const SampleTable = () => {
                 <DataTable
                     data={data}
                     columns={columns}
+                    backupData={originalRows}
                 />
             </div>
         </>

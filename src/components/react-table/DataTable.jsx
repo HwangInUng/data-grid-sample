@@ -33,21 +33,22 @@ const Table = styled.table`
 `;
 
 export const DataTable = (props) => {
-    const { data, setData, columns } = props;
-    const [backupData, setBackupData] = useState([...props.data]);
+    const { data, columns, backupData } = props;
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
-    const [selectedRows, setSelectedRows] = useState([]);
+    const [selectedData, setSelectedData] = useState([]);
 
     const table = useReactTable({
         data,
         columns,
         columnResizeMode,
         state: {
+            data,
+            backupData,
             sorting,
-            selectedRows,
-            setSelectedRows
+            selectedData,
+            setSelectedData,
         },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
@@ -61,12 +62,12 @@ export const DataTable = (props) => {
     };
 
     const handleSelectRow = (selectedRow) => {
-        if (selectedRows.includes(selectedRow)) {
-            setSelectedRows(old => old.filter(row => row !== selectedRow));
+        if (selectedData.includes(selectedRow)) {
+            setSelectedData(old => old.filter(row => row !== selectedRow));
         }
 
-        if (!selectedRows.includes(selectedRow)) {
-            setSelectedRows(old => [...old, selectedRow]);
+        if (!selectedData.includes(selectedRow)) {
+            setSelectedData(old => [...old, selectedRow]);
         }
     }
 
@@ -95,7 +96,7 @@ export const DataTable = (props) => {
                         {table.getRowModel().rows.map(row => (
                             <tr
                                 key={row.id}
-                                className={`data-tbody ${selectedRows.includes(row) ? 'bg-slate-100' : null}`}
+                                className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-100' : null}`}
                                 onClick={() => handleSelectRow(row)}
                             >
                                 {row.getVisibleCells().map(cell => (

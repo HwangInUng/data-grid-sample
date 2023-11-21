@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import tw, {styled} from "twin.macro";
+import tw, { styled } from "twin.macro";
 
 const CellWrapper = styled.div`
     ${tw`
@@ -13,15 +13,15 @@ const CellWrapper = styled.div`
     `}
 `;
 
-export const EditCell = ({ getValue, row, column}) => {
+export const EditCell = ({ getValue, row, column }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
-    const columnMeta = column.columnDef.meta;
+    const { setEditRows, readOnly, type } = column.columnDef.meta;
     const [clicked, setClicked] = useState(false);
 
-    const editValue = () => {
-        setClicked(old => !old);
+    const editValue = (value) => {
+        if (value.length !== 0) setClicked(old => !old);
 
         // 초기 값과 수정된 값을 비교하여 수정된 로우 표시 가능
         if (initialValue !== value) {
@@ -39,13 +39,13 @@ export const EditCell = ({ getValue, row, column}) => {
                     }
                     return oldRow;
                 });
-            columnMeta?.setEditRows(updateRow);
+            setEditRows(updateRow);
         }
     };
 
     useEffect(() => {
         setValue(initialValue);
-        if(initialValue.length === 0) setClicked(true);
+        if (initialValue.length === 0) setClicked(true);
     }, [initialValue]);
 
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
@@ -56,7 +56,7 @@ export const EditCell = ({ getValue, row, column}) => {
                 type="text"
                 value={value}
                 onChange={e => setValue(e.target.value)}
-                onBlur={editValue}
+                onBlur={() => editValue(value)}
                 autoFocus
                 className="w-full"
             />,
@@ -68,9 +68,9 @@ export const EditCell = ({ getValue, row, column}) => {
         return tags[type];
     };
 
-    if (columnMeta?.readOnly) return <span>{value}</span>;
+    if (readOnly) return <span>{value}</span>;
 
     return clicked || value.length === 0 ?
-        editTag(columnMeta?.type) :
-        <CellWrapper onClick={editValue}> {value} </CellWrapper>;
+        editTag(type) :
+        <CellWrapper onClick={() => editValue(value)}> {value} </CellWrapper>;
 };

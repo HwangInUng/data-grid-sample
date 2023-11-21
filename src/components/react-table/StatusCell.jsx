@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
+import { BiSolidAddToQueue, BiSolidEditAlt, BiSolidMinusSquare } from "react-icons/bi";
 
 const StatusWrapper = styled.div`
     ${tw`
@@ -7,65 +8,54 @@ const StatusWrapper = styled.div`
         w-full
         justify-center
     `}
-`;
 
-const CheckInput = styled.input`
-    ${tw`
-        appearance-none
-        border-slate-400
-        border
-        rounded-[50%]
-        w-5
-        h-5
-    `}
-    &:checked{
-        background-color: darkblue;
+    & svg{
+        ${tw`
+            w-5
+            h-5
+        `}
     }
-`;
-
-const StatusIcon = styled.div`
-    ${tw`
-        rounded-[50%]
-        border
-        w-5
-        h-5
-    `}
 `;
 
 export const StatusCell = ({ row, column, table }) => {
     // 체크 여부에 따라 삭제 대상 여부를 추가 및 제거
-    const columnMeta = column.columnDef.meta;
+    const { deleteRows, setCheckedRows } = column.columnDef.meta;
     const tableState = table.options.state;
-    const { selectedRows } = tableState;
-
+    const { data, backupData, selectedData } = tableState;
+    const targetRow = row.original;
 
     const addCheckedRow = () => {
-        const targetRow = row.original;
-        if (selectedRows.includes(row)) {
-            columnMeta?.setCheckedRows((old) => [...old, targetRow]);
+        if (selectedData.includes(row)) {
+            setCheckedRows((old) => [...old, targetRow]);
         } else {
-            columnMeta?.setCheckedRows((old) => old.filter((oldRow) => targetRow !== oldRow));
+            setCheckedRows((old) => old.filter((oldRow) => targetRow !== oldRow));
         }
     }
 
     const matchingStatus = () => {
+        const icons = {
+            add: <BiSolidAddToQueue className="text-green-600" />,
+            edit: <BiSolidEditAlt className="text-blue-600" />,
+            remove: <BiSolidMinusSquare className="text-red-600" />
+        };
 
-    }
+        const editRows = data.filter((row, index) => backupData[index] !== row);
+        const isEdit = editRows.includes(targetRow) && row.id < backupData.length;
+        const isRemove = deleteRows.includes(targetRow);
+        const isAdd = !backupData.includes(targetRow);
+        
+        if (isEdit) return icons.edit;
+        if (isRemove) return icons.remove;
+        if (isAdd) return icons.add;
+    };
 
     useEffect(() => {
         addCheckedRow();
-    }, [selectedRows]);
+    }, [selectedData]);
 
     return (
         <StatusWrapper>
-            {/* <CheckInput
-                type='checkbox'
-                onChange={addCheckedRow}
-                checked={selectedRows.includes(row)}
-            /> */}
-            <StatusIcon>
-                
-            </StatusIcon>
+            {matchingStatus()}
         </StatusWrapper>
     );
 };
