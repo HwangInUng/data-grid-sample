@@ -4,9 +4,9 @@ import {
 import { EditCell } from './EditCell';
 import { StatusCell } from './StatusCell';
 import { useState } from 'react';
-import { DataTable } from './DataTable';
 import { CommonButton } from '../common/CommonButton';
 import { StatusIcon } from './StatusIcon';
+import { DataTableWrapper } from './DataTableWrapper';
 
 export const SampleTable = () => {
     const [data, setData] = useState([
@@ -29,7 +29,7 @@ export const SampleTable = () => {
     // 셀 단위로 이벤트를 부여
     const columns = [
         columnHelper.display({
-            header: 'check',
+            header: 'status',
             cell: StatusCell,
             meta: {
                 deleteRows: deleteRows,
@@ -108,10 +108,11 @@ export const SampleTable = () => {
             <CommonButton onClick={addRow} title="추가" />
             <CommonButton onClick={removeRow} title="삭제" />
             <CommonButton onClick={saveRow} title="저장" />
-            <DataTable
+            <DataTableWrapper
                 data={data}
                 columns={columns}
                 backupData={originalRows}
+                addStatusTable
             />
         </>
     );

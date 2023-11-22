@@ -5,7 +5,7 @@ import { SampleTable } from "./components/react-table/sample-table";
 function App() {
   return (
     <>
-      <GlobalStyle/>
+      <GlobalStyle />
       <div>
         <SampleTable />
       </div>

@@ -10,8 +10,8 @@ const StatusWrapper = styled.div`
 
     & svg{
         ${tw`
-            w-[5px]
-            h-[5px]
+            w-fit
+            h-fit
         `}
     }
 `;
@@ -42,7 +42,7 @@ export const StatusCell = ({ row, column, table }) => {
         const isEdit = editRows.includes(targetRow) && row.id < backupData.length;
         const isRemove = deleteRows.includes(targetRow);
         const isAdd = !backupData.includes(targetRow);
-        
+
         if (isEdit) return icons.edit;
         if (isRemove) return icons.remove;
         if (isAdd) return icons.add;
