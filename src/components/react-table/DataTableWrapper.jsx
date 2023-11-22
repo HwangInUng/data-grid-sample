@@ -9,9 +9,16 @@ import { useState } from "react";
 import { ToggleSwitch } from "../common/ToggleSwitch";
 import { BiSearchAlt } from "react-icons/bi";
 import { DataTable } from "./DataTable";
+import { RefreshIcon } from "../common/RefreshIcon";
 
 export const DataTableWrapper = (props) => {
-    const { data, columns, backupData, addStatusTable } = props;
+    const {
+        data,
+        resetData,
+        columns,
+        backupData,
+        addStatusTable
+    } = props;
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
@@ -24,9 +31,10 @@ export const DataTableWrapper = (props) => {
         state: {
             data,
             backupData,
-            sorting,
             selectedData,
             setSelectedData,
+            sorting,
+            setSorting,
         },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
@@ -39,10 +47,22 @@ export const DataTableWrapper = (props) => {
         setFilterFlag(old => !old);
     };
 
+    const resetTableData = () => {
+        table.resetColumnFilters();
+        setFilterFlag(false);
+        setSelectedData([]);
+        resetData();
+    }
+
     return (
         <div>
-            <div className="mb-1 w-full flex justify-end">
-                <ToggleSwitch title={<BiSearchAlt />} onChange={handleFilterFlag} />
+            <div className="mb-1 w-full flex justify-end gap-x-3">
+                <ToggleSwitch
+                    title={<BiSearchAlt />}
+                    flag={filterFlag}
+                    onChange={handleFilterFlag}
+                />
+                <RefreshIcon onClick={resetTableData} />
             </div>
             <div className="w-full flex">
                 {

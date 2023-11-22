@@ -44,24 +44,19 @@ export const DataTable = (props) => {
                 <thead>
                     {table.getHeaderGroups().map(headerGroup => (
                         <tr key={headerGroup.id} className="data-thead">
-                            {headerGroup.headers.map(header => (
-                                isStatus ?
-                                    header.id === 'status' ?
-                                        <DataTableHeader
-                                            key={header.id}
-                                            table={table}
-                                            header={header}
-                                        /> :
-                                        null :
-                                    header.id !== 'status' ?
+                            {headerGroup.headers.map(header => {
+                                const isStatusColumn = header.id === 'status';
+
+                                return (isStatus && isStatusColumn) || (!isStatus && !isStatusColumn) ?
+                                    (
                                         <DataTableHeader
                                             key={header.id}
                                             table={table}
                                             header={header}
                                             columnResizeMode={columnResizeMode}
-                                        /> :
-                                        null
-                            ))}
+                                        />
+                                    ) : null;
+                            })}
                         </tr>
                     ))}
                 </thead>
@@ -72,21 +67,16 @@ export const DataTable = (props) => {
                             className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-100' : null}`}
                             onClick={() => handleSelectRow(row)}
                         >
-                            {row.getVisibleCells().map(cell => (
-                                isStatus ?
-                                    cell.column.columnDef.cell === StatusCell ?
+                            {row.getVisibleCells().map(cell => {
+                                const isStatusCell = cell.column.columnDef.cell === StatusCell;
+                                return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
+                                    (
                                         <DataTableCell
                                             key={cell.id}
                                             cell={cell}
-                                        /> :
-                                        null :
-                                    cell.column.columnDef.cell !== StatusCell ?
-                                        <DataTableCell
-                                            key={cell.id}
-                                            cell={cell}
-                                        /> :
-                                        null
-                            ))}
+                                        />
+                                    ) : null;
+                            })}
                         </tr>
                     ))}
                 </tbody>

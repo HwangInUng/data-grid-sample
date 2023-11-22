@@ -3,7 +3,7 @@ import {
 } from '@tanstack/react-table';
 import { EditCell } from './EditCell';
 import { StatusCell } from './StatusCell';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CommonButton } from '../common/CommonButton';
 import { StatusIcon } from './StatusIcon';
 import { DataTableWrapper } from './DataTableWrapper';
@@ -72,7 +72,7 @@ export const SampleTable = () => {
     ];
 
     // 테이블 데이터 원래대로 복구
-    const resetRow = () => {
+    const resetData = () => {
         setData(originalRows);
         setCheckedRows([]);
         setDeleteRows([]);
@@ -104,12 +104,12 @@ export const SampleTable = () => {
 
     return (
         <>
-            <CommonButton onClick={resetRow} title="새로고침" />
             <CommonButton onClick={addRow} title="추가" />
             <CommonButton onClick={removeRow} title="삭제" />
             <CommonButton onClick={saveRow} title="저장" />
             <DataTableWrapper
                 data={data}
+                resetData={resetData}
                 columns={columns}
                 backupData={originalRows}
                 addStatusTable

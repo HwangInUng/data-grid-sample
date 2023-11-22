@@ -1,8 +1,9 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
-import { BiSortDown, BiSortUp, BiFilter } from "react-icons/bi";
+import { BiCaretDown } from "react-icons/bi";
 import { DataTableFilter } from "./DataTableFilter";
 import { StatusCell } from "./StatusCell";
+import { useEffect, useState } from "react";
 
 const TableHeader = styled.th`
     ${tw`
@@ -54,6 +55,8 @@ const Resizer = styled.div`
 `;
 export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     const { column } = header;
+    const [openFilter, setOpenFilter] = useState(false);
+    const canFilter = column.getCanFilter();
     // filter
     const onFilterChange = (value) => {
         if (value === 'null') {
@@ -63,18 +66,14 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
         }
     };
 
-    const getSortIcons = () => {
-        const sortIcons = {
-            asc: <BiSortUp />,
-            desc: <BiSortDown />
+    const isStatusCell = column.columnDef.cell === StatusCell;
+
+    useEffect(() => {
+        if (!canFilter) {
+            setOpenFilter(false);
+            column.setFilterValue(null);
         };
-
-        return sortIcons[column.getIsSorted()];
-    }
-
-    const isSortReady = () => {
-        return column.getCanSort() && !column.getIsSorted() ? true : false;
-    }
+    }, [canFilter]);
 
     return (
         <>
@@ -82,29 +81,31 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                 size={header.getSize()}
                 colSpan={column.columnDef.colSpan}
             >
-                {/* sorting start */}
-                <div
-                    className="content-box"
-                    onClick={column.getToggleSortingHandler()}
-                >
+                <div className="content-box">
                     {header.isPlaceholder ?
                         null :
                         flexRender(
                             // column이 CheckCell이면 아이콘으로 표시
-                            column.columnDef.cell === StatusCell ? column.columnDef.meta.icon : column.columnDef.header,
+                            isStatusCell ? column.columnDef.meta.icon : column.columnDef.header,
                             header.getContext()
                         )}
-                    {getSortIcons()}
-                    {isSortReady() ? <BiFilter /> : null}
+                    {canFilter ?
+                        <BiCaretDown
+                            className="absolute right-0"
+                            onClick={() => setOpenFilter(old => !old)}
+                        /> : null}
                 </div>
-                {/* sorting end */}
-                {/* filter start */}
-                {column.getCanFilter() ?
-                    <DataTableFilter onChange={onFilterChange} /> : null}
-                {/* filter end */}
+                {
+                    canFilter && openFilter ?
+                        <DataTableFilter
+                            onChange={onFilterChange}
+                            table={table}
+                            column={column}
+                            setOpenFilter={setOpenFilter}
+                        /> :
+                        null
+                }
 
-
-                {/* resizer start */}
                 <Resizer
                     onMouseDown={header.getResizeHandler()}
                     onTouchStart={header.getResizeHandler()}
@@ -117,7 +118,6 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                                 '',
                     }}
                 />
-                {/* resizer end */}
             </TableHeader>
         </>
     );

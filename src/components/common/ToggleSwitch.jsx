@@ -7,6 +7,11 @@ const ToggleLabel = styled.label`
         gap-[0.5rem]
         cursor-pointer
     `}
+
+    &:hover{
+        transition: transform 150ms linear;
+        transform: scale(1.05);
+    }
 `;
 
 const ToggleInput = styled.input`
@@ -14,9 +19,10 @@ const ToggleInput = styled.input`
     position: relative;
     border: max(2px, 0.1em) solid gray;
     border-radius: 1.25em;
-    width: 2.25em;
+    width: 2.5em;
     height: 1.25em;
     background-color: gray;
+    cursor: pointer;
 
     &::before{
         content: "";
@@ -35,7 +41,7 @@ const ToggleInput = styled.input`
         border-color: darkblue;
         &::before{
             background-color: white;
-            left: 1em;
+            left: 1.25em;
         }
     }
 
@@ -63,7 +69,7 @@ const ToggleInput = styled.input`
     }
 `;
 
-export const ToggleSwitch = ({title, onChange}) => {
+export const ToggleSwitch = ({ title, onChange, flag }) => {
     return (
         <>
             <ToggleLabel>
@@ -71,6 +77,7 @@ export const ToggleSwitch = ({title, onChange}) => {
                 <ToggleInput
                     role="switch"
                     type="checkbox"
+                    checked={flag}
                     onChange={onChange}
                 />
             </ToggleLabel>
