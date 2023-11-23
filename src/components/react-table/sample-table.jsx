@@ -25,7 +25,6 @@ export const SampleTable = () => {
     const [deleteRows, setDeleteRows] = useState([]);
 
     const columnHelper = createColumnHelper();
-
     // 셀 단위로 이벤트를 부여
     const columns = [
         columnHelper.display({

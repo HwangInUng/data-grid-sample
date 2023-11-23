@@ -57,16 +57,17 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     const { column } = header;
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
+    const isStatusCell = column.columnDef.cell === StatusCell;
+
     // filter
     const onFilterChange = (value) => {
-        if (value === 'null') {
+        if (value.length === 0) {
             column.setFilterValue(null);
         } else {
             column.setFilterValue(value);
         }
     };
 
-    const isStatusCell = column.columnDef.cell === StatusCell;
 
     useEffect(() => {
         if (!canFilter) {

@@ -1,6 +1,7 @@
 import { BiFilter, BiSortDown, BiSortUp } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 import { CommonButton } from "../common/CommonButton"
+import { useEffect, useMemo, useState } from "react";
 
 
 const FilterWrapper = styled.div`
@@ -83,11 +84,10 @@ export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiFilter />, title: 'Normal', type: 'normal' },
     ];
-    const { sorting, setSorting } = table.options.state;
-    const { rows } = table.getRowModel();
-    const dataList = [...new Set(
-        rows.map(row => row.original[column.id])
-    )];
+    const { sorting, setSorting, backupData, setColumnFilters } = table.options.state;
+    const dataList = [...new Set(backupData.map(data => data[column.id]))];
+    const [checkList, setCheckList] = useState([]);
+    const [allSelected, setAllSelected] = useState(false);
 
     const handleSorting = (sortingType) => {
         const sortedColumn = sorting.map(col => col.id);
@@ -107,10 +107,45 @@ export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
     };
 
     const selectAllData = () => {
+        setAllSelected(old => !old);
+
+        checkedAll(allSelected);
+    };
+
+    const checkedAll = (check) => {
         const checkBoxList = Array.from(document.getElementsByClassName('list-checkbox'));
-        checkBoxList.forEach((checkBox, index) => index > 0 ? checkBox.checked = checkBoxList[0].checked : null);
-        onChange(null);
+        checkBoxList.forEach(checkBox => checkBox.checked = check);
+    };
+
+    const addColumnFilter = (e) => {
+        const value = e.target.value;
+        const isCheck = e.target.checked;
+        console.log(table.getFilteredRowModel())
+        console.log(table.getCoreRowModel())
+        console.log(table.getState())
+
+        setColumnFilters(old => [...old, { id: column.id, value: value }]);
+        // if (isCheck) {
+        // } else {
+        //     table.setColumnFilters(old => console.log(old));
+        // }
+    };
+
+    const handleInputValue = (value) => {
+        onChange(value);
+
+        const backUpList = [...new Set(
+            backupData.map(data => data[column.id])
+                .filter(data => data.includes(value))
+                .sort()
+        )];
+        setCheckList(backUpList);
     }
+
+    useEffect(() => {
+        setCheckList(dataList.sort());
+    }, []);
+
     return (
         <FilterWrapper>
             {sortData && sortData.map((sort, index) => (
@@ -132,19 +167,28 @@ export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
                 <FilterInput
                     type="text"
                     placeholder="Search"
-                    onChange={(e) => onChange(e.target.value)}
+                    onChange={(e) => handleInputValue(e.target.value)}
                 />
             </div>
             <DataListBox>
-                <div>
-                    <input type="checkbox" className="list-checkbox" onChange={selectAllData}/>
+                {/* <div>
+                    <input
+                        type="checkbox"
+                        className="list-checkbox"
+                        onChange={selectAllData}
+                    />
                     <span>Select All</span>
-                </div>
-                {dataList && dataList.map(data => (
+                </div> */}
+                {checkList && checkList.map((data, index) => (
                     <div
-                        key={data}
+                        key={index}
                     >
-                        <input type="checkbox" className="list-checkbox" />
+                        <input
+                            type="checkbox"
+                            className="list-checkbox"
+                            value={data}
+                            onChange={addColumnFilter}
+                        />
                         <span>{data}</span>
                     </div>
                 ))}

@@ -23,6 +23,8 @@ export const DataTableWrapper = (props) => {
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
     const [selectedData, setSelectedData] = useState([]);
+    const [columnFilters, setColumnFilters] = useState([]);
+
 
     const table = useReactTable({
         data,
@@ -35,10 +37,13 @@ export const DataTableWrapper = (props) => {
             setSelectedData,
             sorting,
             setSorting,
+            columnFilters,
+            setColumnFilters
         },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
+        onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         enableFilters: filterFlag,
     });
