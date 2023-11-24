@@ -1,7 +1,7 @@
-import { BiFilter, BiSortDown, BiSortUp } from "react-icons/bi";
+import { BiAlignJustify, BiSortDown, BiSortUp } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 import { CommonButton } from "../common/CommonButton"
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const FilterWrapper = styled.div`
@@ -82,7 +82,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
     const sortData = [
         { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
-        { icon: <BiFilter />, title: 'Normal', type: 'normal' },
+        { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
     ];
     const { sorting, setSorting, backupData, setColumnFilters } = table.options.state;
     const dataCheckList = [...new Set(backupData.map(data => data[column.id]))];
@@ -121,6 +121,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
         checkedAll(allSelected);
 
         const filterValueList = inputValue.length > 0 ? getBackUpCheckList() : dataCheckList;
+
         if (allSelected) {
             setColumnFilters(old => addColumnFilter(old, filterValueList));
         } else {
@@ -138,19 +139,15 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
     const addColumnFilter = (columnFilters, filterValue) => {
         const count = columnFilters.filter(filter => filter.id === column.id).length;
 
-        if (count === 0) {
-            return [
-                ...columnFilters,
-                { id: column.id, value: Array.isArray(filterValue) ? filterValue : [filterValue] }
-            ];
-        } else {
-            return columnFilters.map(filter => (
+        return count === 0 ?
+            [
+                ...columnFilters, { id: column.id, value: Array.isArray(filterValue) ? filterValue : [filterValue] }
+            ] :
+            columnFilters.map(filter => (
                 filter.id === column.id ?
                     { ...filter, value: Array.isArray(filterValue) ? filterValue : [...filter.value, filterValue] } :
-                    { ...filter, value: filter.value }
-            ));
-        }
-    }
+                    { ...filter, value: filter.value }));
+    };
 
     // unchecked 상태일 경우 필터 값 제거
     const deleteColumnFilter = (columnFilters, filterValue) => {
@@ -161,6 +158,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
         ));
     }
 
+    // checkbox 클릭 시 필터 값 변경
     const changeFilterValue = (e) => {
         const value = e.target.value;
         const isCheck = e.target.checked;
@@ -185,7 +183,6 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
     }
 
     const handleInputValue = (value) => {
-        // onChange(value);
         setInputValue(value);
     }
 
@@ -230,7 +227,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                         className="list-checkbox"
                         onChange={selectAllData}
                     />
-                    <span>{allSelected ? '전체선택' : '전체취소'}</span>
+                    <span>{allSelected ? '전체선택' : '전체해제'}</span>
                 </div>
                 {checkList && checkList.map((data, index) => (
                     <div key={index}>
@@ -245,7 +242,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                     </div>
                 ))}
             </DataListBox>
-            <div className="w-full">
+            <div className="w-full mt-3">
                 <CommonButton
                     title="X"
                     onClick={() => setOpenFilter(false)}

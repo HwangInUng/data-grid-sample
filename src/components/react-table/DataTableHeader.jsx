@@ -1,6 +1,6 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
-import { BiCaretDown } from "react-icons/bi";
+import { BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "./DataTableFilter";
 import { StatusCell } from "./StatusCell";
 import { useEffect, useState } from "react";
@@ -34,6 +34,20 @@ const TableHeader = styled.th`
             h-[20px]
         `}
     }
+
+    .filter-box {
+        ${tw`
+            absolute
+            right-1
+            border
+            border-slate-400
+            rounded-lg
+            bg-white
+            p-[3px]
+            hover:bg-blue-950
+            hover:text-white
+        `}
+    }
 `;
 
 const Resizer = styled.div`
@@ -59,16 +73,6 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     const canFilter = column.getCanFilter();
     const isStatusCell = column.columnDef.cell === StatusCell;
 
-    // filter
-    const onFilterChange = (value) => {
-        if (value.length === 0) {
-            column.setFilterValue(null);
-        } else {
-            column.setFilterValue(value);
-        }
-    };
-
-
     useEffect(() => {
         if (!canFilter) {
             setOpenFilter(false);
@@ -86,20 +90,21 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
                     {header.isPlaceholder ?
                         null :
                         flexRender(
-                            // column이 CheckCell이면 아이콘으로 표시
                             isStatusCell ? column.columnDef.meta.icon : column.columnDef.header,
                             header.getContext()
                         )}
                     {canFilter ?
-                        <BiCaretDown
-                            className="absolute right-0"
-                            onClick={() => setOpenFilter(old => !old)}
-                        /> : null}
+                        <div className="filter-box">
+                            <BiFilter
+                                onClick={() => setOpenFilter(old => !old)}
+                            />
+                        </div> :
+                        null
+                    }
                 </div>
                 {
                     canFilter && openFilter ?
                         <DataTableFilter
-                            onChange={onFilterChange}
                             table={table}
                             column={column}
                             setOpenFilter={setOpenFilter}

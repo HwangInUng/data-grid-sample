@@ -17,14 +17,14 @@ export const DataTableWrapper = (props) => {
         resetData,
         columns,
         backupData,
-        addStatusTable
+        addStatusTable,
+        enableColumnResizing
     } = props;
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
     const [selectedData, setSelectedData] = useState([]);
     const [columnFilters, setColumnFilters] = useState([]);
-
 
     const table = useReactTable({
         data,
@@ -45,6 +45,7 @@ export const DataTableWrapper = (props) => {
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        enableColumnResizing : enableColumnResizing ?? true,
         enableFilters: filterFlag,
     });
 

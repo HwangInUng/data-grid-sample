@@ -116,6 +116,7 @@ export const SampleTable = () => {
                 columns={columns}
                 backupData={originalRows}
                 addStatusTable
+                enableColumnResizing={false}
             />
         </>
     );

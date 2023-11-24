@@ -1,6 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import tw, { styled } from "twin.macro";
-import { BiSolidAddToQueue, BiSolidEditAlt, BiSolidMinusSquare } from "react-icons/bi";
+import {
+    BiSolidAddToQueue,
+    BiSolidEditAlt,
+    BiSolidMinusSquare
+} from "react-icons/bi";
 
 const StatusWrapper = styled.div`
     ${tw`
