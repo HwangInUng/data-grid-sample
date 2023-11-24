@@ -78,16 +78,17 @@ const DataListBox = styled.div`
 `;
 
 // 컬럼의 유형에 맞는 필터 태그 적용 구현 필요
-export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
+export const DataTableFilter = ({ table, column, setOpenFilter }) => {
     const sortData = [
         { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiFilter />, title: 'Normal', type: 'normal' },
     ];
     const { sorting, setSorting, backupData, setColumnFilters } = table.options.state;
-    const dataList = [...new Set(backupData.map(data => data[column.id]))];
+    const dataCheckList = [...new Set(backupData.map(data => data[column.id]))];
     const [checkList, setCheckList] = useState([]);
-    const [allSelected, setAllSelected] = useState(false);
+    const [allSelected, setAllSelected] = useState(true);
+    const [inputValue, setInputValue] = useState('');
 
     const handleSorting = (sortingType) => {
         const sortedColumn = sorting.map(col => col.id);
@@ -106,44 +107,103 @@ export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
         }
     };
 
+    // selectAll check box 컨트롤
     const selectAllData = () => {
         setAllSelected(old => !old);
-
         checkedAll(allSelected);
+
+        const backUpCheckList = [...new Set(
+            backupData.map(data => data[column.id])
+                .filter(data => data.includes(inputValue))
+                .sort()
+        )];
+
+        const filterValueList = inputValue.length > 0 ? backUpCheckList : dataCheckList;
+        console.log(dataCheckList)
+        if (allSelected) {
+            setColumnFilters(old => addColumnFilter(old, filterValueList));
+        } else {
+            setColumnFilters(old => old.filter(filter => filter.id !== column.id));
+            setInputValue('');
+        }
     };
 
     const checkedAll = (check) => {
-        const checkBoxList = Array.from(document.getElementsByClassName('list-checkbox'));
+        const checkBoxList = Array.from(document.getElementsByClassName(column.id));
         checkBoxList.forEach(checkBox => checkBox.checked = check);
     };
 
-    const addColumnFilter = (e) => {
+    // checked 상태일 경우 필터 값 추가
+    const addColumnFilter = (columnFilters, filterValue) => {
+        const count = columnFilters.filter(filter => filter.id === column.id).length;
+
+        if (count === 0) {
+            return [
+                ...columnFilters,
+                { id: column.id, value: Array.isArray(filterValue) ? filterValue : [filterValue] }
+            ];
+        } else {
+            return columnFilters.map(filter => (
+                filter.id === column.id ?
+                    { ...filter, value: Array.isArray(filterValue) ? filterValue : [...filter.value, filterValue] } :
+                    { ...filter, value: filter.value }
+            ));
+        }
+    }
+
+    // unchecked 상태일 경우 필터 값 제거
+    const deleteColumnFilter = (columnFilters, filterValue) => {
+        return columnFilters.map(filter => (
+            filter.id === column.id ?
+                { ...filter, value: filter.value.filter(value => value !== filterValue) } :
+                { ...filter, value: filter.value }
+        ));
+    }
+
+    const changeFilterValue = (e) => {
         const value = e.target.value;
         const isCheck = e.target.checked;
-        console.log(table.getFilteredRowModel())
-        console.log(table.getCoreRowModel())
-        console.log(table.getState())
 
-        setColumnFilters(old => [...old, { id: column.id, value: value }]);
-        // if (isCheck) {
-        // } else {
-        //     table.setColumnFilters(old => console.log(old));
-        // }
+        console.log(table.getState().columnFilters)
+        if (isCheck) {
+            setColumnFilters(old => addColumnFilter(old, value));
+        } else {
+            setColumnFilters(old => deleteColumnFilter(old, value));
+        }
+
+        autoRemoveColumnFilter();
     };
 
-    const handleInputValue = (value) => {
-        onChange(value);
+    // 체크박스 갯수에 따라 해당 컬럼 필터 제거
+    const autoRemoveColumnFilter = () => {
+        const checkList = Array.from(document.getElementsByClassName(column.id));
+        const count = checkList.filter(check => check.checked === true).length;
 
-        const backUpList = [...new Set(
+        return count > 0 ? null :
+            setColumnFilters(old => old.filter(filter => filter.id !== column.id));
+    }
+
+    const handleInputValue = (value) => {
+        // onChange(value);
+        setInputValue(value);
+        const backUpCheckList = [...new Set(
             backupData.map(data => data[column.id])
                 .filter(data => data.includes(value))
                 .sort()
         )];
-        setCheckList(backUpList);
+        setCheckList(backUpCheckList);
     }
+    useEffect(() => {
+        const backUpCheckList = [...new Set(
+            backupData.map(data => data[column.id])
+                .filter(data => data.includes(inputValue))
+                .sort()
+        )];
+        setCheckList(backUpCheckList);
+    }, [inputValue]);
 
     useEffect(() => {
-        setCheckList(dataList.sort());
+        setCheckList(dataCheckList.sort());
     }, []);
 
     return (
@@ -167,27 +227,28 @@ export const DataTableFilter = ({ onChange, table, column, setOpenFilter }) => {
                 <FilterInput
                     type="text"
                     placeholder="Search"
+                    value={inputValue}
                     onChange={(e) => handleInputValue(e.target.value)}
                 />
             </div>
             <DataListBox>
-                {/* <div>
+                <div>
                     <input
                         type="checkbox"
                         className="list-checkbox"
                         onChange={selectAllData}
                     />
                     <span>Select All</span>
-                </div> */}
+                </div>
                 {checkList && checkList.map((data, index) => (
                     <div
                         key={index}
                     >
                         <input
                             type="checkbox"
-                            className="list-checkbox"
+                            className={column.id}
                             value={data}
-                            onChange={addColumnFilter}
+                            onChange={changeFilterValue}
                         />
                         <span>{data}</span>
                     </div>

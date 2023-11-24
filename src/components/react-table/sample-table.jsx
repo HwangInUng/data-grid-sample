@@ -10,7 +10,7 @@ import { DataTableWrapper } from './DataTableWrapper';
 
 export const SampleTable = () => {
     const [data, setData] = useState([
-        { name: 'test', age: '21', gender: '남자', city: '동작구' },
+        { name: 'test0', age: '21', gender: '남자', city: '동작구' },
         { name: 'test1', age: '24', gender: '남자', city: '강동구' },
         { name: 'test2', age: '25', gender: '여자', city: '강남구' },
         { name: 'test3', age: '17', gender: '남자', city: '서초구' },
@@ -39,6 +39,7 @@ export const SampleTable = () => {
         columnHelper.accessor('name', {
             header: '이름',
             cell: EditCell,
+            filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
                 setEditRows: setData
@@ -47,6 +48,7 @@ export const SampleTable = () => {
         columnHelper.accessor('age', {
             header: '나이',
             cell: EditCell,
+            filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
                 setEditRows: setData
@@ -55,6 +57,7 @@ export const SampleTable = () => {
         columnHelper.accessor('gender', {
             header: '성별',
             cell: EditCell,
+            filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
                 setEditRows: setData
@@ -63,6 +66,7 @@ export const SampleTable = () => {
         columnHelper.accessor('city', {
             header: '사는곳',
             cell: EditCell,
+            filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
                 setEditRows: setData
