@@ -107,19 +107,20 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
         }
     };
 
+    const getBackUpCheckList = () => {
+        return [...new Set(
+            backupData.map(data => data[column.id])
+                .filter(data => data.includes(inputValue))
+                .sort()
+        )];
+    }
+
     // selectAll check box 컨트롤
     const selectAllData = () => {
         setAllSelected(old => !old);
         checkedAll(allSelected);
 
-        const backUpCheckList = [...new Set(
-            backupData.map(data => data[column.id])
-                .filter(data => data.includes(inputValue))
-                .sort()
-        )];
-
-        const filterValueList = inputValue.length > 0 ? backUpCheckList : dataCheckList;
-        console.log(dataCheckList)
+        const filterValueList = inputValue.length > 0 ? getBackUpCheckList() : dataCheckList;
         if (allSelected) {
             setColumnFilters(old => addColumnFilter(old, filterValueList));
         } else {
@@ -129,7 +130,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
     };
 
     const checkedAll = (check) => {
-        const checkBoxList = Array.from(document.getElementsByClassName(column.id));
+        const checkBoxList = Array.from(document.getElementsByName(column.id));
         checkBoxList.forEach(checkBox => checkBox.checked = check);
     };
 
@@ -164,7 +165,6 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
         const value = e.target.value;
         const isCheck = e.target.checked;
 
-        console.log(table.getState().columnFilters)
         if (isCheck) {
             setColumnFilters(old => addColumnFilter(old, value));
         } else {
@@ -176,30 +176,22 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
 
     // 체크박스 갯수에 따라 해당 컬럼 필터 제거
     const autoRemoveColumnFilter = () => {
-        const checkList = Array.from(document.getElementsByClassName(column.id));
+        const checkList = Array.from(document.getElementsByName(column.id));
         const count = checkList.filter(check => check.checked === true).length;
 
-        return count > 0 ? null :
+        if (count === 0) {
             setColumnFilters(old => old.filter(filter => filter.id !== column.id));
+        }
     }
 
     const handleInputValue = (value) => {
         // onChange(value);
         setInputValue(value);
-        const backUpCheckList = [...new Set(
-            backupData.map(data => data[column.id])
-                .filter(data => data.includes(value))
-                .sort()
-        )];
-        setCheckList(backUpCheckList);
     }
+
+    // Input에 따라 checkList 갱신
     useEffect(() => {
-        const backUpCheckList = [...new Set(
-            backupData.map(data => data[column.id])
-                .filter(data => data.includes(inputValue))
-                .sort()
-        )];
-        setCheckList(backUpCheckList);
+        setCheckList(getBackUpCheckList());
     }, [inputValue]);
 
     useEffect(() => {
@@ -238,15 +230,14 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                         className="list-checkbox"
                         onChange={selectAllData}
                     />
-                    <span>Select All</span>
+                    <span>{allSelected ? '전체선택' : '전체취소'}</span>
                 </div>
                 {checkList && checkList.map((data, index) => (
-                    <div
-                        key={index}
-                    >
+                    <div key={index}>
                         <input
                             type="checkbox"
-                            className={column.id}
+                            name={column.id}
+                            className="list-checkbox"
                             value={data}
                             onChange={changeFilterValue}
                         />
