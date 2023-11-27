@@ -4,7 +4,7 @@ export const newData = (index) => {
     return {
         id: index + 1,
         name: faker.person.fullName(),
-        age: faker.number.int(40),
+        age: faker.number.int(40).toString(),
         gender: faker.person.gender(),
         city: faker.person.jobArea()
     }

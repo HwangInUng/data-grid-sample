@@ -3,7 +3,7 @@ import {
 } from '@tanstack/react-table';
 import { EditCell } from './EditCell';
 import { StatusCell } from './StatusCell';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { CommonButton } from '../common/CommonButton';
 import { StatusIcon } from './StatusIcon';
 import { DataTableWrapper } from './DataTableWrapper';

@@ -48,7 +48,7 @@ export const DataTableWrapper = (props) => {
     const { data, fetchNextPage, isFetching } =
         // v5 문법
         useInfiniteQuery({
-            queryKey: ['table-data'],
+            queryKey: ['sample-data'],
             queryFn: ({ pageParam }) => fetchData(pageParam * fetchSize, fetchSize),
             initialPageParam: 0,
             getNextPageParam: (_lastPage, pages) => pages.length,
@@ -89,7 +89,7 @@ export const DataTableWrapper = (props) => {
     }, [fetchMoreOnBottomReached]);
 
     const table = useReactTable({
-        data: flatData,
+        data: initialData,
         columns,
         columnResizeMode,
         state: {
@@ -149,7 +149,7 @@ export const DataTableWrapper = (props) => {
                 <RefreshIcon onClick={resetTableData} />
             </div>
             <div
-                className="w-full flex overflow-auto h-[500px]"
+                className="w-full flex overflow-y-scroll h-[500px]"
                 ref={tableContainerRef}
                 onScroll={e => fetchMoreOnBottomReached(e.target)}
             >

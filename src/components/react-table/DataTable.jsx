@@ -5,6 +5,9 @@ import { StatusCell } from "./StatusCell";
 
 const Table = styled.table`
     width: ${props => props.size};
+    height: fit-content;
+    border-collapse: separate;
+    border-spacing: 0;
 
     .data-thead{
         ${tw`
