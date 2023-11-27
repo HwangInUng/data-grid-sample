@@ -19,11 +19,18 @@ const Table = styled.table`
             `}
         }
     }
+
+    & thead{
+        margin: 0;
+        position: sticky;
+        top: 0;
+    }
 `;
 
 export const DataTable = (props) => {
-    const { table, columnResizeMode, addStatusTable } = props;
+    const { table, columnResizeMode, addStatusTable, padding, virtualRows } = props;
     const { selectedData, setSelectedData } = table.options.state;
+    const { rows } = table.getRowModel();
     const isStatus = addStatusTable;
 
     const tableSize = isStatus ? '40px' : '100%';
@@ -61,26 +68,40 @@ export const DataTable = (props) => {
                     ))}
                 </thead>
                 <tbody>
-                    {table.getRowModel().rows.map(row => (
-                        <tr
-                            key={row.id}
-                            className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-100' : null}`}
-                            onClick={() => handleSelectRow(row)}
-                        >
-                            {row.getVisibleCells().map(cell => {
-                                const isStatusCell = cell.column.columnDef.cell === StatusCell;
-                                return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
-                                    (
-                                        <DataTableCell
-                                            key={cell.id}
-                                            cell={cell}
-                                        />
-                                    ) : null;
-                            })}
+                    {padding && padding.top > 0 && (
+                        <tr>
+                            <td style={{ height: `${padding.top}px` }} />
                         </tr>
-                    ))}
+                    )}
+                    {virtualRows && virtualRows.map(virtualRow => {
+                        const row = rows[virtualRow.index];
+                        return (
+                            <tr
+                                key={row.id}
+                                className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-100' : null}`
+                                }
+                                onClick={() => handleSelectRow(row)}
+                            >
+                                {row.getVisibleCells().map(cell => {
+                                    const isStatusCell = cell.column.columnDef.cell === StatusCell;
+                                    return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
+                                        (
+                                            <DataTableCell
+                                                key={cell.id}
+                                                cell={cell}
+                                            />
+                                        ) : null;
+                                })}
+                            </tr>
+                        );
+                    })}
+                    {padding && padding.bottom > 0 && (
+                        <tr>
+                            <td style={{ height: `${padding.bottom}px` }} />
+                        </tr>
+                    )}
                 </tbody>
-            </Table>
+            </Table >
         </>
     );
 };

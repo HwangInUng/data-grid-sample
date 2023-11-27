@@ -7,19 +7,11 @@ import { useEffect, useState } from 'react';
 import { CommonButton } from '../common/CommonButton';
 import { StatusIcon } from './StatusIcon';
 import { DataTableWrapper } from './DataTableWrapper';
+// test 데이터 생성
+import { makeData } from '../../js/makData';
 
 export const SampleTable = () => {
-    const [data, setData] = useState([
-        { name: 'test0', age: '21', gender: '남자', city: '동작구' },
-        { name: 'test1', age: '24', gender: '남자', city: '강동구' },
-        { name: 'test2', age: '25', gender: '여자', city: '강남구' },
-        { name: 'test3', age: '17', gender: '남자', city: '서초구' },
-        { name: 'test4', age: '26', gender: '여자', city: '관악구' },
-        { name: 'test5', age: '21', gender: '남자', city: '노원구' },
-        { name: 'test6', age: '30', gender: '남자', city: '동작구' },
-        { name: 'test7', age: '18', gender: '여자', city: '강서구' },
-        { name: 'test8', age: '19', gender: '남자', city: '강북구' }
-    ]);
+    const [data, setData] = useState(makeData([1000]));
     const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
@@ -107,11 +99,13 @@ export const SampleTable = () => {
 
     return (
         <>
-            <CommonButton onClick={addRow} title="추가" />
-            <CommonButton onClick={removeRow} title="삭제" />
-            <CommonButton onClick={saveRow} title="저장" />
+            <div className='w-full flex justify-end mb-2 py-2'>
+                <CommonButton onClick={addRow} title="추가" />
+                <CommonButton onClick={removeRow} title="삭제" />
+                <CommonButton onClick={saveRow} title="저장" />
+            </div>
             <DataTableWrapper
-                data={data}
+                initialData={data}
                 resetData={resetData}
                 columns={columns}
                 backupData={originalRows}

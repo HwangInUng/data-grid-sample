@@ -9,6 +9,7 @@ const ModalBackground = styled.div`
         h-screen
         absolute
     `}
+    z-index: 998;
     background-color: rgba(0, 0, 0, 0.7);
 `
 

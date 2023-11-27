@@ -5,7 +5,7 @@ const Button = styled.button`
         rounded-lg
         py-[3px]
         px-[10px]
-        mr-[5px]
+        ml-[5px]
         text-white
         text-sm
     `}

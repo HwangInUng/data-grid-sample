@@ -24,8 +24,8 @@ export const StatusCell = ({ row, column, table }) => {
     // 체크 여부에 따라 삭제 대상 여부를 추가 및 제거
     const { deleteRows, setCheckedRows } = column.columnDef.meta;
     const tableState = table.options.state;
-    const { data, backupData, selectedData } = tableState;
-    const targetRow = row.original;
+    const { initialData, backupData, selectedData } = tableState;
+    const targetRow = initialData[row.id];
 
     const addCheckedRow = () => {
         if (selectedData.includes(row)) {
@@ -42,7 +42,7 @@ export const StatusCell = ({ row, column, table }) => {
             remove: <BiSolidMinusSquare className="text-red-600" />
         };
 
-        const editRows = data.filter((row, index) => backupData[index] !== row);
+        const editRows = initialData.filter((row, index) => backupData[index] !== row);
         const isEdit = editRows.includes(targetRow) && row.id < backupData.length;
         const isRemove = deleteRows.includes(targetRow);
         const isAdd = !backupData.includes(targetRow);

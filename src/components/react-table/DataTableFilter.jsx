@@ -156,7 +156,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                 { ...filter, value: filter.value.filter(value => value !== filterValue) } :
                 { ...filter, value: filter.value }
         ));
-    }
+    };
 
     // checkbox 클릭 시 필터 값 변경
     const changeFilterValue = (e) => {

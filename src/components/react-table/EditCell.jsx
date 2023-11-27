@@ -12,7 +12,7 @@ const CellWrapper = styled.div`
     `}
 `;
 
-export const EditCell = ({ getValue, row, column }) => {
+export const EditCell = ({ getValue, row, column, table }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
