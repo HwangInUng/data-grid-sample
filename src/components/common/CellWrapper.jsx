@@ -1,4 +1,4 @@
-import tw, {styled} from 'twin.macro';
+import tw, { styled } from 'twin.macro';
 
 const Wrapper = styled.div`
     ${tw`
@@ -10,14 +10,13 @@ const Wrapper = styled.div`
     `}
 
     justify-content: ${props => props.justify || 'center'};
-
-    & span{
-        ${tw`
-            px-1
-        `}
-    }
 `;
 
-export const CellWrapper = ({children, justify}) => {
-  return <Wrapper justify={justify}>{children}</Wrapper>
+export const CellWrapper = ({ children, justify, onClick }) => {
+    return <Wrapper
+        onClick={onClick ?? null}
+        justify={justify}
+    >
+        {children}
+    </Wrapper>
 }

@@ -19,6 +19,7 @@ const Button = styled.div`
   `}
 `;
 
-export const DisplayButton = ({ children, onClick }) => {
-  return <Button onClick={onClick}>{children}</Button>
+export const DisplayButton = ({ row, column }) => {
+  const { text } = column.columnDef.meta;
+  return <Button>{text}</Button>
 };

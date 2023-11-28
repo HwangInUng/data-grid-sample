@@ -11,6 +11,7 @@ import { DataTableWrapper } from './DataTableWrapper';
 import { makeData } from '../../js/makData';
 import { EditCheckInput } from './EditCheckInput';
 import { DisplayCheckInput } from './DisplayCheckInput';
+import { DisplayButton } from './DisplayButton';
 
 export const SampleTable = () => {
     const [data, setData] = useState(makeData([1000]));
@@ -34,6 +35,7 @@ export const SampleTable = () => {
         columnHelper.accessor('name', {
             header: '이름',
             cell: EditCell,
+            size: 200,
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
@@ -54,6 +56,7 @@ export const SampleTable = () => {
         columnHelper.accessor('gender', {
             header: '성별',
             cell: EditCell,
+            size: 1,
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'select',
@@ -61,23 +64,31 @@ export const SampleTable = () => {
                 setEditRows: setData
             }
         }),
-        columnHelper.accessor('city', {
+        columnHelper.accessor('createdAt', {
             header: '사는곳',
             cell: EditCell,
-            size: 20,
+            size: 1,
             filterFn: 'arrIncludesSome',
             meta: {
-                type: 'checkbox',
+                type: 'date',
                 setEditRows: setData
             }
         }),
         columnHelper.display({
             header: '체크',
             cell: DisplayCheckInput,
-            size: 20,
+            size: 1,
             meta: {
                 readOnly: true,
-                key: 'city'
+                key: 'auth'
+            }
+        }),
+        columnHelper.display({
+            header: '버튼',
+            cell: DisplayButton,
+            size: 1,
+            meta: {
+                text: '등록'
             }
         }),
     ];

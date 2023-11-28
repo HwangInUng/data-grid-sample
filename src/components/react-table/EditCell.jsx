@@ -16,7 +16,6 @@ export const EditCell = ({ getValue, row, column }) => {
         type,
         options,
         justify,
-        buttonTitle
     } = column.columnDef.meta;
     const [clicked, setClicked] = useState(false);
 
@@ -58,7 +57,7 @@ export const EditCell = ({ getValue, row, column }) => {
                     onChange={handleValue}
                     onBlur={() => editValue(value)}
                 /> :
-                <span>{value}</span>,
+                <span className="px-1">{value}</span>,
         'select': <EditSelect
             value={value}
             options={options}

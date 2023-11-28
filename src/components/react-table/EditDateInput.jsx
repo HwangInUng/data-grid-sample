@@ -12,9 +12,13 @@ const DateInput = styled.input`
 `;
 
 export const EditDateInput = ({value, onChange}) => {
+  const handleOnChage = (e) => {
+    const newDate = e.target.value
+    onChange(newDate);
+  }
   return <DateInput
     type='date'
     value={value}
-    onChange={onChange}
+    onChange={handleOnChage}
   />
 }
