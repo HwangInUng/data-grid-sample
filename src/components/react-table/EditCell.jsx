@@ -1,27 +1,10 @@
 import { useEffect, useState } from "react";
-import tw, { styled } from "twin.macro";
 import { EditSelect } from "./EditSelect";
 import { EditInput } from "./EditInput";
 import { EditCheckInput } from "./EditCheckInput";
-import { EditButton } from "./EditButton";
-
-const CellWrapper = styled.div`
-    ${tw`
-        h-full
-        overflow-hidden
-        flex
-        items-center
-        text-[0.8rem]
-    `}
-
-    justify-content: ${props => props.justify || 'center'};
-
-    & span{
-        ${tw`
-            px-1
-        `}
-    }
-`;
+import { EditButton } from "./DisplayButton";
+import { CellWrapper } from "../common/CellWrapper";
+import { EditDateInput } from "./EditDateInput";
 
 export const EditCell = ({ getValue, row, column }) => {
     const initialValue = getValue();
@@ -86,11 +69,10 @@ export const EditCell = ({ getValue, row, column }) => {
             onChange={editValue}
             readOnly={readOnly}
         />,
-        'date': <EditInput type='date' />,
-        'button': <EditButton
-            onClick={() => console.log('click')}>
-            {buttonTitle}
-        </EditButton>
+        'date': <EditDateInput
+            value={value}
+            onChange={editValue}
+        />,
     };
 
     useEffect(() => {

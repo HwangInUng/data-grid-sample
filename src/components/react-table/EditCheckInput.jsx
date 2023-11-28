@@ -1,24 +1,12 @@
-import tw, { styled } from 'twin.macro';
+import { CellCheckInput } from '../common/CellCheckInput';
 
-const CheckInput = styled.input`
-  ${tw`
-    w-[15px]
-    h-[15px]
-    rounded-lg
-    border
-    outline-none
-    border-slate-400
-  `}
-`;
-
-export const EditCheckInput = ({ value, onChange, readOnly }) => {
+export const EditCheckInput = ({ value, onChange }) => {
   const handleCheck = (e) => {
     onChange(e.target.checked ? 'Y' : 'N');
   }
-  return <CheckInput
+  return <CellCheckInput
     type='checkbox'
-    checked={value === 'Y' ? true : false}
-    readOnly={readOnly}
-    onChange={readOnly ? null : handleCheck}
+    value={value}
+    onChange={handleCheck}
   />;
 };

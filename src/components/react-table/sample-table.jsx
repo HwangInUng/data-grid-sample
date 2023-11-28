@@ -10,6 +10,7 @@ import { DataTableWrapper } from './DataTableWrapper';
 // test 데이터 생성
 import { makeData } from '../../js/makData';
 import { EditCheckInput } from './EditCheckInput';
+import { DisplayCheckInput } from './DisplayCheckInput';
 
 export const SampleTable = () => {
     const [data, setData] = useState(makeData([1000]));
@@ -67,9 +68,16 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'checkbox',
-                // readOnly: true,
-                // buttonTitle: '등록'
                 setEditRows: setData
+            }
+        }),
+        columnHelper.display({
+            header: '체크',
+            cell: DisplayCheckInput,
+            size: 20,
+            meta: {
+                readOnly: true,
+                key: 'city'
             }
         }),
     ];

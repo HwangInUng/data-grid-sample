@@ -19,6 +19,6 @@ const Button = styled.div`
   `}
 `;
 
-export const EditButton = ({ children, onClick }) => {
+export const DisplayButton = ({ children, onClick }) => {
   return <Button onClick={onClick}>{children}</Button>
 };
