@@ -1,37 +1,28 @@
-import { useEffect, useRef } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Input = styled.input`
-  &.text{
-    ${tw`
-    w-full
-    rounded-lg
-    px-1
-    `}
-  }
-  
-  &.checkbox{
-    ${tw`
-      w-[20px]
-      h-[20px]
-      rounded-lg
-      `}
-  }
-  
   ${tw`
+    w-full
+    h-full
+    rounded-lg
+    px-2
     border
     outline-none
     border-slate-400
   `}
 `
 
-export const EditInput = ({ type, value, onChange, onBlur }) => {
+export const EditInput = ({ value, onChange, onBlur }) => {
+  const onFocus = (e) => {
+    e.target.select();
+  };
+
   return <Input
-    type={type}
+    type='text'
     value={value}
     onChange={onChange}
     onBlur={onBlur}
-    autoFocus={type === 'text' ? true : false}
-    className={type}
+    onFocus={onFocus}
+    autoFocus
   />;
 };

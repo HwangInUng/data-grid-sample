@@ -5,6 +5,8 @@ const Select = styled.select`
     border
     rounded-lg
     w-fit
+    py-1
+    px-1
   `}
 `;
 

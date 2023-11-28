@@ -9,6 +9,7 @@ import { StatusIcon } from './StatusIcon';
 import { DataTableWrapper } from './DataTableWrapper';
 // test 데이터 생성
 import { makeData } from '../../js/makData';
+import { EditCheckInput } from './EditCheckInput';
 
 export const SampleTable = () => {
     const [data, setData] = useState(makeData([1000]));
@@ -35,7 +36,7 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
-                readOnly: true,
+                readOnly: true, // 읽기전용(default: false)
                 setEditRows: setData
             }
         }),
@@ -45,7 +46,7 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
-                justify: 'right',
+                justify: 'right', // 가로 방향
                 setEditRows: setData
             }
         }),
@@ -55,19 +56,22 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'select',
-                options: genderOption,
+                options: genderOption, // select 옵션
                 setEditRows: setData
             }
         }),
         columnHelper.accessor('city', {
             header: '사는곳',
             cell: EditCell,
+            size: 20,
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'checkbox',
+                // readOnly: true,
+                // buttonTitle: '등록'
                 setEditRows: setData
             }
-        })
+        }),
     ];
 
     // 테이블 데이터 원래대로 복구

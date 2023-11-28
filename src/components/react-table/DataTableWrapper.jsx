@@ -1,4 +1,3 @@
-import tw, { styled } from "twin.macro";
 import {
     getCoreRowModel,
     getFilteredRowModel,

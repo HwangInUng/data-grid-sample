@@ -6,7 +6,8 @@ export const newData = (index) => {
         name: faker.person.fullName(),
         age: faker.number.int(40).toString(),
         gender: index%3 === 0 ? '남자' : '여자',
-        city: faker.person.jobArea()
+        // city: faker.person.jobArea()
+        city: index%5 === 0 ? 'Y' : 'N'
     }
 };
 

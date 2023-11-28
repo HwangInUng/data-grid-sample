@@ -2,18 +2,25 @@ import { useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
 import { EditSelect } from "./EditSelect";
 import { EditInput } from "./EditInput";
+import { EditCheckInput } from "./EditCheckInput";
+import { EditButton } from "./EditButton";
 
 const CellWrapper = styled.div`
     ${tw`
+        h-full
         overflow-hidden
         flex
         items-center
         text-[0.8rem]
-        font-normal
-        px-1
     `}
 
     justify-content: ${props => props.justify || 'center'};
+
+    & span{
+        ${tw`
+            px-1
+        `}
+    }
 `;
 
 export const EditCell = ({ getValue, row, column }) => {
@@ -22,10 +29,11 @@ export const EditCell = ({ getValue, row, column }) => {
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
     const {
         setEditRows,
-        readOnly,
+        readOnly = false,
         type,
         options,
-        justify
+        justify,
+        buttonTitle
     } = column.columnDef.meta;
     const [clicked, setClicked] = useState(false);
 
@@ -37,7 +45,6 @@ export const EditCell = ({ getValue, row, column }) => {
             // 변경된 로우의 key에 해당하는 값을 변경
             // setEditRows()을 통해 변경된 row를 1개씩 적재
             const currentKey = column.id;
-
             const updateRow = (old) =>
                 old.map((oldRow, index) => {
                     if (index === row.index) {
@@ -56,49 +63,47 @@ export const EditCell = ({ getValue, row, column }) => {
         const changeValue = e.target.value;
         setValue(changeValue);
     }
+    const isEmpty = value && value.length === 0;
 
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
     const editTag = {
-        'text': <EditInput
-            type="text"
-            value={value}
-            onChange={handleValue}
-            onBlur={() => editValue(value)}
-            autoFocus
-            className="w-full"
-        />,
+        'text': readOnly ? value :
+            clicked || isEmpty ?
+                <EditInput
+                    value={value}
+                    onChange={handleValue}
+                    onBlur={() => editValue(value)}
+                /> :
+                <span>{value}</span>,
         'select': <EditSelect
-            options={options}
             value={value}
+            options={options}
             onChange={handleValue}
         />,
-        'checkbox': <EditInput type='checkbox' />,
-        'date': <input type='date'></input>,
-        'button': <button>등록</button>
+        'checkbox': <EditCheckInput
+            value={value}
+            onChange={editValue}
+            readOnly={readOnly}
+        />,
+        'date': <EditInput type='date' />,
+        'button': <EditButton
+            onClick={() => console.log('click')}>
+            {buttonTitle}
+        </EditButton>
     };
 
     useEffect(() => {
         setValue(initialValue);
-        if (initialValue.length === 0) setClicked(true);
+        if (initialValue && initialValue.length === 0) setClicked(true);
     }, [initialValue]);
-
-    if (readOnly) {
-        return <CellWrapper justify={justify ?? null}>
-            {value}
-        </CellWrapper>
-    }
 
     return (
         <CellWrapper
             onClick={() => editValue(value)}
             justify={justify ?? null}
         >
-            {
-                clicked || value.length === 0 || type === 'select' ?
-                    editTag[type] :
-                    value
-            }
+            {editTag[type]}
         </CellWrapper>
     );
 };

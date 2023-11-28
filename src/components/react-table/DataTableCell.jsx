@@ -2,6 +2,7 @@ import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 
 const TableCell = styled.td`
+    padding: 0;
     height: 35px;
     border: 1px solid lightgray;
 `;
