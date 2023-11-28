@@ -1,22 +1,32 @@
 import { useEffect, useState } from "react";
 import tw, { styled } from "twin.macro";
+import { EditSelect } from "./EditSelect";
+import { EditInput } from "./EditInput";
 
 const CellWrapper = styled.div`
     ${tw`
         overflow-hidden
         flex
         items-center
-        justify-center
-        text-sm
+        text-[0.8rem]
         font-normal
+        px-1
     `}
+
+    justify-content: ${props => props.justify || 'center'};
 `;
 
-export const EditCell = ({ getValue, row, column, table }) => {
+export const EditCell = ({ getValue, row, column }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
-    const { setEditRows, readOnly, type } = column.columnDef.meta;
+    const {
+        setEditRows,
+        readOnly,
+        type,
+        options,
+        justify
+    } = column.columnDef.meta;
     const [clicked, setClicked] = useState(false);
 
     const editValue = (value) => {
@@ -42,34 +52,53 @@ export const EditCell = ({ getValue, row, column, table }) => {
         }
     };
 
+    const handleValue = (e) => {
+        const changeValue = e.target.value;
+        setValue(changeValue);
+    }
+
+    // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
+    // type은 컬럼의 meta로 보유
+    const editTag = {
+        'text': <EditInput
+            type="text"
+            value={value}
+            onChange={handleValue}
+            onBlur={() => editValue(value)}
+            autoFocus
+            className="w-full"
+        />,
+        'select': <EditSelect
+            options={options}
+            value={value}
+            onChange={handleValue}
+        />,
+        'checkbox': <EditInput type='checkbox' />,
+        'date': <input type='date'></input>,
+        'button': <button>등록</button>
+    };
+
     useEffect(() => {
         setValue(initialValue);
         if (initialValue.length === 0) setClicked(true);
     }, [initialValue]);
 
-    // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
-    // type은 컬럼의 meta로 보유
-    const editTag = (type) => {
-        const tags = {
-            'text': <input
-                type="text"
-                value={value}
-                onChange={e => setValue(e.target.value)}
-                onBlur={() => editValue(value)}
-                autoFocus
-                className="w-full"
-            />,
-            'select': <select></select>,
-            'checkbox': <input type='checkbox'></input>,
-            'date': <input type='date'></input>
-        };
+    if (readOnly) {
+        return <CellWrapper justify={justify ?? null}>
+            {value}
+        </CellWrapper>
+    }
 
-        return tags[type];
-    };
-
-    if (readOnly) return <span>{value}</span>;
-
-    return clicked || value.length === 0 ?
-        editTag(type) :
-        <CellWrapper onClick={() => editValue(value)}> {value} </CellWrapper>;
+    return (
+        <CellWrapper
+            onClick={() => editValue(value)}
+            justify={justify ?? null}
+        >
+            {
+                clicked || value.length === 0 || type === 'select' ?
+                    editTag[type] :
+                    value
+            }
+        </CellWrapper>
+    );
 };

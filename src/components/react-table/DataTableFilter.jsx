@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 const FilterWrapper = styled.div`
     ${tw`
         absolute
-        w-[150px]
+        w-[200px]
         bg-white
         border
         border-slate-400
@@ -230,7 +230,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                     <span>{allSelected ? '전체선택' : '전체해제'}</span>
                 </div>
                 {checkList && checkList.map((data, index) => (
-                    <div key={index}>
+                    <div key={index} className="w-fit">
                         <input
                             type="checkbox"
                             name={column.id}
@@ -238,7 +238,7 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
                             value={data}
                             onChange={changeFilterValue}
                         />
-                        <span>{data}</span>
+                        <span className="whitespace-nowrap">{data}</span>
                     </div>
                 ))}
             </DataListBox>

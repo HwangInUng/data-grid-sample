@@ -15,6 +15,7 @@ export const SampleTable = () => {
     const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
+    const genderOption = ['남자', '여자'];
 
     const columnHelper = createColumnHelper();
     // 셀 단위로 이벤트를 부여
@@ -34,6 +35,7 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
+                readOnly: true,
                 setEditRows: setData
             }
         }),
@@ -43,6 +45,7 @@ export const SampleTable = () => {
             filterFn: 'arrIncludesSome',
             meta: {
                 type: 'text',
+                justify: 'right',
                 setEditRows: setData
             }
         }),
@@ -51,7 +54,8 @@ export const SampleTable = () => {
             cell: EditCell,
             filterFn: 'arrIncludesSome',
             meta: {
-                type: 'text',
+                type: 'select',
+                options: genderOption,
                 setEditRows: setData
             }
         }),
@@ -60,7 +64,7 @@ export const SampleTable = () => {
             cell: EditCell,
             filterFn: 'arrIncludesSome',
             meta: {
-                type: 'text',
+                type: 'checkbox',
                 setEditRows: setData
             }
         })
