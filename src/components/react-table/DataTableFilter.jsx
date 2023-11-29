@@ -16,10 +16,9 @@ const FilterWrapper = styled.div`
         px-2
         text-sm
     `}
-    /* right: ${props => props.left}px; */
     right: 0px;
     top: ${props => props.top}px;
-    z-index: 999;
+    z-index: 50;
 `;
 
 const FilterInput = styled.input`

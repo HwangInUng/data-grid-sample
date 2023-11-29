@@ -9,7 +9,6 @@ import { StatusIcon } from './StatusIcon';
 import { DataTableWrapper } from './DataTableWrapper';
 // test 데이터 생성
 import { makeData } from '../../js/makData';
-import { EditCheckInput } from './EditCheckInput';
 import { DisplayCheckInput } from './DisplayCheckInput';
 import { DisplayButton } from './DisplayButton';
 
@@ -136,7 +135,7 @@ export const SampleTable = () => {
                 resetData={resetData}
                 columns={columns}
                 backupData={originalRows}
-                addStatusTable
+                addStatusTable={true}
                 enableColumnResizing={false}
             />
         </>

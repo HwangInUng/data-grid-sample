@@ -2,7 +2,7 @@ import tw, {styled} from 'twin.macro';
 
 const DateInput = styled.input`
   ${tw`
-    w-full
+    w-fit
     py-1
     rounded-lg
     border

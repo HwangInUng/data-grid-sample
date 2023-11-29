@@ -1,5 +1,5 @@
 import { flexRender } from "@tanstack/react-table";
-import tw, { styled } from "twin.macro";
+import { styled } from "twin.macro";
 
 const TableCell = styled.td`
     padding: 0;

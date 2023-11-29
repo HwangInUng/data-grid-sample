@@ -8,6 +8,7 @@ const Button = styled.div`
     border-slate-300
     bg-white
     text-center
+    text-sm
     p-0.5
     cursor-pointer
     transform

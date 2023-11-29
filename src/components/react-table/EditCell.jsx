@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { EditSelect } from "./EditSelect";
 import { EditInput } from "./EditInput";
 import { EditCheckInput } from "./EditCheckInput";
-import { EditButton } from "./DisplayButton";
 import { CellWrapper } from "../common/CellWrapper";
 import { EditDateInput } from "./EditDateInput";
 
@@ -50,14 +49,15 @@ export const EditCell = ({ getValue, row, column }) => {
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
     const editTag = {
-        'text': readOnly ? value :
+        'text': readOnly ?
+            <span className="px-2">{value}</span> :
             clicked || isEmpty ?
                 <EditInput
                     value={value}
                     onChange={handleValue}
                     onBlur={() => editValue(value)}
                 /> :
-                <span className="px-1">{value}</span>,
+                <span className="px-2">{value}</span>,
         'select': <EditSelect
             value={value}
             options={options}

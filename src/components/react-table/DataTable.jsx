@@ -27,11 +27,18 @@ const Table = styled.table`
         margin: 0;
         position: sticky;
         top: 0;
+        z-index: 5;
     }
 `;
 
 export const DataTable = (props) => {
-    const { table, columnResizeMode, addStatusTable, padding, virtualRows } = props;
+    const {
+        table,
+        columnResizeMode,
+        addStatusTable,
+        padding,
+        virtualRows
+    } = props;
     const { selectedData, setSelectedData } = table.options.state;
     const { rows } = table.getRowModel();
     const isStatus = addStatusTable;

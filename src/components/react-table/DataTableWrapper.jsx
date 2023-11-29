@@ -21,8 +21,8 @@ export const DataTableWrapper = (props) => {
         resetData,
         columns,
         backupData,
-        addStatusTable,
-        enableColumnResizing
+        addStatusTable = false,
+        enableColumnResizing = true
     } = props;
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
@@ -106,7 +106,7 @@ export const DataTableWrapper = (props) => {
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
-        enableColumnResizing: enableColumnResizing ?? true,
+        enableColumnResizing: enableColumnResizing,
         enableFilters: filterFlag,
     });
 
