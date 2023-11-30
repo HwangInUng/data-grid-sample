@@ -13,7 +13,7 @@ const TableHeader = styled.th`
     `}
 
     width: ${props => props.size}px;
-    height: 35px;
+    height: ${props => props.height || 35}px;
     border: 1px solid lightgray;
 
     .content-box{
@@ -67,6 +67,8 @@ const Resizer = styled.div`
         opacity: 1;
     }
 `;
+
+const headerHeight = 35;
 export const DataTableHeader = ({ table, header, columnResizeMode }) => {
     const { column } = header;
     const [openFilter, setOpenFilter] = useState(false);
@@ -79,12 +81,13 @@ export const DataTableHeader = ({ table, header, columnResizeMode }) => {
             column.setFilterValue(null);
         };
     }, [canFilter]);
-
     return (
         <>
             <TableHeader
                 size={header.getSize()}
-                colSpan={column.columnDef.colSpan}
+                height={isStatusCell ? headerHeight * header.rowSpan : null}
+                rowSpan={header.rowSpan}
+                colSpan={header.colSpan}
             >
                 <div className="content-box">
                     {header.isPlaceholder ?

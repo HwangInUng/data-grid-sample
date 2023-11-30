@@ -57,7 +57,13 @@ export const EditCell = ({ getValue, row, column }) => {
                     onChange={handleValue}
                     onBlur={() => editValue(value)}
                 /> :
-                <span className="px-2">{value}</span>,
+                <span
+                    className="px-2"
+                    tabIndex={0}
+                    onFocus={() => setClicked(old => !old)}
+                >
+                    {value}
+                </span>,
         'select': <EditSelect
             value={value}
             options={options}
@@ -66,7 +72,6 @@ export const EditCell = ({ getValue, row, column }) => {
         'checkbox': <EditCheckInput
             value={value}
             onChange={editValue}
-            readOnly={readOnly}
         />,
         'date': <EditDateInput
             value={value}

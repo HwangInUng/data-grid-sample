@@ -31,56 +31,74 @@ export const SampleTable = () => {
                 icon: <StatusIcon />
             }
         }),
-        columnHelper.accessor('name', {
-            header: '이름',
-            cell: EditCell,
-            size: 200,
-            filterFn: 'arrIncludesSome',
-            meta: {
-                type: 'text',
-                readOnly: true, // 읽기전용(default: false)
-                setEditRows: setData
-            }
+        columnHelper.group({
+            id: 'test',
+            header: 'test',
+            columns: [
+                columnHelper.accessor('name', {
+                    header: '이름',
+                    cell: EditCell,
+                    size: 200,
+                    filterFn: 'arrIncludesSome',
+                    meta: {
+                        type: 'text',
+                        readOnly: true, // 읽기전용(default: false)
+                        setEditRows: setData
+                    }
+                }),
+                columnHelper.accessor('age', {
+                    header: '나이',
+                    cell: EditCell,
+                    filterFn: 'arrIncludesSome',
+                    meta: {
+                        type: 'text',
+                        justify: 'right', // 가로 방향
+                        setEditRows: setData
+                    }
+                }),
+            ]
         }),
-        columnHelper.accessor('age', {
-            header: '나이',
-            cell: EditCell,
-            filterFn: 'arrIncludesSome',
-            meta: {
-                type: 'text',
-                justify: 'right', // 가로 방향
-                setEditRows: setData
-            }
-        }),
-        columnHelper.accessor('gender', {
-            header: '성별',
-            cell: EditCell,
-            size: 1,
-            filterFn: 'arrIncludesSome',
-            meta: {
-                type: 'select',
-                options: genderOption, // select 옵션
-                setEditRows: setData
-            }
-        }),
-        columnHelper.accessor('createdAt', {
-            header: '사는곳',
-            cell: EditCell,
-            size: 1,
-            filterFn: 'arrIncludesSome',
-            meta: {
-                type: 'date',
-                setEditRows: setData
-            }
-        }),
-        columnHelper.display({
-            header: '체크',
-            cell: DisplayCheckInput,
-            size: 1,
-            meta: {
-                readOnly: true,
-                key: 'auth'
-            }
+        columnHelper.group({
+            id: 'test2',
+            header: 'test2',
+            columns: [
+                columnHelper.accessor('gender', {
+                    header: '성별',
+                    cell: EditCell,
+                    size: 1,
+                    filterFn: 'arrIncludesSome',
+                    meta: {
+                        type: 'select',
+                        options: genderOption, // select 옵션
+                        setEditRows: setData
+                    }
+                }),
+                columnHelper.group({
+                    id: 'test3',
+                    header: 'test3',
+                    columns: [
+                        columnHelper.accessor('createdAt', {
+                            header: '사는곳',
+                            cell: EditCell,
+                            size: 1,
+                            filterFn: 'arrIncludesSome',
+                            meta: {
+                                type: 'date',
+                                setEditRows: setData
+                            }
+                        }),
+                        columnHelper.display({
+                            header: '체크',
+                            cell: DisplayCheckInput,
+                            size: 1,
+                            meta: {
+                                readOnly: true,
+                                key: 'auth'
+                            }
+                        }),
+                    ]
+                }),
+            ]
         }),
         columnHelper.display({
             header: '버튼',
