@@ -10,6 +10,7 @@ const TableHeader = styled.th`
         relative
         font-bold
         p-0
+        text-sm
     `}
 
     width: ${props => props.size}px;
@@ -69,8 +70,9 @@ const Resizer = styled.div`
 `;
 
 const headerHeight = 35;
-export const DataTableHeader = ({ table, header, columnResizeMode }) => {
+export const DataTableHeader = ({ table, header }) => {
     const { column } = header;
+    const { columnResizeMode } = table.options;
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
     const isStatusCell = column.columnDef.cell === StatusCell;

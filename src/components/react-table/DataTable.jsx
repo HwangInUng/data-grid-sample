@@ -18,7 +18,7 @@ const Table = styled.table`
     .data-tbody{
         &:hover{
             ${tw`
-                bg-slate-100
+                bg-slate-200
             `}
         }
     }
@@ -34,7 +34,6 @@ const Table = styled.table`
 export const DataTable = (props) => {
     const {
         table,
-        columnResizeMode,
         addStatusTable,
         padding,
         virtualRows
@@ -55,15 +54,15 @@ export const DataTable = (props) => {
         }
     };
 
-    const getHeaderGroupArray = () => {
+    const getHeaderGroups = () => {
         const headerGroups = table.getHeaderGroups();
-        const headerIds = [];
+        const headerIds = new Set(); // 동일한 컬럼명 중복 방지
         const resultHeaderGroups = [];
 
         for (let i = 0; i < headerGroups.length; i++) {
             const headerGroup = i === 0 ? headerGroups[i].headers : resultHeaderGroups[i];
-            // 가장 상단 행 객체 평면화
 
+            // 행 객체 평면화
             const preHeaders = headerGroup.map(header =>
                 header.isPlaceholder ?
                     {
@@ -71,18 +70,16 @@ export const DataTable = (props) => {
                         isPlaceholder: false,
                         rowSpan: table.getHeaderGroups().length - i
                     } :
-                    {
-                        ...header,
-                        rowSpan: 1
-                    }
+                    { ...header, rowSpan: 1 }
             );
             resultHeaderGroups.pop(); // 마지막 배열을 꺼냄
             resultHeaderGroups.push(preHeaders); // 수정된 배열을 저장
-            preHeaders.forEach(preHeader => headerIds.push(preHeader.column.id)); // 현재까지 보유한 header 누적
+            preHeaders.forEach(preHeader => headerIds.add(preHeader.column.id)); // 현재까지 보유한 header 누적
 
             const targetHeaders = headerGroups[i + 1].headers;
-            const newHeaders = targetHeaders.filter(header => !headerIds.includes(header.column.id));
+            const newHeaders = targetHeaders.filter(header => !headerIds.has(header.column.id));
             resultHeaderGroups.push(newHeaders);
+
             if (i === headerGroups.length - 2) {
                 break;
             }
@@ -94,7 +91,7 @@ export const DataTable = (props) => {
         <>
             <Table size={tableSize}>
                 <thead>
-                    {getHeaderGroupArray().map((headerGroup, index) => (
+                    {getHeaderGroups().map((headerGroup, index) => (
                         <tr key={index} className="data-thead">
                             {headerGroup.map(header => {
                                 const isStatusColumn = header.column.id === 'status';
@@ -105,7 +102,6 @@ export const DataTable = (props) => {
                                             key={header.id}
                                             table={table}
                                             header={header}
-                                            columnResizeMode={columnResizeMode}
                                         />
                                     ) : null;
                             })}
@@ -123,19 +119,13 @@ export const DataTable = (props) => {
                         return (
                             <tr
                                 key={row.id}
-                                className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-100' : null}`
-                                }
+                                className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-200' : null}`}
                                 onClick={() => handleSelectRow(row)}
                             >
                                 {row.getVisibleCells().map(cell => {
                                     const isStatusCell = cell.column.columnDef.cell === StatusCell;
                                     return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
-                                        (
-                                            <DataTableCell
-                                                key={cell.id}
-                                                cell={cell}
-                                            />
-                                        ) : null;
+                                        (<DataTableCell key={cell.id} cell={cell} />) : null;
                                 })}
                             </tr>
                         );

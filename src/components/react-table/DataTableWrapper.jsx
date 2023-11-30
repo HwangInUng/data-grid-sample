@@ -12,6 +12,16 @@ import { RefreshIcon } from "../common/RefreshIcon";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import tw, {styled} from "twin.macro";
+
+const VirtualBox = styled.div`
+    ${tw`
+        w-full
+        flex
+        overflow-y-scroll
+        h-[500px]
+    `}
+`;
 
 const fetchSize = 25;
 
@@ -147,8 +157,7 @@ export const DataTableWrapper = (props) => {
                 />
                 <RefreshIcon onClick={resetTableData} />
             </div>
-            <div
-                className="w-full flex overflow-y-scroll h-[500px]"
+            <VirtualBox
                 ref={tableContainerRef}
                 onScroll={e => fetchMoreOnBottomReached(e.target)}
             >
@@ -165,11 +174,10 @@ export const DataTableWrapper = (props) => {
                 }
                 <DataTable
                     table={table}
-                    columnResizeMode={columnResizeMode}
                     padding={padding}
                     virtualRows={virtualRows()}
                 />
-            </div>
+            </VirtualBox>
         </div>
     );
 }
