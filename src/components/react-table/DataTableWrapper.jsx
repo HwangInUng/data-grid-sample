@@ -28,6 +28,7 @@ const fetchSize = 25;
 export const DataTableWrapper = (props) => {
     const {
         initialData,
+        setData,
         resetData,
         columns,
         backupData,
@@ -103,6 +104,7 @@ export const DataTableWrapper = (props) => {
         columnResizeMode,
         state: {
             initialData,
+            setData,
             backupData,
             selectedData,
             setSelectedData,

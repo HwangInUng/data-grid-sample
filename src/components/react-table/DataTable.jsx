@@ -2,6 +2,9 @@ import tw, { styled } from "twin.macro";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableCell } from "./DataTableCell";
 import { StatusCell } from "./StatusCell";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { DataTableRow } from "./DataTableRow";
 
 const Table = styled.table`
     width: ${props => props.size};
@@ -13,14 +16,6 @@ const Table = styled.table`
         ${tw`
             bg-blue-50
         `}
-    }
-
-    .data-tbody{
-        &:hover{
-            ${tw`
-                bg-slate-200
-            `}
-        }
     }
 
     & thead{
@@ -38,7 +33,12 @@ export const DataTable = (props) => {
         padding,
         virtualRows
     } = props;
-    const { selectedData, setSelectedData } = table.options.state;
+    const {
+        initialData,
+        setData,
+        selectedData,
+        setSelectedData
+    } = table.options.state;
     const { rows } = table.getRowModel();
     const isStatus = addStatusTable;
 
@@ -87,56 +87,69 @@ export const DataTable = (props) => {
         return resultHeaderGroups;
     };
 
+    // 배열 요소 재위치
+    const reorderRow = (draggedRowIndex, targetRowIndex) => {
+        // 드래그 된 배열의 요소를 대상 로우 인덱스에 추가
+        // 외부 splice의 0은 요소 대상제거 x
+        // 내부 splice는 드래그 된 대상 요소 1개만 제거
+        initialData.splice(targetRowIndex, 0, initialData.splice(draggedRowIndex, 1)[0])
+        setData([...initialData]);
+    };
+    
     return (
         <>
-            <Table size={tableSize}>
-                <thead>
-                    {getHeaderGroups().map((headerGroup, index) => (
-                        <tr key={index} className="data-thead">
-                            {headerGroup.map(header => {
-                                const isStatusColumn = header.column.id === 'status';
+            <DndProvider backend={HTML5Backend}>
+                <Table size={tableSize}>
+                    <thead>
+                        {getHeaderGroups().map((headerGroup, index) => (
+                            <tr key={index} className="data-thead">
+                                {headerGroup.map(header => {
+                                    const isStatusColumn = header.column.id === 'status';
 
-                                return (isStatus && isStatusColumn) || (!isStatus && !isStatusColumn) ?
-                                    (
-                                        <DataTableHeader
-                                            key={header.id}
-                                            table={table}
-                                            header={header}
-                                        />
-                                    ) : null;
-                            })}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody>
-                    {padding && padding.top > 0 && (
-                        <tr>
-                            <td style={{ height: `${padding.top}px` }} />
-                        </tr>
-                    )}
-                    {virtualRows && virtualRows.map(virtualRow => {
-                        const row = rows[virtualRow.index];
-                        return (
-                            <tr
-                                key={row.id}
-                                className={`data-tbody ${selectedData.includes(row) ? 'bg-slate-200' : null}`}
-                                onClick={() => handleSelectRow(row)}
-                            >
-                                {row.getVisibleCells().map(cell => {
-                                    const isStatusCell = cell.column.columnDef.cell === StatusCell;
-                                    return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
-                                        (<DataTableCell key={cell.id} cell={cell} />) : null;
+                                    return (isStatus && isStatusColumn) || (!isStatus && !isStatusColumn) ?
+                                        (
+                                            <DataTableHeader
+                                                key={header.id}
+                                                table={table}
+                                                header={header}
+                                            />
+                                        ) : null;
                                 })}
                             </tr>
-                        );
-                    })}
-                    {padding && padding.bottom > 0 && (
-                        <tr>
-                            <td style={{ height: `${padding.bottom}px` }} />
-                        </tr>
-                    )}
-                </tbody>
-            </Table >
+                        ))}
+                    </thead>
+                    <tbody>
+                        {padding && padding.top > 0 && (
+                            <tr>
+                                <td style={{ height: `${padding.top}px` }} />
+                            </tr>
+                        )}
+                        {virtualRows && virtualRows.map(virtualRow => {
+                            const row = rows[virtualRow.index];
+                            return (
+                                <DataTableRow
+                                    key={row.id}
+                                    row={row}
+                                    selectedData={selectedData}
+                                    onClick={handleSelectRow}
+                                    reorderRow={reorderRow}
+                                >
+                                    {row.getVisibleCells().map(cell => {
+                                        const isStatusCell = cell.column.columnDef.cell === StatusCell;
+                                        return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
+                                            (<DataTableCell key={cell.id} cell={cell} />) : null;
+                                    })}
+                                </DataTableRow>
+                            );
+                        })}
+                        {padding && padding.bottom > 0 && (
+                            <tr>
+                                <td style={{ height: `${padding.bottom}px` }} />
+                            </tr>
+                        )}
+                    </tbody>
+                </Table >
+            </DndProvider>
         </>
     );
 };

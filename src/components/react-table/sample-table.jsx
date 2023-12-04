@@ -150,6 +150,7 @@ export const SampleTable = () => {
             </div>
             <DataTableWrapper
                 initialData={data}
+                setData={setData}
                 resetData={resetData}
                 columns={columns}
                 backupData={originalRows}
