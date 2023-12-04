@@ -5,6 +5,7 @@ import { StatusCell } from "./StatusCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DataTableRow } from "./DataTableRow";
+import { useEffect, useMemo } from "react";
 
 const Table = styled.table`
     width: ${props => props.size};
@@ -38,7 +39,6 @@ export const DataTable = (props) => {
         setSelectedData
     } = table.options.state;
     const isStatus = addStatusTable;
-
     const tableSize = isStatus ? '40px' : '100%';
 
     const handleSelectRow = (selectedRow) => {
@@ -83,7 +83,6 @@ export const DataTable = (props) => {
         }
         return resultHeaderGroups;
     };
-
     // 배열 요소 재위치
     const reorderRow = (draggedRowIndex, targetRowIndex) => {
         // 드래그 된 배열의 요소를 대상 로우 인덱스에 추가

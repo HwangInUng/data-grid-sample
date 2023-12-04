@@ -83,7 +83,12 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
     ];
-    const { sorting, setSorting, backupData, setColumnFilters } = table.options.state;
+    const {
+        sorting,
+        setSorting,
+        backupData,
+        setColumnFilters
+    } = table.options.state;
     const dataCheckList = [...new Set(backupData.map(data => data[column.id]))];
     const [checkList, setCheckList] = useState([]);
     const [allSelected, setAllSelected] = useState(true);

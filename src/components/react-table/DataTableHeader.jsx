@@ -63,16 +63,11 @@ const Resizer = styled.div`
     touch-action: none;
     right: 0px;
     top: 0px;
-
-    .isResizing {
-        opacity: 1;
-    }
 `;
 
 const headerHeight = 35;
 export const DataTableHeader = ({ table, header }) => {
     const { column } = header;
-    const { columnResizeMode } = table.options;
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
     const isStatusCell = column.columnDef.cell === StatusCell;
@@ -120,14 +115,6 @@ export const DataTableHeader = ({ table, header }) => {
                 <Resizer
                     onMouseDown={header.getResizeHandler()}
                     onTouchStart={header.getResizeHandler()}
-                    className={column.getIsResizing() ? 'isResizing' : ''}
-                    style={{
-                        transform:
-                            columnResizeMode === 'onEnd' &&
-                                column.getIsResizing() ?
-                                `translateX(${table.getState().columnSizingInfo.deltaOffset}px)` :
-                                '',
-                    }}
                 />
             </TableHeader>
         </>

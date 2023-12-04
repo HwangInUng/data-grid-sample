@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import tw, { styled } from "twin.macro";
 import {
     BiSolidAddToQueue,
@@ -26,15 +26,7 @@ export const StatusCell = ({ row, column, table }) => {
     const { initialData, backupData, selectedData } = table.options.state;
     const targetRow = initialData[row.id];
 
-    const addCheckedRow = () => {
-        if (selectedData.includes(row)) {
-            setCheckedRows((old) => [...old, targetRow]);
-        } else {
-            setCheckedRows((old) => old.filter((oldRow) => targetRow !== oldRow));
-        }
-    }
-
-    const matchingStatus = () => {
+    const matchingStatus = useMemo(() => {
         const icons = {
             add: <BiSolidAddToQueue className="text-green-600" />,
             edit: <BiSolidEditAlt className="text-blue-600" />,
@@ -42,22 +34,29 @@ export const StatusCell = ({ row, column, table }) => {
         };
 
         const editRows = initialData.filter(row => row.id < backupData.length && !backupData.includes(row));
-        const isEdit = editRows.includes(targetRow);
+        const isEdit = editRows.includes(targetRow) && !deleteRows.includes(targetRow);
         const isRemove = deleteRows.includes(targetRow);
         const isAdd = !backupData.includes(targetRow);
 
         if (isEdit) return icons.edit;
         if (isRemove) return icons.remove;
         if (isAdd) return icons.add;
-    };
+    }, [initialData, backupData, deleteRows, targetRow]);
 
     useEffect(() => {
-        addCheckedRow();
-    }, [selectedData]);
+        const addCheckedRow = () => {
+            if (selectedData.includes(row)) {
+                setCheckedRows((old) => [...old, targetRow]);
+            } else {
+                setCheckedRows((old) => old.filter((oldRow) => targetRow !== oldRow));
+            }
+        };
 
+        addCheckedRow();
+    }, [row, selectedData, setCheckedRows, targetRow]);
     return (
         <StatusWrapper>
-            {matchingStatus()}
+            {matchingStatus}
         </StatusWrapper>
     );
 };

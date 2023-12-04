@@ -10,7 +10,7 @@ const TableCell = styled.td`
 export const DataTableCell = ({ cell }) => {
     return (
         <>
-            <TableCell style={{width: cell.column.getSize()}}>
+            <TableCell style={{ width: cell.column.getSize() }}>
                 {flexRender(
                     cell.column.columnDef.cell,
                     cell.getContext()

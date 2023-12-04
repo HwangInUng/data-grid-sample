@@ -44,7 +44,6 @@ export const EditCell = ({ getValue, row, column }) => {
         setValue(changeValue);
     }
     const isEmpty = value && value.length === 0;
-
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
     const editTag = {

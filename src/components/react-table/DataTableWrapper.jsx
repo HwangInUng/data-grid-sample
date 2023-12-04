@@ -20,8 +20,6 @@ const VirtualBox = styled.div`
     `}
 `;
 
-const fetchSize = 25;
-
 export const DataTableWrapper = (props) => {
     const {
         initialData,
@@ -37,58 +35,6 @@ export const DataTableWrapper = (props) => {
     const [filterFlag, setFilterFlag] = useState(false);
     const [selectedData, setSelectedData] = useState([]);
     const [columnFilters, setColumnFilters] = useState([]);
-
-    // initialData fetch 함수
-    // const fetchData = (start, size) => {
-    //     const fetchedData = [...initialData];
-
-    //     return {
-    //         data: fetchedData.slice(start, start + size),
-    //         meta: {
-    //             totalRowCount: fetchedData.length
-    //         }
-    //     };
-    // }
-
-    // 무한 스크롤 시작
-    // const tableContainerRef = useRef(null);
-    // const { data, fetchNextPage, isFetching } =
-    //     // v5 문법
-    //     useInfiniteQuery({
-    //         queryKey: ['sample-data'],
-    //         queryFn: ({ pageParam }) => fetchData(pageParam * fetchSize, fetchSize),
-    //         initialPageParam: 0,
-    //         getNextPageParam: (_lastPage, pages) => pages.length,
-    //         keepPreviousData: true,
-    //         refetchOnWindowFocus: false,
-    //     });
-    // data를 평면화하여 저장
-    // const flatData = useMemo(
-    //     () => data?.pages?.flatMap(page => page.data) ?? [],
-    //     [data]
-    // );
-    // DBRow에 대한 총 카운트 반환
-    // const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0;
-    // const totalFatched = flatData.length;
-
-    // 스크롤 하단 마운트 시 호출
-    // const fetchMoreOnBottomReached = useCallback(
-    //     // 이벤트 대상 컨테이너 요소
-    //     (containerRefElement) => {
-    //         if (containerRefElement) {
-    //             const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
-    //             // 테이블 하단 지정된 px 이내로 스크롤 할 경우 데이터 패치
-    //             if (
-    //                 scrollHeight - scrollTop - clientHeight < 300 &&
-    //                 !isFetching &&
-    //                 totalFatched < totalDBRowCount
-    //             ) {
-    //                 fetchNextPage();
-    //             }
-    //         }
-    //     },
-    //     [fetchNextPage, isFetching, totalFatched, totalDBRowCount]
-    // );
 
     const table = useReactTable({
         data: initialData,
@@ -110,35 +56,21 @@ export const DataTableWrapper = (props) => {
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
+        onRowSelectionChange: setSelectedData,
         enableColumnResizing: enableColumnResizing,
         enableFilters: filterFlag,
     });
-
-    // const rowVirtualizer = useVirtualizer({
-    //     getScrollElement: () => tableContainerRef.current,
-    //     count: rows.length,
-    //     estimateSize: () => fetchSize,
-    //     overscan: 10,
-    // });
-    // const { getVirtualItems: virtualRows, getTotalSize: totalSize } = rowVirtualizer;
-
-    // const paddingTop = virtualRows().length > 0 ? virtualRows()[0].start || 0 : 0;
-    // const paddingBottom = virtualRows().length > 0 ?
-    //     totalSize() - virtualRows()[virtualRows().length - 1].end || 0 : 0;
-    // const padding = { top: paddingTop, bottom: paddingBottom };
-    // 무한 스크롤 끝
 
     const handleFilterFlag = () => {
         setFilterFlag(old => !old);
     };
 
     const resetTableData = () => {
-        table.resetColumnFilters();
+        setColumnFilters([]);
         setFilterFlag(false);
         setSelectedData([]);
         resetData();
-    }
-
+    };
     return (
         <div>
             <div className="mb-1 w-full flex justify-end gap-x-3">
@@ -165,4 +97,4 @@ export const DataTableWrapper = (props) => {
             </VirtualBox>
         </div>
     );
-}
+};
