@@ -30,8 +30,6 @@ export const DataTable = (props) => {
     const {
         table,
         addStatusTable,
-        padding,
-        virtualRows
     } = props;
     const {
         initialData,
@@ -39,7 +37,6 @@ export const DataTable = (props) => {
         selectedData,
         setSelectedData
     } = table.options.state;
-    const { rows } = table.getRowModel();
     const isStatus = addStatusTable;
 
     const tableSize = isStatus ? '40px' : '100%';
@@ -119,13 +116,7 @@ export const DataTable = (props) => {
                         ))}
                     </thead>
                     <tbody>
-                        {padding && padding.top > 0 && (
-                            <tr>
-                                <td style={{ height: `${padding.top}px` }} />
-                            </tr>
-                        )}
-                        {virtualRows && virtualRows.map(virtualRow => {
-                            const row = rows[virtualRow.index];
+                        {table.getRowModel().rows.map(row => {
                             return (
                                 <DataTableRow
                                     key={row.id}
@@ -142,11 +133,6 @@ export const DataTable = (props) => {
                                 </DataTableRow>
                             );
                         })}
-                        {padding && padding.bottom > 0 && (
-                            <tr>
-                                <td style={{ height: `${padding.bottom}px` }} />
-                            </tr>
-                        )}
                     </tbody>
                 </Table >
             </DndProvider>

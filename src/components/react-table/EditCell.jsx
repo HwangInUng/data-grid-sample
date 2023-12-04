@@ -19,8 +19,7 @@ export const EditCell = ({ getValue, row, column }) => {
     const [clicked, setClicked] = useState(false);
 
     const editValue = (value) => {
-        if (value.length !== 0) setClicked(old => !old);
-
+        setClicked(old => !old);
         // 초기 값과 수정된 값을 비교하여 수정된 로우 표시 가능
         if (initialValue !== value) {
             // 변경된 로우의 key에 해당하는 값을 변경
@@ -49,8 +48,7 @@ export const EditCell = ({ getValue, row, column }) => {
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
     const editTag = {
-        'text': readOnly ?
-            <span className="px-2">{value}</span> :
+        'text': readOnly ? <span className="px-2">{value}</span> :
             clicked || isEmpty ?
                 <EditInput
                     value={value}
@@ -81,7 +79,6 @@ export const EditCell = ({ getValue, row, column }) => {
 
     useEffect(() => {
         setValue(initialValue);
-        if (initialValue && initialValue.length === 0) setClicked(true);
     }, [initialValue]);
 
     return (

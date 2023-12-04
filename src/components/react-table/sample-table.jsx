@@ -13,7 +13,7 @@ import { DisplayCheckInput } from './DisplayCheckInput';
 import { DisplayButton } from './DisplayButton';
 
 export const SampleTable = () => {
-    const [data, setData] = useState(makeData([1000]));
+    const [data, setData] = useState(makeData([50]));
     const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
@@ -78,7 +78,7 @@ export const SampleTable = () => {
                     header: 'test3',
                     columns: [
                         columnHelper.accessor('createdAt', {
-                            header: '사는곳',
+                            header: '생일',
                             cell: EditCell,
                             size: 1,
                             filterFn: 'arrIncludesSome',

@@ -7,7 +7,14 @@ const TableRow = styled.tr`
   `}
 `;
 
-export const DataTableRow = ({ row, selectedData, children, onClick, reorderRow }) => {
+export const DataTableRow = (props) => {
+  const {
+    row,
+    selectedData,
+    children,
+    onClick,
+    reorderRow
+  } = props;
   const [, dropRef] = useDrop({
     accept: 'row',
     drop: (draggedRow) => reorderRow(draggedRow.index, row.index)
