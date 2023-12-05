@@ -4,7 +4,7 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { createContext, useContext, useState } from "react";
+import { createContext, useState } from "react";
 import { ToggleSwitch } from "../common/ToggleSwitch";
 import { BiSearchAlt } from "react-icons/bi";
 import { DataTable } from "./DataTable";

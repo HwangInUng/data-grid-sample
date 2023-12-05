@@ -5,7 +5,7 @@ import { StatusCell } from "./StatusCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DataTableRow } from "./DataTableRow";
-import { memo, useCallback, useContext, useEffect, useMemo } from "react";
+import { memo, useCallback, useContext, useMemo } from "react";
 import { tableStateContext } from "./DataTableWrapper";
 
 const Table = styled.table`
@@ -56,7 +56,7 @@ export const DataTable = memo((props) => {
             setSelectedData(old => [...old, selectedRow]);
         }
     }, [selectedData]);
-    
+
     const getHeaderGroups = () => {
         const headerGroups = table.getHeaderGroups();
         const headerIds = new Set(); // 동일한 컬럼명 중복 방지
@@ -115,7 +115,7 @@ export const DataTable = memo((props) => {
                                             <DataTableHeader
                                                 key={header.id}
                                                 header={header}
-                                                filterSettings={filterFlag}
+                                                filterFlag={filterFlag}
                                                 sorting={sorting}
                                                 setSorting={setSorting}
                                                 backupData={backupData}

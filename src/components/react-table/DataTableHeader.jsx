@@ -1,9 +1,10 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
-import { BiFilter } from "react-icons/bi";
+import { BiCaretLeft, BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "./DataTableFilter";
 import { StatusCell } from "./StatusCell";
 import { memo, useEffect, useState } from "react";
+import { EditCell } from "./EditCell";
 
 const TableHeader = styled.th`
     ${tw`
@@ -19,6 +20,7 @@ const TableHeader = styled.th`
 
     .content-box{
         ${tw`
+            relative
             flex
             items-center
             justify-center
@@ -27,7 +29,21 @@ const TableHeader = styled.th`
         `}
     }
 
-    & svg{
+    .required-icon{
+        ${tw`
+            absolute
+            top-[-3px]
+            left-[-3px]
+            w-[15px]
+            h-[15px]
+            m-0
+            p-0
+            rotate-45
+            text-red-600
+        `}
+    }
+
+    .filter-icon{
         ${tw`
             p-0
             m-0
@@ -78,6 +94,8 @@ export const DataTableHeader = memo((props) => {
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
     const isStatusCell = column.columnDef.cell === StatusCell;
+    const isRequired = column.columnDef.cell === EditCell &&
+        column.columnDef.meta.required;
 
     useEffect(() => {
         if (!canFilter) {
@@ -94,6 +112,7 @@ export const DataTableHeader = memo((props) => {
                 rowSpan={header.rowSpan}
                 colSpan={header.colSpan}
             >
+                {isRequired ? <BiCaretLeft className="required-icon" /> : null}
                 <div className="content-box">
                     {header.isPlaceholder ?
                         null :
@@ -104,6 +123,7 @@ export const DataTableHeader = memo((props) => {
                     {canFilter ?
                         <div className="filter-box">
                             <BiFilter
+                                className="filter-icon"
                                 onClick={() => setOpenFilter(old => !old)}
                             />
                         </div> :

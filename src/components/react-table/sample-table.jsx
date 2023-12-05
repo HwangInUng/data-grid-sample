@@ -13,7 +13,7 @@ import { DisplayCheckInput } from './DisplayCheckInput';
 import { DisplayButton } from './DisplayButton';
 
 export const SampleTable = () => {
-    const [data, setData] = useState(makeData([50]));
+    const [data, setData] = useState(() => makeData([50]));
     const [checkedRows, setCheckedRows] = useState([]);
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
@@ -38,10 +38,11 @@ export const SampleTable = () => {
                 columnHelper.accessor('name', {
                     header: '이름',
                     cell: EditCell,
-                    size: 200,
+                    size: 100,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'text',
+                        required: true,
                         readOnly: true, // 읽기전용(default: false)
                         setEditRows: setData
                     }
@@ -52,6 +53,7 @@ export const SampleTable = () => {
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'text',
+                        required: true,
                         justify: 'right', // 가로 방향
                         setEditRows: setData
                     }
