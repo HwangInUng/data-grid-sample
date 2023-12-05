@@ -1,10 +1,10 @@
 import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 import { BiCaretLeft, BiFilter } from "react-icons/bi";
-import { DataTableFilter } from "./DataTableFilter";
-import { StatusCell } from "./StatusCell";
+import { DataTableFilter } from "../utils/DataTableFilter";
+import { StatusCell } from "../cells/StatusCell";
 import { memo, useEffect, useState } from "react";
-import { EditCell } from "./EditCell";
+import { EditCell } from "../cells/EditCell";
 
 const TableHeader = styled.th`
     ${tw`

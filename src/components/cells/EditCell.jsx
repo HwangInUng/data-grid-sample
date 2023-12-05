@@ -1,9 +1,18 @@
+import tw, {styled} from 'twin.macro';
 import { memo, useEffect, useState } from "react";
 import { EditSelect } from "./EditSelect";
 import { EditInput } from "./EditInput";
 import { EditCheckInput } from "./EditCheckInput";
-import { CellWrapper } from "../common/CellWrapper";
+import { CellWrapper } from "./CellWrapper";
 import { EditDateInput } from "./EditDateInput";
+
+const ValueBox = styled.span`
+    ${tw`
+        px-2
+        overflow-hidden
+        whitespace-nowrap
+    `}
+`;
 
 export const EditCell = memo(({ getValue, row, column }) => {
     const initialValue = getValue();
@@ -47,20 +56,19 @@ export const EditCell = memo(({ getValue, row, column }) => {
     // 넘어온 type의 종류를 통해 해당 컴포넌트 반환
     // type은 컬럼의 meta로 보유
     const editTag = {
-        'text': readOnly ? <span className="px-2">{value}</span> :
+        'text': readOnly ? <ValueBox>{value}</ValueBox> :
             clicked || isEmpty ?
                 <EditInput
                     value={value}
                     onChange={handleValue}
                     onBlur={() => editValue(value)}
                 /> :
-                <span
-                    className="px-2"
+                <ValueBox
                     tabIndex={0}
                     onFocus={() => setClicked(old => !old)}
                 >
                     {value}
-                </span>,
+                </ValueBox>,
         'select': <EditSelect
             value={value}
             options={options}

@@ -5,10 +5,10 @@ import {
     useReactTable,
 } from "@tanstack/react-table";
 import { createContext, useState } from "react";
-import { ToggleSwitch } from "../common/ToggleSwitch";
+import { ToggleSwitch } from "../utils/ToggleSwitch";
 import { BiSearchAlt } from "react-icons/bi";
 import { DataTable } from "./DataTable";
-import { RefreshIcon } from "../common/RefreshIcon";
+import { RefreshIcon } from "../utils/RefreshIcon";
 import tw, { styled } from "twin.macro";
 
 const VirtualBox = styled.div`

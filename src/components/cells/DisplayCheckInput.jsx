@@ -1,5 +1,5 @@
-import { CellCheckInput } from "../common/CellCheckInput";
-import { CellWrapper } from "../common/CellWrapper";
+import { CellCheckInput } from "./CellCheckInput";
+import { CellWrapper } from "./CellWrapper";
 
 export const DisplayCheckInput = ({ row, column }) => {
   const { key, readOnly } = column.columnDef.meta;

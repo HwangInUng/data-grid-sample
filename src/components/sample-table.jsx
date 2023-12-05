@@ -1,16 +1,16 @@
 import {
     createColumnHelper,
 } from '@tanstack/react-table';
-import { EditCell } from './EditCell';
-import { StatusCell } from './StatusCell';
+import { EditCell } from './cells/EditCell';
+import { StatusCell } from './cells/StatusCell';
 import { useState } from 'react';
-import { CommonButton } from '../common/CommonButton';
-import { StatusIcon } from './StatusIcon';
-import { DataTableWrapper } from './DataTableWrapper';
+import { CommonButton } from './common/CommonButton';
+import { StatusIcon } from './utils/StatusIcon';
+import { DataTableWrapper } from './table-core/DataTableWrapper';
 // test 데이터 생성
-import { makeData } from '../../js/makData';
-import { DisplayCheckInput } from './DisplayCheckInput';
-import { DisplayButton } from './DisplayButton';
+import { makeData } from '../js/makData';
+import { DisplayCheckInput } from './cells/DisplayCheckInput';
+import { DisplayButton } from './cells/DisplayButton';
 
 export const SampleTable = () => {
     const [data, setData] = useState(() => makeData([50]));
@@ -38,7 +38,6 @@ export const SampleTable = () => {
                 columnHelper.accessor('name', {
                     header: '이름',
                     cell: EditCell,
-                    size: 100,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'text',
@@ -67,7 +66,6 @@ export const SampleTable = () => {
                 columnHelper.accessor('gender', {
                     header: '성별',
                     cell: EditCell,
-                    size: 1,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'select',
@@ -82,7 +80,6 @@ export const SampleTable = () => {
                         columnHelper.accessor('createdAt', {
                             header: '생일',
                             cell: EditCell,
-                            size: 1,
                             filterFn: 'arrIncludesSome',
                             meta: {
                                 type: 'date',
@@ -92,7 +89,6 @@ export const SampleTable = () => {
                         columnHelper.display({
                             header: '체크',
                             cell: DisplayCheckInput,
-                            size: 1,
                             meta: {
                                 readOnly: true,
                                 key: 'auth'
@@ -105,7 +101,6 @@ export const SampleTable = () => {
         columnHelper.display({
             header: '버튼',
             cell: DisplayButton,
-            size: 1,
             meta: {
                 text: '등록'
             }
@@ -145,20 +140,34 @@ export const SampleTable = () => {
 
     return (
         <>
-            <div className='w-full flex justify-end mb-2 py-2'>
-                <CommonButton onClick={addRow} title="추가" />
-                <CommonButton onClick={removeRow} title="삭제" />
-                <CommonButton onClick={saveRow} title="저장" />
-            </div>
-            <DataTableWrapper
-                initialData={data}
-                setData={setData}
-                resetData={resetData}
-                columns={columns}
-                backupData={originalRows}
-                addStatusTable={true}
+            <div className='w-[50%]'>
+                <div className='w-full flex justify-between mb-2 py-2'>
+                    <div className='w-1/2 flex justify-start items-center'>
+                        <div className='px-2 font-bold'>
+                            샘플
+                        </div>
+                        <div className='text-sm text-slate-600'>
+                            <span>전체</span>
+                            <span className='text-blue-500 font-bold'>{` ${data.length}`}</span>
+                            <span>건</span>
+                        </div>
+                    </div>
+                    <div className='w-1/2 flex justify-end items-center'>
+                        <CommonButton onClick={addRow} title="추가" />
+                        <CommonButton onClick={removeRow} title="삭제" />
+                        <CommonButton onClick={saveRow} title="저장" />
+                    </div>
+                </div>
+                <DataTableWrapper
+                    initialData={data}
+                    setData={setData}
+                    resetData={resetData}
+                    columns={columns}
+                    backupData={originalRows}
+                    addStatusTable={true}
                 // enableColumnResizing={true}
-            />
+                />
+            </div>
         </>
     );
 };

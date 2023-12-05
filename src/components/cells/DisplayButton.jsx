@@ -13,6 +13,7 @@ const Button = styled.div`
     cursor-pointer
     transform
     duration-100
+    whitespace-nowrap
 
     hover:border-slate-500
     hover:bg-blue-950

@@ -1,4 +1,4 @@
-import { CellCheckInput } from '../common/CellCheckInput';
+import { CellCheckInput } from './CellCheckInput';
 
 export const EditCheckInput = ({ value, onChange }) => {
   const handleCheck = (e) => {

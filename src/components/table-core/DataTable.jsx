@@ -1,7 +1,7 @@
 import tw, { styled } from "twin.macro";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableCell } from "./DataTableCell";
-import { StatusCell } from "./StatusCell";
+import { StatusCell } from "../cells/StatusCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DataTableRow } from "./DataTableRow";

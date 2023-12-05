@@ -1,5 +1,5 @@
 import { GlobalStyle } from "./GlobalStyle";
-import { SampleTable } from "./components/react-table/sample-table";
+import { SampleTable } from "./components/sample-table";
 
 function App() {
   return (
