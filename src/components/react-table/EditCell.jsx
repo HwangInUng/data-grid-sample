@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { EditSelect } from "./EditSelect";
 import { EditInput } from "./EditInput";
 import { EditCheckInput } from "./EditCheckInput";
 import { CellWrapper } from "../common/CellWrapper";
 import { EditDateInput } from "./EditDateInput";
 
-export const EditCell = ({ getValue, row, column }) => {
+export const EditCell = memo(({ getValue, row, column }) => {
     const initialValue = getValue();
     const [value, setValue] = useState(getValue());
     // type을 meta 속성으로 보유하여 컴포넌트 동적 생성
@@ -88,4 +88,4 @@ export const EditCell = ({ getValue, row, column }) => {
             {editTag[type]}
         </CellWrapper>
     );
-};
+});

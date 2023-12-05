@@ -3,7 +3,7 @@ import tw, { styled } from "twin.macro";
 import { BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "./DataTableFilter";
 import { StatusCell } from "./StatusCell";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 
 const TableHeader = styled.th`
     ${tw`
@@ -66,7 +66,14 @@ const Resizer = styled.div`
 `;
 
 const headerHeight = 35;
-export const DataTableHeader = ({ table, header }) => {
+export const DataTableHeader = memo((props) => {
+    const {
+        header,
+        sorting,
+        setSorting,
+        backupData,
+        setColumnFilters
+    } = props;
     const { column } = header;
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
@@ -78,6 +85,7 @@ export const DataTableHeader = ({ table, header }) => {
             column.setFilterValue(null);
         };
     }, [canFilter]);
+
     return (
         <>
             <TableHeader
@@ -105,9 +113,12 @@ export const DataTableHeader = ({ table, header }) => {
                 {
                     canFilter && openFilter ?
                         <DataTableFilter
-                            table={table}
                             column={column}
                             setOpenFilter={setOpenFilter}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            backupData={backupData}
+                            setColumnFilters={setColumnFilters}
                         /> :
                         null
                 }
@@ -119,4 +130,4 @@ export const DataTableHeader = ({ table, header }) => {
             </TableHeader>
         </>
     );
-};
+});

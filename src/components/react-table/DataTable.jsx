@@ -5,7 +5,8 @@ import { StatusCell } from "./StatusCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DataTableRow } from "./DataTableRow";
-import { useEffect, useMemo } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo } from "react";
+import { tableStateContext } from "./DataTableWrapper";
 
 const Table = styled.table`
     width: ${props => props.size};
@@ -27,7 +28,7 @@ const Table = styled.table`
     }
 `;
 
-export const DataTable = (props) => {
+export const DataTable = memo((props) => {
     const {
         table,
         addStatusTable,
@@ -36,12 +37,17 @@ export const DataTable = (props) => {
         initialData,
         setData,
         selectedData,
-        setSelectedData
-    } = table.options.state;
+        setSelectedData,
+        sorting,
+        setSorting,
+        backupData,
+        setColumnFilters
+    } = useContext(tableStateContext);
+    const filterFlag = table.options.enableFilters;
     const isStatus = addStatusTable;
     const tableSize = isStatus ? '40px' : '100%';
 
-    const handleSelectRow = (selectedRow) => {
+    const handleSelectRow = useCallback((selectedRow) => {
         if (selectedData.includes(selectedRow)) {
             setSelectedData(old => old.filter(row => row !== selectedRow));
         }
@@ -49,8 +55,8 @@ export const DataTable = (props) => {
         if (!selectedData.includes(selectedRow)) {
             setSelectedData(old => [...old, selectedRow]);
         }
-    };
-
+    }, [selectedData]);
+    
     const getHeaderGroups = () => {
         const headerGroups = table.getHeaderGroups();
         const headerIds = new Set(); // 동일한 컬럼명 중복 방지
@@ -83,21 +89,23 @@ export const DataTable = (props) => {
         }
         return resultHeaderGroups;
     };
+    const groupHeaders = useMemo(() => getHeaderGroups(), [table])
+
     // 배열 요소 재위치
-    const reorderRow = (draggedRowIndex, targetRowIndex) => {
+    const reorderRow = useCallback((draggedRowIndex, targetRowIndex) => {
         // 드래그 된 배열의 요소를 대상 로우 인덱스에 추가
         // 외부 splice의 0은 요소 대상제거 x
         // 내부 splice는 드래그 된 대상 요소 1개만 제거
         initialData.splice(targetRowIndex, 0, initialData.splice(draggedRowIndex, 1)[0])
         setData([...initialData]);
-    };
-    
+    }, [initialData]);
+
     return (
         <>
             <DndProvider backend={HTML5Backend}>
                 <Table size={tableSize}>
                     <thead>
-                        {getHeaderGroups().map((headerGroup, index) => (
+                        {groupHeaders.map((headerGroup, index) => (
                             <tr key={index} className="data-thead">
                                 {headerGroup.map(header => {
                                     const isStatusColumn = header.column.id === 'status';
@@ -106,8 +114,12 @@ export const DataTable = (props) => {
                                         (
                                             <DataTableHeader
                                                 key={header.id}
-                                                table={table}
                                                 header={header}
+                                                filterSettings={filterFlag}
+                                                sorting={sorting}
+                                                setSorting={setSorting}
+                                                backupData={backupData}
+                                                setColumnFilters={setColumnFilters}
                                             />
                                         ) : null;
                                 })}
@@ -127,7 +139,12 @@ export const DataTable = (props) => {
                                     {row.getVisibleCells().map(cell => {
                                         const isStatusCell = cell.column.columnDef.cell === StatusCell;
                                         return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
-                                            (<DataTableCell key={cell.id} cell={cell} />) : null;
+                                            (<DataTableCell
+                                                key={cell.id}
+                                                cellSize={cell.column.getSize()}
+                                                cell={cell.column.columnDef.cell}
+                                                context={cell.getContext()}
+                                            />) : null;
                                     })}
                                 </DataTableRow>
                             );
@@ -137,4 +154,4 @@ export const DataTable = (props) => {
             </DndProvider>
         </>
     );
-};
+});

@@ -4,12 +4,12 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { ToggleSwitch } from "../common/ToggleSwitch";
 import { BiSearchAlt } from "react-icons/bi";
 import { DataTable } from "./DataTable";
 import { RefreshIcon } from "../common/RefreshIcon";
-import tw, {styled} from "twin.macro";
+import tw, { styled } from "twin.macro";
 
 const VirtualBox = styled.div`
     ${tw`
@@ -19,6 +19,8 @@ const VirtualBox = styled.div`
         h-[500px]
     `}
 `;
+
+export const tableStateContext = createContext();
 
 export const DataTableWrapper = (props) => {
     const {
@@ -68,33 +70,37 @@ export const DataTableWrapper = (props) => {
     const resetTableData = () => {
         setColumnFilters([]);
         setFilterFlag(false);
+        setSorting([]);
         setSelectedData([]);
         resetData();
     };
+
     return (
-        <div>
-            <div className="mb-1 w-full flex justify-end gap-x-3">
-                <ToggleSwitch
-                    title={<BiSearchAlt />}
-                    flag={filterFlag}
-                    onChange={handleFilterFlag}
-                />
-                <RefreshIcon onClick={resetTableData} />
+        <tableStateContext.Provider value={table.options.state}>
+            <div>
+                <div className="mb-1 w-full flex justify-end gap-x-3">
+                    <ToggleSwitch
+                        title={<BiSearchAlt />}
+                        flag={filterFlag}
+                        onChange={handleFilterFlag}
+                    />
+                    <RefreshIcon onClick={resetTableData} />
+                </div>
+                <VirtualBox>
+                    {
+                        // status 테이블 포함 시 고정된 열 크기의 테이블 생성
+                        addStatusTable ?
+                            <DataTable
+                                table={table}
+                                addStatusTable
+                            /> :
+                            null
+                    }
+                    <DataTable
+                        table={table}
+                    />
+                </VirtualBox>
             </div>
-            <VirtualBox>
-                {
-                    // status 테이블 포함 시 고정된 열 크기의 테이블 생성
-                    addStatusTable ?
-                        <DataTable
-                            table={table}
-                            addStatusTable
-                        /> :
-                        null
-                }
-                <DataTable
-                    table={table}
-                />
-            </VirtualBox>
-        </div>
+        </tableStateContext.Provider>
     );
 };

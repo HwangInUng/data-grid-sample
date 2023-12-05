@@ -1,3 +1,4 @@
+import { memo, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import tw, { styled } from "twin.macro";
 
@@ -7,7 +8,7 @@ const TableRow = styled.tr`
   `}
 `;
 
-export const DataTableRow = (props) => {
+export const DataTableRow = memo((props) => {
   const {
     row,
     selectedData,
@@ -15,6 +16,7 @@ export const DataTableRow = (props) => {
     onClick,
     reorderRow
   } = props;
+  
   const [, dropRef] = useDrop({
     accept: 'row',
     drop: (draggedRow) => reorderRow(draggedRow.index, row.index)
@@ -40,4 +42,4 @@ export const DataTableRow = (props) => {
       </TableRow>
     </>
   );
-};
+});

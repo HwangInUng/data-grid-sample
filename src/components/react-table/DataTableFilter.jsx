@@ -77,18 +77,20 @@ const DataListBox = styled.div`
 `;
 
 // 컬럼의 유형에 맞는 필터 태그 적용 구현 필요
-export const DataTableFilter = ({ table, column, setOpenFilter }) => {
+export const DataTableFilter = (props) => {
+    const {
+        column,
+        setOpenFilter,
+        sorting,
+        setSorting,
+        backupData,
+        setColumnFilters
+    } = props;
     const sortData = [
         { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
     ];
-    const {
-        sorting,
-        setSorting,
-        backupData,
-        setColumnFilters
-    } = table.options.state;
     const dataCheckList = [...new Set(backupData.map(data => data[column.id]))];
     const [checkList, setCheckList] = useState([]);
     const [allSelected, setAllSelected] = useState(true);
@@ -255,4 +257,4 @@ export const DataTableFilter = ({ table, column, setOpenFilter }) => {
             </div>
         </FilterWrapper>
     );
-}
+};

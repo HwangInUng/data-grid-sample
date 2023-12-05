@@ -7,14 +7,17 @@ const TableCell = styled.td`
     border: 1px solid lightgray;
 `;
 
-export const DataTableCell = ({ cell }) => {
+export const DataTableCell = (props) => {
+    const {
+        cellSize,
+        cell,
+        context
+    } = props;
+
     return (
         <>
-            <TableCell style={{ width: cell.column.getSize() }}>
-                {flexRender(
-                    cell.column.columnDef.cell,
-                    cell.getContext()
-                )}
+            <TableCell style={{ width: cellSize }}>
+                {flexRender(cell, context)}
             </TableCell>
         </>
     );
