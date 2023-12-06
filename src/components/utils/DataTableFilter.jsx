@@ -1,7 +1,8 @@
 import { BiAlignJustify, BiSortDown, BiSortUp } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 import { CommonButton } from "../common/CommonButton"
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { TableContext } from "../table-core/DataTableWrapper";
 
 
 const FilterWrapper = styled.div`
@@ -79,78 +80,64 @@ const DataListBox = styled.div`
 // 컬럼의 유형에 맞는 필터 태그 적용 구현 필요
 export const DataTableFilter = (props) => {
     const {
-        column,
+        columnId,
         setOpenFilter,
-        sorting,
+    } = props;
+    const {
         setSorting,
         backupData,
-        setColumnFilters
-    } = props;
+        setColumnFilters,
+        handleSorting
+    } = useContext(TableContext);
     const sortData = [
         { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
     ];
-    const dataCheckList = [...new Set(backupData.map(data => data[column.id]))];
+    
+    const dataCheckList = [...new Set(backupData.map(data => data[columnId]))];
     const [checkList, setCheckList] = useState([]);
     const [allSelected, setAllSelected] = useState(true);
     const [inputValue, setInputValue] = useState('');
 
-    const handleSorting = (sortingType) => {
-        const sortedColumn = sorting.map(col => col.id);
-        if (sortedColumn.length === 0 || !sortedColumn.includes(column.id)) {
-            setSorting(old => [
-                ...old,
-                { id: column.id, desc: sortingType }
-            ]);
-            return;
-        }
-
-        if (sortedColumn.includes(column.id)) {
-            setSorting(old => old.map(col => (
-                col.id === column.id ? { id: column.id, desc: sortingType } : col
-            )));
-        }
-    };
-
-    const getBackUpCheckList = () => {
+    const getBackUpCheckList = useMemo(() => {
         return [...new Set(
-            backupData.map(data => data[column.id])
+            backupData.map(data => data[columnId])
                 .filter(data => data.includes(inputValue))
                 .sort()
         )];
-    }
+    }, [backupData, checkList]);
 
     // selectAll check box 컨트롤
-    const selectAllData = () => {
+    const selectAllData = useCallback(() => {
         setAllSelected(old => !old);
         checkedAll(allSelected);
 
-        const filterValueList = inputValue.length > 0 ? getBackUpCheckList() : dataCheckList;
+        const filterValueList = inputValue.length > 0 ? getBackUpCheckList : dataCheckList;
 
         if (allSelected) {
             setColumnFilters(old => addColumnFilter(old, filterValueList));
         } else {
-            setColumnFilters(old => old.filter(filter => filter.id !== column.id));
+            setColumnFilters(old => old.filter(filter => filter.id !== columnId));
             setInputValue('');
         }
-    };
+    }, [allSelected]);
 
     const checkedAll = (check) => {
-        const checkBoxList = Array.from(document.getElementsByName(column.id));
+        const checkBoxList = Array.from(document.getElementsByName(columnId));
         checkBoxList.forEach(checkBox => checkBox.checked = check);
     };
 
     // checked 상태일 경우 필터 값 추가
     const addColumnFilter = (columnFilters, filterValue) => {
-        const count = columnFilters.filter(filter => filter.id === column.id).length;
+        const count = columnFilters.filter(filter => filter.id === columnId).length;
 
         return count === 0 ?
             [
-                ...columnFilters, { id: column.id, value: Array.isArray(filterValue) ? filterValue : [filterValue] }
+                ...columnFilters, { id: columnId, value: Array.isArray(filterValue) ? filterValue : [filterValue] }
             ] :
             columnFilters.map(filter => (
-                filter.id === column.id ?
+                filter.id === columnId ?
                     { ...filter, value: Array.isArray(filterValue) ? filterValue : [...filter.value, filterValue] } :
                     { ...filter, value: filter.value }));
     };
@@ -158,7 +145,7 @@ export const DataTableFilter = (props) => {
     // unchecked 상태일 경우 필터 값 제거
     const deleteColumnFilter = (columnFilters, filterValue) => {
         return columnFilters.map(filter => (
-            filter.id === column.id ?
+            filter.id === columnId ?
                 { ...filter, value: filter.value.filter(value => value !== filterValue) } :
                 { ...filter, value: filter.value }
         ));
@@ -180,11 +167,11 @@ export const DataTableFilter = (props) => {
 
     // 체크박스 갯수에 따라 해당 컬럼 필터 제거
     const autoRemoveColumnFilter = () => {
-        const checkList = Array.from(document.getElementsByName(column.id));
+        const checkList = Array.from(document.getElementsByName(columnId));
         const count = checkList.filter(check => check.checked === true).length;
 
         if (count === 0) {
-            setColumnFilters(old => old.filter(filter => filter.id !== column.id));
+            setColumnFilters(old => old.filter(filter => filter.id !== columnId));
         }
     }
 
@@ -194,7 +181,7 @@ export const DataTableFilter = (props) => {
 
     // Input에 따라 checkList 갱신
     useEffect(() => {
-        setCheckList(getBackUpCheckList());
+        setCheckList(getBackUpCheckList);
     }, [inputValue]);
 
     useEffect(() => {
@@ -208,9 +195,9 @@ export const DataTableFilter = (props) => {
                     key={index}
                     onClick={
                         sort.type === 'desc' ?
-                            () => handleSorting(true) :
+                            () => handleSorting(true, columnId) :
                             sort.type === 'asc' ?
-                                () => handleSorting(false) :
+                                () => handleSorting(false, columnId) :
                                 () => setSorting([])
                     }
                 >
@@ -239,7 +226,7 @@ export const DataTableFilter = (props) => {
                     <div key={index} className="w-fit">
                         <input
                             type="checkbox"
-                            name={column.id}
+                            name={columnId}
                             className="list-checkbox"
                             value={data}
                             onChange={changeFilterValue}

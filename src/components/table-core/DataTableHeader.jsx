@@ -2,9 +2,7 @@ import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 import { BiCaretLeft, BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "../utils/DataTableFilter";
-import { StatusCell } from "../cells/StatusCell";
 import { memo, useEffect, useState } from "react";
-import { EditCell } from "../cells/EditCell";
 
 const TableHeader = styled.th`
     ${tw`
@@ -14,7 +12,6 @@ const TableHeader = styled.th`
         text-sm
     `}
 
-    width: ${props => props.size}px;
     height: ${props => props.height || 35}px;
     border: 1px solid lightgray;
 
@@ -82,19 +79,12 @@ const Resizer = styled.div`
 `;
 
 const headerHeight = 35;
-export const DataTableHeader = memo((props) => {
-    const {
-        header,
-        sorting,
-        setSorting,
-        backupData,
-        setColumnFilters
-    } = props;
+function DataTableHeader({ header }) {
     const { column } = header;
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
-    const isStatusCell = column.columnDef.cell === StatusCell;
-    const isRequired = column.columnDef.cell === EditCell &&
+    const isStatusCell = column.id === 'status';
+    const isRequired = column.accessorFn !== undefined &&
         column.columnDef.meta.required;
 
     useEffect(() => {
@@ -107,7 +97,7 @@ export const DataTableHeader = memo((props) => {
     return (
         <>
             <TableHeader
-                size={header.getSize()}
+                style={{ width: header.getSize() }}
                 height={isStatusCell ? headerHeight * header.rowSpan : null}
                 rowSpan={header.rowSpan}
                 colSpan={header.colSpan}
@@ -117,7 +107,7 @@ export const DataTableHeader = memo((props) => {
                     {header.isPlaceholder ?
                         null :
                         flexRender(
-                            isStatusCell ? column.columnDef.meta.icon : column.columnDef.header,
+                            column.columnDef.header,
                             header.getContext()
                         )}
                     {canFilter ?
@@ -133,12 +123,8 @@ export const DataTableHeader = memo((props) => {
                 {
                     canFilter && openFilter ?
                         <DataTableFilter
-                            column={column}
+                            columnId={column.id}
                             setOpenFilter={setOpenFilter}
-                            sorting={sorting}
-                            setSorting={setSorting}
-                            backupData={backupData}
-                            setColumnFilters={setColumnFilters}
                         /> :
                         null
                 }
@@ -150,4 +136,6 @@ export const DataTableHeader = memo((props) => {
             </TableHeader>
         </>
     );
-});
+};
+
+export default memo(DataTableHeader);

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import tw, {styled} from 'twin.macro';
 
 const DateInput = styled.input`
@@ -11,10 +12,10 @@ const DateInput = styled.input`
   `}
 `;
 
-export const EditDateInput = ({value, onChange}) => {
+export const EditDateInput = memo(({value, onChange}) => {
   return <DateInput
     type='date'
     value={value}
-    onChange={() => onChange(value)}
+    onChange={onChange}
   />
-}
+});

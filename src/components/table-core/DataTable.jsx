@@ -1,15 +1,14 @@
 import tw, { styled } from "twin.macro";
-import { DataTableHeader } from "./DataTableHeader";
+import DataTableHeader from "./DataTableHeader";
 import { DataTableCell } from "./DataTableCell";
-import { StatusCell } from "../cells/StatusCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { DataTableRow } from "./DataTableRow";
-import { memo, useCallback, useContext, useMemo } from "react";
-import { tableStateContext } from "./DataTableWrapper";
+import { memo, useContext, useMemo } from "react";
+import { TableContext } from "./DataTableWrapper";
+import DataTableRow from "./DataTableRow";
+
 
 const Table = styled.table`
-    width: ${props => props.size};
     height: fit-content;
     border-collapse: separate;
     border-spacing: 0;
@@ -28,39 +27,21 @@ const Table = styled.table`
     }
 `;
 
-export const DataTable = memo((props) => {
+function DataTable(props) {
     const {
-        table,
+        tableHeaderGroups,
+        tableRows,
         addStatusTable,
     } = props;
-    const {
-        initialData,
-        setData,
-        selectedData,
-        setSelectedData,
-        sorting,
-        setSorting,
-        backupData,
-        setColumnFilters
-    } = useContext(tableStateContext);
-    const filterFlag = table.options.enableFilters;
+    const { filterFlag, setData } = useContext(TableContext);
     const isStatus = addStatusTable;
-    const tableSize = isStatus ? '40px' : '100%';
 
-    const handleSelectRow = useCallback((selectedRow) => {
-        if (selectedData.includes(selectedRow)) {
-            setSelectedData(old => old.filter(row => row !== selectedRow));
-        }
-
-        if (!selectedData.includes(selectedRow)) {
-            setSelectedData(old => [...old, selectedRow]);
-        }
-    }, [selectedData]);
-
-    const getHeaderGroups = () => {
-        const headerGroups = table.getHeaderGroups();
+    const getHeaderGroups = useMemo(() => {
+        const headerGroups = tableHeaderGroups;
         const headerIds = new Set(); // 동일한 컬럼명 중복 방지
         const resultHeaderGroups = [];
+
+        if (headerGroups.length === 1) return headerGroups;
 
         for (let i = 0; i < headerGroups.length; i++) {
             const headerGroup = i === 0 ? headerGroups[i].headers : resultHeaderGroups[i];
@@ -71,7 +52,7 @@ export const DataTable = memo((props) => {
                     {
                         ...header,
                         isPlaceholder: false,
-                        rowSpan: table.getHeaderGroups().length - i
+                        rowSpan: tableHeaderGroups.length - i
                     } :
                     { ...header, rowSpan: 1 }
             );
@@ -88,24 +69,14 @@ export const DataTable = memo((props) => {
             }
         }
         return resultHeaderGroups;
-    };
-    const groupHeaders = useMemo(() => getHeaderGroups(), [table])
-
-    // 배열 요소 재위치
-    const reorderRow = useCallback((draggedRowIndex, targetRowIndex) => {
-        // 드래그 된 배열의 요소를 대상 로우 인덱스에 추가
-        // 외부 splice의 0은 요소 대상제거 x
-        // 내부 splice는 드래그 된 대상 요소 1개만 제거
-        initialData.splice(targetRowIndex, 0, initialData.splice(draggedRowIndex, 1)[0])
-        setData([...initialData]);
-    }, [initialData]);
+    }, [tableHeaderGroups]);
 
     return (
         <>
             <DndProvider backend={HTML5Backend}>
-                <Table size={tableSize}>
+                <Table style={{ width: isStatus ? '40px' : '100%' }}>
                     <thead>
-                        {groupHeaders.map((headerGroup, index) => (
+                        {getHeaderGroups.map((headerGroup, index) => (
                             <tr key={index} className="data-thead">
                                 {headerGroup.map(header => {
                                     const isStatusColumn = header.column.id === 'status';
@@ -116,10 +87,6 @@ export const DataTable = memo((props) => {
                                                 key={header.id}
                                                 header={header}
                                                 filterFlag={filterFlag}
-                                                sorting={sorting}
-                                                setSorting={setSorting}
-                                                backupData={backupData}
-                                                setColumnFilters={setColumnFilters}
                                             />
                                         ) : null;
                                 })}
@@ -127,23 +94,21 @@ export const DataTable = memo((props) => {
                         ))}
                     </thead>
                     <tbody>
-                        {table.getRowModel().rows.map(row => {
+                        {tableRows.map(row => {
                             return (
                                 <DataTableRow
                                     key={row.id}
                                     row={row}
-                                    selectedData={selectedData}
-                                    onClick={handleSelectRow}
-                                    reorderRow={reorderRow}
                                 >
                                     {row.getVisibleCells().map(cell => {
-                                        const isStatusCell = cell.column.columnDef.cell === StatusCell;
+                                        const isStatusCell = cell.column.id === 'status';
                                         return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
                                             (<DataTableCell
                                                 key={cell.id}
-                                                cellSize={cell.column.getSize()}
-                                                cell={cell.column.columnDef.cell}
-                                                context={cell.getContext()}
+                                                row={row.original}
+                                                rowIndex={row.index}
+                                                cell={cell}
+                                                setData={setData}
                                             />) : null;
                                     })}
                                 </DataTableRow>
@@ -154,4 +119,5 @@ export const DataTable = memo((props) => {
             </DndProvider>
         </>
     );
-});
+};
+export default DataTable;

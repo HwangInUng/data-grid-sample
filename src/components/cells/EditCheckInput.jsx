@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { CellCheckInput } from './CellCheckInput';
 
-export const EditCheckInput = ({ value, onChange }) => {
+export const EditCheckInput = memo(({ value, onChange }) => {
   const handleCheck = (e) => {
     onChange(e.target.checked ? 'Y' : 'N');
   }
@@ -9,4 +10,4 @@ export const EditCheckInput = ({ value, onChange }) => {
     value={value}
     onChange={handleCheck}
   />;
-};
+});

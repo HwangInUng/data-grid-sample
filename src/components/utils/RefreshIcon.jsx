@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { BiRefresh } from 'react-icons/bi';
 import tw, { styled } from 'twin.macro';
 
@@ -24,10 +25,10 @@ const RefreshWrapper = styled.div`
     }
 `;
 
-export const RefreshIcon = ({ onClick }) => {
+export const RefreshIcon = memo(({ onClick }) => {
     return (
         <RefreshWrapper>
             <BiRefresh className="refresh-icon" onClick={onClick} />
         </RefreshWrapper>
     );
-};
+});

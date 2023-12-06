@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Input = styled.input`
@@ -12,7 +13,7 @@ const Input = styled.input`
   `}
 `
 
-export const EditInput = ({ value, onChange, onBlur }) => {
+export const EditInput = memo(({ value, onChange, onBlur }) => {
   const onFocus = (e) => {
     e.target.select();
   };
@@ -25,4 +26,4 @@ export const EditInput = ({ value, onChange, onBlur }) => {
     onFocus={onFocus}
     autoFocus
   />;
-};
+});

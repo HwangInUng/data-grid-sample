@@ -1,35 +1,27 @@
 import {
     createColumnHelper,
 } from '@tanstack/react-table';
-import { EditCell } from './cells/EditCell';
-import { StatusCell } from './cells/StatusCell';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CommonButton } from './common/CommonButton';
 import { StatusIcon } from './utils/StatusIcon';
-import { DataTableWrapper } from './table-core/DataTableWrapper';
 // test 데이터 생성
 import { makeData } from '../js/makData';
 import { DisplayCheckInput } from './cells/DisplayCheckInput';
 import { DisplayButton } from './cells/DisplayButton';
+import DataTableWrapper from './table-core/DataTableWrapper';
 
 export const SampleTable = () => {
-    const [data, setData] = useState(() => makeData([50]));
-    const [checkedRows, setCheckedRows] = useState([]);
+    const [data, setData] = useState(() => makeData([500]));
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
     const genderOption = ['남자', '여자'];
 
     const columnHelper = createColumnHelper();
     // 셀 단위로 이벤트를 부여
-    const columns = [
+    const columns = useMemo(() => [
         columnHelper.display({
-            header: 'status',
-            cell: StatusCell,
-            meta: {
-                deleteRows: deleteRows,
-                setCheckedRows: setCheckedRows,
-                icon: <StatusIcon />
-            }
+            id: 'status',
+            header: <StatusIcon />,
         }),
         columnHelper.group({
             id: 'test',
@@ -37,24 +29,20 @@ export const SampleTable = () => {
             columns: [
                 columnHelper.accessor('name', {
                     header: '이름',
-                    cell: EditCell,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'text',
                         required: true,
                         readOnly: true, // 읽기전용(default: false)
-                        setEditRows: setData
                     }
                 }),
                 columnHelper.accessor('age', {
                     header: '나이',
-                    cell: EditCell,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'text',
                         required: true,
                         justify: 'right', // 가로 방향
-                        setEditRows: setData
                     }
                 }),
             ]
@@ -65,12 +53,10 @@ export const SampleTable = () => {
             columns: [
                 columnHelper.accessor('gender', {
                     header: '성별',
-                    cell: EditCell,
                     filterFn: 'arrIncludesSome',
                     meta: {
                         type: 'select',
                         options: genderOption, // select 옵션
-                        setEditRows: setData
                     }
                 }),
                 columnHelper.group({
@@ -79,14 +65,13 @@ export const SampleTable = () => {
                     columns: [
                         columnHelper.accessor('createdAt', {
                             header: '생일',
-                            cell: EditCell,
                             filterFn: 'arrIncludesSome',
                             meta: {
                                 type: 'date',
-                                setEditRows: setData
                             }
                         }),
                         columnHelper.display({
+                            id: 'check',
                             header: '체크',
                             cell: DisplayCheckInput,
                             meta: {
@@ -99,48 +84,49 @@ export const SampleTable = () => {
             ]
         }),
         columnHelper.display({
+            id: 'button',
             header: '버튼',
             cell: DisplayButton,
             meta: {
                 text: '등록'
             }
         }),
-    ];
+    ], []);
 
     // 테이블 데이터 원래대로 복구
-    const resetData = () => {
-        setData(originalRows);
-        setCheckedRows([]);
-        setDeleteRows([]);
-    }
+    // const resetData = () => {
+    //     setData(originalRows);
+    //     setCheckedRows([]);
+    //     setDeleteRows([]);
+    // }
 
     // 추가
-    const addRow = () => {
+    const addRow = useCallback(() => {
         const newRow = {
             name: '', age: '', gender: '', city: ''
         };
 
         setData((old) => [...old, newRow]);
-    };
+    }, []);
 
     // 삭제
-    const removeRow = () => {
-        if (checkedRows.length === 0) return;
+    const removeRow = useCallback(() => {
+        // if (checkedRows.length === 0) return;
 
-        setDeleteRows(checkedRows);
-        setCheckedRows([]);
-    };
+        // setDeleteRows(checkedRows);
+        // setCheckedRows([]);
+    }, []);
 
     // 변경/추가 저장
-    const saveRow = () => {
+    const saveRow = useCallback(() => {
         const newRow = data.filter(row => !deleteRows.includes(row));
         setData(newRow);
         setOriginalRows(newRow);
-    }
+    }, []);
 
     return (
         <>
-            <div className='w-[50%]'>
+            <div className='w-full'>
                 <div className='w-full flex justify-between mb-2 py-2'>
                     <div className='w-1/2 flex justify-start items-center'>
                         <div className='px-2 font-bold'>
@@ -159,13 +145,13 @@ export const SampleTable = () => {
                     </div>
                 </div>
                 <DataTableWrapper
+                    columns={columns}
                     initialData={data}
                     setData={setData}
-                    resetData={resetData}
-                    columns={columns}
                     backupData={originalRows}
+                    deleteData={deleteRows}
+                    setDeleteData={setDeleteRows}
                     addStatusTable={true}
-                // enableColumnResizing={true}
                 />
             </div>
         </>

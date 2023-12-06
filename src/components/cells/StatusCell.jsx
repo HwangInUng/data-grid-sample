@@ -1,10 +1,7 @@
-import { useEffect, useMemo } from "react";
+import { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import tw, { styled } from "twin.macro";
-import {
-    BiSolidAddToQueue,
-    BiSolidEditAlt,
-    BiSolidMinusSquare
-} from "react-icons/bi";
+import { TableContext } from "../table-core/DataTableWrapper";
+import { BiSolidAddToQueue, BiSolidEditAlt, BiSolidMinusSquare } from "react-icons/bi";
 
 const StatusWrapper = styled.div`
     ${tw`
@@ -20,43 +17,19 @@ const StatusWrapper = styled.div`
     }
 `;
 
-export const StatusCell = ({ row, column, table }) => {
-    // 체크 여부에 따라 삭제 대상 여부를 추가 및 제거
-    const { deleteRows, setCheckedRows } = column.columnDef.meta;
-    const { initialData, backupData, selectedData } = table.options.state;
-    const targetRow = initialData[row.id];
+export const StatusCell = memo(({ row }) => {
+    const { matchingStatus } = useContext(TableContext);
 
-    const matchingStatus = useMemo(() => {
-        const icons = {
-            add: <BiSolidAddToQueue className="text-green-600" />,
-            edit: <BiSolidEditAlt className="text-blue-600" />,
-            remove: <BiSolidMinusSquare className="text-red-600" />
-        };
+    const result = useCallback(() => matchingStatus(row.original), [row]);
 
-        const editRows = initialData.filter(row => row.id < backupData.length && !backupData.includes(row));
-        const isEdit = editRows.includes(targetRow) && !deleteRows.includes(targetRow);
-        const isRemove = deleteRows.includes(targetRow);
-        const isAdd = !backupData.includes(targetRow);
-
-        if (isEdit) return icons.edit;
-        if (isRemove) return icons.remove;
-        if (isAdd) return icons.add;
-    }, [initialData, backupData, deleteRows, targetRow]);
-
-    useEffect(() => {
-        const addCheckedRow = () => {
-            if (selectedData.includes(row)) {
-                setCheckedRows((old) => [...old, targetRow]);
-            } else {
-                setCheckedRows((old) => old.filter((oldRow) => targetRow !== oldRow));
-            }
-        };
-
-        addCheckedRow();
-    }, [row, selectedData, setCheckedRows, targetRow]);
+    const icons = {
+        add: <BiSolidAddToQueue className="text-green-600" />,
+        edit: <BiSolidEditAlt className="text-blue-600" />,
+        remove: <BiSolidMinusSquare className="text-red-600" />
+    };
     return (
         <StatusWrapper>
-            {matchingStatus}
+            {icons[result]}
         </StatusWrapper>
     );
-};
+});

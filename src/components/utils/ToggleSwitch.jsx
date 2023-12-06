@@ -1,3 +1,5 @@
+import { memo } from "react";
+import { BiSearchAlt } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 
 const ToggleLabel = styled.label`
@@ -69,11 +71,14 @@ const ToggleInput = styled.input`
     }
 `;
 
-export const ToggleSwitch = ({ title, onChange, flag }) => {
+function ToggleSwitch({ title, onChange, flag }) {
+    const icons = {
+        'search': <BiSearchAlt />
+    };
     return (
         <>
             <ToggleLabel>
-                <span>{title}</span>
+                <span>{icons[title]}</span>
                 <ToggleInput
                     role="switch"
                     type="checkbox"
@@ -84,3 +89,5 @@ export const ToggleSwitch = ({ title, onChange, flag }) => {
         </>
     );
 };
+
+export default memo(ToggleSwitch);

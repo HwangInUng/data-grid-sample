@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Button = styled.button`
@@ -19,10 +20,10 @@ const Button = styled.button`
     }
 `;
 
-export const CommonButton = ({ title, onClick, color }) => {
+export const CommonButton = memo(({ title, onClick, color }) => {
     return <Button
         onClick={onClick}
         color={color}>
         {title}
     </Button>;
-}
+});

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Select = styled.select`
@@ -10,7 +11,7 @@ const Select = styled.select`
   `}
 `;
 
-export const EditSelect = ({ options, value, onChange }) => {
+export const EditSelect = memo(({ options, value, onChange }) => {
   return <Select value={value} onChange={onChange}>
     {options && options.map(option => (
       <option value={option} key={option}>
@@ -18,4 +19,4 @@ export const EditSelect = ({ options, value, onChange }) => {
       </option>
     ))}
   </Select>;
-};
+});

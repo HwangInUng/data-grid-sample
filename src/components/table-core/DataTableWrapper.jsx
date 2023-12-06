@@ -4,12 +4,11 @@ import {
     getSortedRowModel,
     useReactTable,
 } from "@tanstack/react-table";
-import { createContext, useState } from "react";
-import { ToggleSwitch } from "../utils/ToggleSwitch";
-import { BiSearchAlt } from "react-icons/bi";
-import { DataTable } from "./DataTable";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
+import ToggleSwitch from "../utils/ToggleSwitch";
 import { RefreshIcon } from "../utils/RefreshIcon";
 import tw, { styled } from "twin.macro";
+import DataTable from "./DataTable";
 
 const VirtualBox = styled.div`
     ${tw`
@@ -20,14 +19,15 @@ const VirtualBox = styled.div`
     `}
 `;
 
-export const tableStateContext = createContext();
+export const TableContext = createContext();
 
-export const DataTableWrapper = (props) => {
+function DataTableWrapper(props) {
     const {
+        columns,
         initialData,
         setData,
-        resetData,
-        columns,
+        deleteData,
+        setDeleteData,
         backupData,
         addStatusTable = false,
         enableColumnResizing = true
@@ -35,24 +35,13 @@ export const DataTableWrapper = (props) => {
     const [columnResizeMode,] = useState('onChange');
     const [sorting, setSorting] = useState([]);
     const [filterFlag, setFilterFlag] = useState(false);
-    const [selectedData, setSelectedData] = useState([]);
-    const [columnFilters, setColumnFilters] = useState([]);
+    const [, setSelectedData] = useState([]);
+    const [, setColumnFilters] = useState([]);
 
     const table = useReactTable({
         data: initialData,
         columns,
         columnResizeMode,
-        state: {
-            initialData,
-            setData,
-            backupData,
-            selectedData,
-            setSelectedData,
-            sorting,
-            setSorting,
-            columnFilters,
-            setColumnFilters
-        },
         getCoreRowModel: getCoreRowModel(),
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
@@ -63,24 +52,83 @@ export const DataTableWrapper = (props) => {
         enableFilters: filterFlag,
     });
 
-    const handleFilterFlag = () => {
-        setFilterFlag(old => !old);
-    };
+    const tableHeaderGroups = useMemo(() => table.getHeaderGroups(), [table]);
+    const tableRows = useMemo(() => table.getRowModel().rows, [table]);
 
-    const resetTableData = () => {
+    const handleFilterFlag = useCallback(() => {
+        setFilterFlag(old => !old);
+    }, []);
+
+    const resetTableData = useCallback(() => {
         setColumnFilters([]);
         setFilterFlag(false);
         setSorting([]);
         setSelectedData([]);
-        resetData();
-    };
+        setDeleteData([]);
+        setData(backupData);
+    }, [backupData, setData, setSelectedData, setDeleteData]);
+
+    const matchingStatus = useMemo((targetRow) => {
+        const editRows = initialData.filter(row => row.id < backupData.length && !backupData.includes(row));
+        const isEdit = editRows.includes(targetRow) && !deleteData.includes(targetRow);
+        const isRemove = deleteData.includes(targetRow);
+        const isAdd = !backupData.includes(targetRow);
+
+        if (isEdit) return 'edit';
+        if (isRemove) return 'remove';
+        if (isAdd) return 'add';
+    }, [initialData, backupData, deleteData]);
+
+    const handleSorting = useCallback((sortingType, columnId) => {
+        const sortedColumn = sorting.map(col => col.id);
+        if (sortedColumn.length === 0 || !sortedColumn.includes(columnId)) {
+            setSorting(old => [
+                ...old,
+                { id: columnId, desc: sortingType }
+            ]);
+            return;
+        }
+
+        if (sortedColumn.includes(columnId)) {
+            setSorting(old => old.map(col => (
+                col.id === columnId ? { id: columnId, desc: sortingType } : col
+            )));
+        }
+    }, [sorting]);
+
+    const reorderRow = useCallback((draggedRowIndex, targetRowIndex) => {
+        initialData.splice(targetRowIndex, 0, initialData.splice(draggedRowIndex, 1)[0])
+        setData([...initialData]);
+    }, [initialData]);
+
+    const contextValue = useMemo(() => ({
+        setData,
+        backupData,
+        filterFlag,
+        setSorting,
+        setColumnFilters,
+        matchingStatus,
+        handleSorting,
+        setSelectedData,
+        reorderRow
+    }), [
+        setData,
+        backupData,
+        filterFlag,
+        setSorting,
+        setColumnFilters,
+        matchingStatus,
+        handleSorting,
+        setSelectedData,
+        reorderRow
+    ]);
 
     return (
-        <tableStateContext.Provider value={table.options.state}>
+        <TableContext.Provider value={contextValue}>
             <div>
                 <div className="mb-1 w-full flex justify-end gap-x-3">
                     <ToggleSwitch
-                        title={<BiSearchAlt />}
+                        title='search'
                         flag={filterFlag}
                         onChange={handleFilterFlag}
                     />
@@ -91,16 +139,20 @@ export const DataTableWrapper = (props) => {
                         // status 테이블 포함 시 고정된 열 크기의 테이블 생성
                         addStatusTable ?
                             <DataTable
-                                table={table}
+                                tableHeaderGroups={tableHeaderGroups}
+                                tableRows={tableRows}
                                 addStatusTable
                             /> :
                             null
                     }
                     <DataTable
-                        table={table}
+                        tableHeaderGroups={tableHeaderGroups}
+                        tableRows={tableRows}
                     />
                 </VirtualBox>
             </div>
-        </tableStateContext.Provider>
+        </TableContext.Provider>
     );
 };
+
+export default DataTableWrapper;
