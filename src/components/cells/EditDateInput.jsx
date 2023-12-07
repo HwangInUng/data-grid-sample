@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import tw, {styled} from 'twin.macro';
+import { memo, useCallback } from 'react';
+import tw, { styled } from 'twin.macro';
 
 const DateInput = styled.input`
   ${tw`
@@ -12,10 +12,15 @@ const DateInput = styled.input`
   `}
 `;
 
-export const EditDateInput = memo(({value, onChange}) => {
+export const EditDateInput = ({ value, handleValue, editValue }) => {
+  const handleOnchange = useCallback((e) => {
+    const changeValue = e.target.value;
+    handleValue(e);
+    editValue(changeValue);
+  }, []);
   return <DateInput
     type='date'
     value={value}
-    onChange={onChange}
+    onChange={handleOnchange}
   />
-});
+};

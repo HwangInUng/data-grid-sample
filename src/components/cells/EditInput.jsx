@@ -13,7 +13,7 @@ const Input = styled.input`
   `}
 `
 
-export const EditInput = memo(({ value, onChange, onBlur }) => {
+export const EditInput = ({ value, onChange, onBlur }) => {
   const onFocus = (e) => {
     e.target.select();
   };
@@ -26,4 +26,4 @@ export const EditInput = memo(({ value, onChange, onBlur }) => {
     onFocus={onFocus}
     autoFocus
   />;
-});
+};

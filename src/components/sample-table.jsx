@@ -11,7 +11,7 @@ import { DisplayButton } from './cells/DisplayButton';
 import DataTableWrapper from './table-core/DataTableWrapper';
 
 export const SampleTable = () => {
-    const [data, setData] = useState(() => makeData([500]));
+    const [data, setData] = useState(() => makeData([1000]));
     const [originalRows, setOriginalRows] = useState(data);
     const [deleteRows, setDeleteRows] = useState([]);
     const genderOption = ['남자', '여자'];
@@ -120,6 +120,7 @@ export const SampleTable = () => {
     // 변경/추가 저장
     const saveRow = useCallback(() => {
         const newRow = data.filter(row => !deleteRows.includes(row));
+
         setData(newRow);
         setOriginalRows(newRow);
     }, []);

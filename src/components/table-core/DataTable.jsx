@@ -1,12 +1,10 @@
 import tw, { styled } from "twin.macro";
 import DataTableHeader from "./DataTableHeader";
-import { DataTableCell } from "./DataTableCell";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { memo, useContext, useMemo } from "react";
-import { TableContext } from "./DataTableWrapper";
+import { memo, useMemo } from "react";
 import DataTableRow from "./DataTableRow";
-
+import DataTableCell from "./DataTableCell";
 
 const Table = styled.table`
     height: fit-content;
@@ -29,15 +27,13 @@ const Table = styled.table`
 
 function DataTable(props) {
     const {
-        tableHeaderGroups,
-        tableRows,
+        memoizedHeaderGroups,
+        memoizedRows,
         addStatusTable,
     } = props;
-    const { filterFlag, setData } = useContext(TableContext);
-    const isStatus = addStatusTable;
 
     const getHeaderGroups = useMemo(() => {
-        const headerGroups = tableHeaderGroups;
+        const headerGroups = memoizedHeaderGroups;
         const headerIds = new Set(); // 동일한 컬럼명 중복 방지
         const resultHeaderGroups = [];
 
@@ -52,7 +48,7 @@ function DataTable(props) {
                     {
                         ...header,
                         isPlaceholder: false,
-                        rowSpan: tableHeaderGroups.length - i
+                        rowSpan: memoizedHeaderGroups.length - i
                     } :
                     { ...header, rowSpan: 1 }
             );
@@ -69,24 +65,23 @@ function DataTable(props) {
             }
         }
         return resultHeaderGroups;
-    }, [tableHeaderGroups]);
+    }, [memoizedHeaderGroups]);
 
     return (
         <>
             <DndProvider backend={HTML5Backend}>
-                <Table style={{ width: isStatus ? '40px' : '100%' }}>
+                <Table style={{ width: addStatusTable ? '40px' : '100%' }}>
                     <thead>
                         {getHeaderGroups.map((headerGroup, index) => (
                             <tr key={index} className="data-thead">
                                 {headerGroup.map(header => {
                                     const isStatusColumn = header.column.id === 'status';
 
-                                    return (isStatus && isStatusColumn) || (!isStatus && !isStatusColumn) ?
+                                    return (addStatusTable && isStatusColumn) || (!addStatusTable && !isStatusColumn) ?
                                         (
                                             <DataTableHeader
                                                 key={header.id}
                                                 header={header}
-                                                filterFlag={filterFlag}
                                             />
                                         ) : null;
                                 })}
@@ -94,22 +89,24 @@ function DataTable(props) {
                         ))}
                     </thead>
                     <tbody>
-                        {tableRows.map(row => {
+                        {memoizedRows.map(row => {
                             return (
                                 <DataTableRow
                                     key={row.id}
                                     row={row}
+                                    isStatus={addStatusTable}
                                 >
                                     {row.getVisibleCells().map(cell => {
                                         const isStatusCell = cell.column.id === 'status';
-                                        return (isStatus && isStatusCell) || (!isStatus && !isStatusCell) ?
-                                            (<DataTableCell
-                                                key={cell.id}
-                                                row={row.original}
-                                                rowIndex={row.index}
-                                                cell={cell}
-                                                setData={setData}
-                                            />) : null;
+                                        return (addStatusTable && isStatusCell) || (!addStatusTable && !isStatusCell) ?
+                                            (
+                                                <DataTableCell
+                                                    key={cell.id}
+                                                    row={row.original}
+                                                    rowIndex={row.index}
+                                                    cell={cell}
+                                                />
+                                            ) : null;
                                     })}
                                 </DataTableRow>
                             );

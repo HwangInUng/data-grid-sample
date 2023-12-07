@@ -1,6 +1,6 @@
-import { memo, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useCallback, useContext, useEffect } from "react";
 import tw, { styled } from "twin.macro";
-import { TableContext } from "../table-core/DataTableWrapper";
+import { DispatchContext } from "../table-core/DataTableWrapper";
 import { BiSolidAddToQueue, BiSolidEditAlt, BiSolidMinusSquare } from "react-icons/bi";
 
 const StatusWrapper = styled.div`
@@ -17,19 +17,23 @@ const StatusWrapper = styled.div`
     }
 `;
 
-export const StatusCell = memo(({ row }) => {
-    const { matchingStatus } = useContext(TableContext);
+const icons = {
+    add: <BiSolidAddToQueue className="text-green-600" />,
+    edit: <BiSolidEditAlt className="text-blue-600" />,
+    remove: <BiSolidMinusSquare className="text-red-600" />
+};
 
-    const result = useCallback(() => matchingStatus(row.original), [row]);
+function StatusCell({ row }) {
+    const { matchingStatus } = useContext(DispatchContext);
+    const status = matchingStatus(row);
+    if(row.id === 1) console.log(status);
+    const Icon = () => icons[status];
 
-    const icons = {
-        add: <BiSolidAddToQueue className="text-green-600" />,
-        edit: <BiSolidEditAlt className="text-blue-600" />,
-        remove: <BiSolidMinusSquare className="text-red-600" />
-    };
     return (
         <StatusWrapper>
-            {icons[result]}
+            <Icon />
         </StatusWrapper>
     );
-});
+};
+
+export default StatusCell;

@@ -2,7 +2,8 @@ import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 import { BiCaretLeft, BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "../utils/DataTableFilter";
-import { memo, useEffect, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useState } from "react";
+import { StateContext } from "./DataTableWrapper";
 
 const TableHeader = styled.th`
     ${tw`
@@ -79,8 +80,10 @@ const Resizer = styled.div`
 `;
 
 const headerHeight = 35;
+
 function DataTableHeader({ header }) {
     const { column } = header;
+    const { filterFlag } = useContext(StateContext);
     const [openFilter, setOpenFilter] = useState(false);
     const canFilter = column.getCanFilter();
     const isStatusCell = column.id === 'status';
@@ -123,7 +126,7 @@ function DataTableHeader({ header }) {
                 {
                     canFilter && openFilter ?
                         <DataTableFilter
-                            columnId={column.id}
+                            columnId={header.column.id}
                             setOpenFilter={setOpenFilter}
                         /> :
                         null

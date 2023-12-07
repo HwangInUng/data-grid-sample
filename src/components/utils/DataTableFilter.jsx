@@ -2,7 +2,7 @@ import { BiAlignJustify, BiSortDown, BiSortUp } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 import { CommonButton } from "../common/CommonButton"
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { TableContext } from "../table-core/DataTableWrapper";
+import { DispatchContext, StateContext, TableContext } from "../table-core/DataTableWrapper";
 
 
 const FilterWrapper = styled.div`
@@ -84,29 +84,50 @@ export const DataTableFilter = (props) => {
         setOpenFilter,
     } = props;
     const {
-        setSorting,
         backupData,
-        setColumnFilters,
-        handleSorting
-    } = useContext(TableContext);
+        sorting
+    } = useContext(StateContext);
+    const {
+        handleColumnFilters,
+        setSorting,
+        resetSorting,
+    } = useContext(DispatchContext);
+
     const sortData = [
         { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
         { icon: <BiSortDown />, title: 'Z to A', type: 'desc' },
         { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
     ];
-    
+
     const dataCheckList = [...new Set(backupData.map(data => data[columnId]))];
     const [checkList, setCheckList] = useState([]);
     const [allSelected, setAllSelected] = useState(true);
     const [inputValue, setInputValue] = useState('');
 
-    const getBackUpCheckList = useMemo(() => {
+    const getBackUpCheckList = () => {
         return [...new Set(
             backupData.map(data => data[columnId])
                 .filter(data => data.includes(inputValue))
                 .sort()
         )];
-    }, [backupData, checkList]);
+    };
+
+    const handleSorting = useCallback((sortingType, columnId) => {
+        const sortedColumn = sorting.map(col => col.id);
+        if (sortedColumn.length === 0 || !sortedColumn.includes(columnId)) {
+            setSorting(old => [
+                ...old,
+                { id: columnId, desc: sortingType }
+            ]);
+            return;
+        }
+
+        if (sortedColumn.includes(columnId)) {
+            setSorting(old => old.map(col => (
+                col.id === columnId ? { id: columnId, desc: sortingType } : col
+            )));
+        }
+    }, [sorting]);
 
     // selectAll check box 컨트롤
     const selectAllData = useCallback(() => {
@@ -116,9 +137,9 @@ export const DataTableFilter = (props) => {
         const filterValueList = inputValue.length > 0 ? getBackUpCheckList : dataCheckList;
 
         if (allSelected) {
-            setColumnFilters(old => addColumnFilter(old, filterValueList));
+            handleColumnFilters(old => addColumnFilter(old, filterValueList));
         } else {
-            setColumnFilters(old => old.filter(filter => filter.id !== columnId));
+            handleColumnFilters(old => old.filter(filter => filter.id !== columnId));
             setInputValue('');
         }
     }, [allSelected]);
@@ -157,9 +178,9 @@ export const DataTableFilter = (props) => {
         const isCheck = e.target.checked;
 
         if (isCheck) {
-            setColumnFilters(old => addColumnFilter(old, value));
+            handleColumnFilters(old => addColumnFilter(old, value));
         } else {
-            setColumnFilters(old => deleteColumnFilter(old, value));
+            handleColumnFilters(old => deleteColumnFilter(old, value));
         }
 
         autoRemoveColumnFilter();
@@ -171,7 +192,7 @@ export const DataTableFilter = (props) => {
         const count = checkList.filter(check => check.checked === true).length;
 
         if (count === 0) {
-            setColumnFilters(old => old.filter(filter => filter.id !== columnId));
+            handleColumnFilters(old => old.filter(filter => filter.id !== columnId));
         }
     }
 
@@ -181,6 +202,7 @@ export const DataTableFilter = (props) => {
 
     // Input에 따라 checkList 갱신
     useEffect(() => {
+        if (inputValue.length === 0) setCheckList(dataCheckList.sort());
         setCheckList(getBackUpCheckList);
     }, [inputValue]);
 
@@ -198,7 +220,7 @@ export const DataTableFilter = (props) => {
                             () => handleSorting(true, columnId) :
                             sort.type === 'asc' ?
                                 () => handleSorting(false, columnId) :
-                                () => setSorting([])
+                                () => resetSorting()
                     }
                 >
                     {sort.icon}

@@ -11,7 +11,7 @@ const Select = styled.select`
   `}
 `;
 
-export const EditSelect = memo(({ options, value, onChange }) => {
+export const EditSelect = ({ options, value, onChange }) => {
   return <Select value={value} onChange={onChange}>
     {options && options.map(option => (
       <option value={option} key={option}>
@@ -19,4 +19,4 @@ export const EditSelect = memo(({ options, value, onChange }) => {
       </option>
     ))}
   </Select>;
-});
+};

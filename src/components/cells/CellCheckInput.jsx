@@ -8,6 +8,7 @@ const CheckInput = styled.input`
     border
     outline-none
     border-slate-400
+    m-auto
   `}
 `;
 

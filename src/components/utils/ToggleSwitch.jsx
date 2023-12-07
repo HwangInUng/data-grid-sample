@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
 
@@ -75,6 +75,8 @@ function ToggleSwitch({ title, onChange, flag }) {
     const icons = {
         'search': <BiSearchAlt />
     };
+
+    const memoizedOnChange = useCallback(() => onChange(), [onChange]);
     return (
         <>
             <ToggleLabel>
@@ -83,7 +85,7 @@ function ToggleSwitch({ title, onChange, flag }) {
                     role="switch"
                     type="checkbox"
                     checked={flag}
-                    onChange={onChange}
+                    onChange={memoizedOnChange}
                 />
             </ToggleLabel>
         </>
