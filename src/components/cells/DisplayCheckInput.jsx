@@ -1,11 +1,18 @@
+import { memo } from "react";
 import { CellCheckInput } from "./CellCheckInput";
 
-export const DisplayCheckInput = ({ row, column }) => {
+const isEqual = (prevProps, nextProps) => {
+  return prevProps.row.original === nextProps.row.original;
+};
+
+function DisplayCheckInput ({ row, column, table }) {
   const { key, readOnly } = column.columnDef.meta;
   return (
-      <CellCheckInput
-        value={row.original[key]}
-        readOnly={readOnly}
-      />
+    <CellCheckInput
+      value={row.original[key]}
+      readOnly={readOnly}
+    />
   );
 };
+
+export default memo(DisplayCheckInput, isEqual);

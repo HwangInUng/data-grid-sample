@@ -15,7 +15,8 @@ export const newData = (index) => {
         age: faker.number.int(40).toString(),
         gender: index % 3 === 0 ? '남자' : '여자',
         createdAt: dateFormat(faker.date.birthdate()),
-        auth: index % 5 === 0 ? 'Y' : 'N'
+        auth: index % 5 === 0 ? 'Y' : 'N',
+        rowType: 'normal'
     }
 };
 

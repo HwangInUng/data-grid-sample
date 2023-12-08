@@ -1,3 +1,4 @@
+import { memo, useEffect } from 'react';
 import tw, { styled } from 'twin.macro';
 
 const Button = styled.div`
@@ -21,7 +22,22 @@ const Button = styled.div`
   `}
 `;
 
-export const DisplayButton = ({ row, column }) => {
-  const { text } = column.columnDef.meta;
-  return <Button>{text}</Button>
+// isEqual 함수를 통해 row의 original 정보가 동일하지
+// 않은 경우에만 리런더링을 수행
+const isEqual = (prevProps, nextProps) => {
+  return prevProps.row.original === nextProps.row.original;
 };
+
+function DisplayButton({ row, column, table }) {
+  const { text, onClick } = column.columnDef.meta;
+  const tableMeta = table.options.meta;
+
+  const handleOnClick = () => {
+    onClick(row.original);
+  };
+
+  // useEffect(() => console.log(row))
+  return <Button onClick={handleOnClick}>{text}</Button>
+};
+
+export default memo(DisplayButton, isEqual);
