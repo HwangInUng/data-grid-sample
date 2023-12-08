@@ -1,23 +1,38 @@
 import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
-function TestTable({ initialData, setData, columns }) {
-
+function TestTable(props) {
+  const {
+    initialData,
+    setData,
+    columns,
+    selectedData,
+    setSelectedData
+  } = props;
   const table = useReactTable({
     data: initialData,
     columns,
     meta: {
+      editValue: (rowIndex, columnId, value) => {
+        setData(old => old.map(
+          (oldRow, index) => {
+            if (index === rowIndex) return { ...oldRow, [columnId]: value };
+            return oldRow;
+          }
+        ));
+      }
     },
-    getCoreRowModel: getCoreRowModel()
-  })
+    getCoreRowModel: getCoreRowModel(),
+  });
 
   // useMemo 미사용 시 행 추가시 렌더를 2번씩 실행
   // useMemo 사용 후 렌더링 1번 실행
   const memoizedRows = useMemo(() => table.getRowModel().rows, [initialData]);
+  useEffect(() => console.log('test'))
 
   return (
     <div className="w-full">
-      <table>
+      <table className="w-full">
         <thead>
           {table.getHeaderGroups().map((headerGroups, index) => (
             <tr key={index}>
@@ -35,9 +50,13 @@ function TestTable({ initialData, setData, columns }) {
         </thead>
         <tbody>
           {memoizedRows.map(row => (
-            <tr key={row.id}>
+            <tr
+              key={row.id}
+              className={selectedData === row.index ? 'bg-blue-200' : null}
+              onClick={(e) => setSelectedData(e, row.index)}
+            >
               {row.getVisibleCells().map(cell => (
-                <td key={cell.id}>
+                <td key={cell.id} className="border">
                   {flexRender(
                     cell.column.columnDef.cell,
                     cell.getContext()

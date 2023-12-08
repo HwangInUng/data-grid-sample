@@ -32,12 +32,17 @@ function DisplayButton({ row, column, table }) {
   const { text, onClick } = column.columnDef.meta;
   const tableMeta = table.options.meta;
 
-  const handleOnClick = () => {
+  const handleOnClick = (e) => {
+    e.stopPropagation();
     onClick(row.original);
   };
 
   // useEffect(() => console.log(row))
-  return <Button onClick={handleOnClick}>{text}</Button>
+  return <Button
+    onClick={handleOnClick}
+  >
+    {text}
+  </Button>
 };
 
 export default memo(DisplayButton, isEqual);

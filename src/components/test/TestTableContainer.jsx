@@ -7,6 +7,8 @@ import DisplayCheckInput from "../cells/DisplayCheckInput";
 import { CommonButton } from "../common/CommonButton";
 import ButtonContainer from "../utils/ButtonContainer";
 import TestTable from "./TestTable";
+import EditCell from "../cells/EditCell";
+import TestTableCell from "./TestTableCell";
 
 const newRow = {
   name: '',
@@ -19,7 +21,8 @@ const newRow = {
 const columnHelper = createColumnHelper();
 
 function TestTableContainer() {
-  const [data, setData] = useState(() => makeData([10]));
+  const [data, setData] = useState(() => makeData([100]));
+  const [selectedData, setSelectedData] = useState('');
   const defaultColumns = [
     columnHelper.display({
       id: 'status',
@@ -27,6 +30,7 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('name', {
       header: '이름',
+      cell: TestTableCell,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'text',
@@ -36,6 +40,7 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('age', {
       header: '나이',
+      cell: TestTableCell,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'text',
@@ -45,6 +50,7 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('gender', {
       header: '성별',
+      cell: TestTableCell,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'select',
@@ -53,6 +59,7 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('createdAt', {
       header: '생일',
+      cell: TestTableCell,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'date',
@@ -87,24 +94,34 @@ function TestTableContainer() {
 
   // rowType이 select된 대상을 delete로 변경
   const handleRemoveData = useCallback(() => {
-    const emptySelectRows = data.filter(row => row.rowType === 'select').length;
-    if (emptySelectRows === 0) {
+    if (selectedData === '') {
       alert('삭제할 대상이 없습니다.');
       return;
     };
-
-    setData(old => {
-      old.map(oldRow => {
-        if (oldRow.rowType === 'select') {
-          return {
-            ...oldRow,
-            rowType: 'delete'
-          }
-        }
-        return oldRow;
-      })
+    const newRow = data.map((row, index) => {
+      if (selectedData === index) {
+        return { ...row, rowType: 'delete' };
+      }
+      return row;
     });
-  }, []);
+    setData(newRow);
+    setSelectedData('');
+  }, [data, selectedData]);
+
+  const handleSaveData = useCallback(() => {
+    const newRow = data.filter(row => row.rowType !== 'delete');
+    setData(newRow);
+    setSelectedData('');
+  }, [data]);
+
+  const handleSelectedData = useCallback((e, rowIndex) => {
+    if (e.button !== 0) return;
+    if (selectedData === rowIndex) {
+      setSelectedData('');
+    } else {
+      setSelectedData(rowIndex);
+    }
+  }, [selectedData]);
 
   // column을 정의하는 경우 hoisting을 통한 정보 전달
   // column에서 useCallback을 사용하여 메모이제이션
@@ -112,15 +129,21 @@ function TestTableContainer() {
     setData(old => [...old, targetRow]);
   };
 
-  useEffect(() => console.log('test22222222'), [data])
+  useEffect(() => console.log(selectedData), [selectedData])
   return (
     <div className="w-full">
       <ButtonContainer title="샘플" count={data.length}>
         <CommonButton title="추가" onClick={handleAddData} />
         <CommonButton title="삭제" onClick={handleRemoveData} />
-        <CommonButton title="저장" />
+        <CommonButton title="저장" onClick={handleSaveData} />
       </ButtonContainer>
-      <TestTable initialData={data} setData={setData} columns={columns} />
+      <TestTable
+        initialData={data}
+        setData={setData}
+        columns={columns}
+        selectedData={selectedData}
+        setSelectedData={handleSelectedData}
+      />
     </div>
   );
 };

@@ -12,11 +12,12 @@ const CheckInput = styled.input`
   `}
 `;
 
-export const CellCheckInput = ({value, readOnly, onChange}) => {
-  return <CheckInput 
+export const CellCheckInput = ({ value, readOnly, onChange }) => {
+  return <CheckInput
     type='checkbox'
     checked={value === 'Y' ? true : false}
     readOnly={readOnly}
     onChange={readOnly ? null : onChange}
+    onMouseDown={e => e.stopPropagation()}
   />;
 };
