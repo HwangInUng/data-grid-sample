@@ -5,11 +5,11 @@ const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
 };
 
-function DisplayCheckInput ({ row, column, table }) {
-  const { key, readOnly } = column.columnDef.meta;
+function DisplayCheckInput({ row, column, table }) {
+  const { readOnly } = column.columnDef.meta;
   return (
     <CellCheckInput
-      value={row.original[key]}
+      value={row.original[column.id]}
       readOnly={readOnly}
     />
   );

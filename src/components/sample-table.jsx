@@ -2,7 +2,7 @@ import {
     createColumnHelper,
 } from '@tanstack/react-table';
 import { useCallback, useMemo, useState } from 'react';
-import { CommonButton } from './common/CommonButton';
+import CommonButton from './common/CommonButton';
 import { StatusIcon } from './utils/StatusIcon';
 // test 데이터 생성
 import { makeData } from '../js/makData';

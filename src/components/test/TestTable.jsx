@@ -1,5 +1,9 @@
-import { flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from "@tanstack/react-table";
+import { useEffect, useMemo } from "react";
 
 function TestTable(props) {
   const {
@@ -16,7 +20,13 @@ function TestTable(props) {
       editValue: (rowIndex, columnId, value) => {
         setData(old => old.map(
           (oldRow, index) => {
-            if (index === rowIndex) return { ...oldRow, [columnId]: value };
+            if (index === rowIndex) {
+              return {
+                ...oldRow,
+                [columnId]: value,
+                rowType: oldRow.rowType === 'add' ? oldRow.rowType : 'update'
+              };
+            }
             return oldRow;
           }
         ));

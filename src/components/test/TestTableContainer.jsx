@@ -1,21 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { makeData } from "../../js/makData";
 import { createColumnHelper } from "@tanstack/react-table";
 import { StatusIcon } from "../utils/StatusIcon";
 import DisplayButton from "../cells/DisplayButton";
 import DisplayCheckInput from "../cells/DisplayCheckInput";
-import { CommonButton } from "../common/CommonButton";
+import CommonButton from "../common/CommonButton";
 import ButtonContainer from "../utils/ButtonContainer";
 import TestTable from "./TestTable";
-import EditCell from "../cells/EditCell";
 import TestTableCell from "./TestTableCell";
+import TestStatusCell from "./TestStatusCell";
 
 const newRow = {
   name: '',
   age: '',
   gender: '',
   createdAt: '',
-  rowType: 'normal'
+  rowType: 'add'
 }
 
 const columnHelper = createColumnHelper();
@@ -26,6 +26,7 @@ function TestTableContainer() {
   const defaultColumns = [
     columnHelper.display({
       id: 'status',
+      cell: TestStatusCell,
       header: <StatusIcon />,
     }),
     columnHelper.accessor('name', {
@@ -66,12 +67,11 @@ function TestTableContainer() {
       }
     }),
     columnHelper.display({
-      id: 'check',
+      id: 'auth', // row.id로 해당 키의 값을 획득
       header: '체크',
       cell: DisplayCheckInput,
       meta: {
         readOnly: true,
-        key: 'auth'
       }
     }),
     columnHelper.display({
@@ -88,12 +88,14 @@ function TestTableContainer() {
 
   // useCallBack으로 감싸주지 않을 경우 이벤트와 연관된 버튼도 리렌더링 발생
   // 또는, 의존성 배열에 data를 추가할 경우에도 동일함
-  const handleAddData = useCallback(() => {
+  const handleAddData = () => {
     setData(old => [...old, newRow]);
-  }, []);
+  };
 
   // rowType이 select된 대상을 delete로 변경
-  const handleRemoveData = useCallback(() => {
+  // data 및 selectedData 변경 시 값이 비교되어야함.
+  // 이전과 데이터가 동일 할 수 없기 때문에 useCallback() 미사용
+  const handleRemoveData = () => {
     if (selectedData === '') {
       alert('삭제할 대상이 없습니다.');
       return;
@@ -106,32 +108,40 @@ function TestTableContainer() {
     });
     setData(newRow);
     setSelectedData('');
-  }, [data, selectedData]);
+  };
 
-  const handleSaveData = useCallback(() => {
-    const newRow = data.filter(row => row.rowType !== 'delete');
+  const handleSaveData = () => {
+    // normal이 아닌 객체가 없다면 save를 수행하지 않아야함
+    const isEmpty = data.filter(row => row.rowType !== 'normal').length;
+    if (isEmpty === 0) {
+      alert('저장할 내용이 없습니다.');
+      return;
+    }
+
+    const newRow = data.filter(row => row.rowType !== 'delete')
+      .map(row => ({ ...row, rowType: 'normal' }));
     setData(newRow);
     setSelectedData('');
-  }, [data]);
+  };
 
-  const handleSelectedData = useCallback((e, rowIndex) => {
+  const handleSelectedData = (e, rowIndex) => {
     if (e.button !== 0) return;
     if (selectedData === rowIndex) {
       setSelectedData('');
     } else {
       setSelectedData(rowIndex);
     }
-  }, [selectedData]);
+  };
 
   // column을 정의하는 경우 hoisting을 통한 정보 전달
   // column에서 useCallback을 사용하여 메모이제이션
   function handleDuplicate(targetRow) {
-    setData(old => [...old, targetRow]);
+    const duplicateRow = { ...targetRow, rowType: 'add' };
+    setData(old => [...old, duplicateRow]);
   };
 
-  useEffect(() => console.log(selectedData), [selectedData])
   return (
-    <div className="w-full">
+    <div className="w-full h-[600px] overflow-y-scroll">
       <ButtonContainer title="샘플" count={data.length}>
         <CommonButton title="추가" onClick={handleAddData} />
         <CommonButton title="삭제" onClick={handleRemoveData} />

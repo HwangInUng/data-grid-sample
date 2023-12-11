@@ -20,10 +20,12 @@ const Button = styled.button`
     }
 `;
 
-export const CommonButton = memo(({ title, onClick, color }) => {
+function CommonButton({ title, onClick, color }) {
     return <Button
         onClick={onClick}
         color={color}>
         {title}
     </Button>;
-});
+};
+
+export default memo(CommonButton);

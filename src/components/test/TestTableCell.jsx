@@ -11,8 +11,13 @@ function TestTableCell({ getValue, row, column, table }) {
   const tableMeta = table.options.meta;
 
   const handleOnChage = (e) => {
+    const newValue = e.target.value;
+    setValue(newValue);
+    tableMeta?.editValue(row.index, column.id, newValue);
+  }
+
+  const handleValue = (e) => {
     setValue(e.target.value);
-    tableMeta?.editValue(e.target.value);
   }
 
   useEffect(() => {
@@ -38,18 +43,19 @@ function TestTableCell({ getValue, row, column, table }) {
             </span> :
             <input
               type={columnMeta.type}
-              className="text-center"
+              className="text-center invalid:border-red-500 border"
               value={value}
+              required={columnMeta?.required ?? false}
               name={column.id}
               onFocus={e => e.target.select()}
               onChange={
                 columnMeta.type === 'text' ?
-                  e => setValue(e.target.value) :
+                  handleValue :
                   handleOnChage
               }
               onBlur={
                 columnMeta.type === 'text' ?
-                  tableMeta?.editValue :
+                  (e) => tableMeta?.editValue(row.index, column.id, e.target.value) :
                   null
               }
             />

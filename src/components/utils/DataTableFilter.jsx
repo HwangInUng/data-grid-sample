@@ -1,6 +1,6 @@
 import { BiAlignJustify, BiSortDown, BiSortUp } from "react-icons/bi";
 import tw, { styled } from "twin.macro";
-import { CommonButton } from "../common/CommonButton"
+import CommonButton from "../common/CommonButton"
 import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { DispatchContext, StateContext, TableContext } from "../table-core/DataTableWrapper";
 
