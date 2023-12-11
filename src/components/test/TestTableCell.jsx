@@ -10,10 +10,13 @@ function TestTableCell({ getValue, row, column, table }) {
   const columnMeta = column.columnDef.meta;
   const tableMeta = table.options.meta;
 
-  const handleOnChage = (e) => {
+  const handleEditValue = (e) => {
     const newValue = e.target.value;
     setValue(newValue);
-    tableMeta?.editValue(row.index, column.id, newValue);
+    
+    if (initialValue !== newValue) {
+      tableMeta?.editValue(row.index, column.id, initialValue, newValue);
+    }
   }
 
   const handleValue = (e) => {
@@ -30,7 +33,7 @@ function TestTableCell({ getValue, row, column, table }) {
         columnMeta.type === 'select' ?
           <select
             value={value}
-            onChange={handleOnChage}
+            onChange={handleEditValue}
             onClick={e => e.stopPropagation()}
           >
             {columnMeta.options.map((option, index) => (
@@ -51,11 +54,11 @@ function TestTableCell({ getValue, row, column, table }) {
               onChange={
                 columnMeta.type === 'text' ?
                   handleValue :
-                  handleOnChage
+                  handleEditValue
               }
               onBlur={
                 columnMeta.type === 'text' ?
-                  (e) => tableMeta?.editValue(row.index, column.id, e.target.value) :
+                  handleEditValue :
                   null
               }
             />

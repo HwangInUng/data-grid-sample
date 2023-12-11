@@ -23,9 +23,11 @@ const columnHelper = createColumnHelper();
 function TestTableContainer() {
   const [data, setData] = useState(() => makeData([100]));
   const [selectedData, setSelectedData] = useState('');
+
   const defaultColumns = [
     columnHelper.display({
       id: 'status',
+      size: 45,
       cell: TestStatusCell,
       header: <StatusIcon />,
     }),

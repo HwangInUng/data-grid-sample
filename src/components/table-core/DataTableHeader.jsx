@@ -2,7 +2,7 @@ import { flexRender } from "@tanstack/react-table";
 import tw, { styled } from "twin.macro";
 import { BiCaretLeft, BiFilter } from "react-icons/bi";
 import { DataTableFilter } from "../utils/DataTableFilter";
-import { memo, useCallback, useContext, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { StateContext } from "./DataTableWrapper";
 
 const TableHeader = styled.th`
@@ -65,20 +65,6 @@ const TableHeader = styled.th`
     }
 `;
 
-const Resizer = styled.div`
-    ${tw`
-        absolute
-        h-full
-        w-[10px]
-    `}
-
-    cursor: col-resize;
-    user-select: none;
-    touch-action: none;
-    right: 0px;
-    top: 0px;
-`;
-
 const headerHeight = 35;
 
 function DataTableHeader({ header }) {
@@ -131,14 +117,9 @@ function DataTableHeader({ header }) {
                         /> :
                         null
                 }
-
-                <Resizer
-                    onMouseDown={header.getResizeHandler()}
-                    onTouchStart={header.getResizeHandler()}
-                />
             </TableHeader>
         </>
     );
 };
 
-export default memo(DataTableHeader);
+export default DataTableHeader;
