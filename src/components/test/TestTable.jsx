@@ -5,7 +5,13 @@ import {
   getSortedRowModel,
   useReactTable
 } from "@tanstack/react-table";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import TestTableHeader from "./TestTableHeader";
 import ToggleSwitch from "../utils/ToggleSwitch";
 import { RefreshIcon } from "../utils/RefreshIcon";
@@ -13,6 +19,8 @@ import TestTableRow from "./TestTableRow";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "../styles/TableStyles";
+import { useMergeHeaderGroups } from "../../hooks/useMergeHeaderGroups";
 
 function TestTable(props) {
   const {
@@ -52,7 +60,9 @@ function TestTable(props) {
         ));
       },
       getFilterCheckList: (columnId) => {
-        const filterCheckList = Array.from(new Set(backupData.map(data => data[columnId])));
+        const filterCheckList = Array.from(
+          new Set(backupData.map(data => data[columnId]))
+        );
         return filterCheckList;
       },
       getBackupData: () => backupData,
@@ -86,8 +96,8 @@ function TestTable(props) {
     enableColumnFilters: filterFlag
   });
   const tableMeta = table.options.meta;
-  // useMemo 미사용 시 행 추가시 렌더를 2번씩 실행
-  // useMemo 사용 후 렌더링 1번 실행
+
+  const mergeHeaderGropus = useMergeHeaderGroups(table.getHeaderGroups());
   const memoizedRows = useMemo(() => table.getRowModel().rows, [initialData, selectedData, sorting, columnFilters, backupData]);
 
   const handleFilterFlag = useCallback(() => {
@@ -111,7 +121,7 @@ function TestTable(props) {
   const rowVirtualizer = useVirtualizer({
     getScrollElement: () => tableContainerRef.current,
     count: memoizedRows.length,
-    estimateSize: () => 30,
+    estimateSize: () => 35,
     overscan: 10,
   });
   const { getVirtualItems: virtualRows, getTotalSize: totalSize } = rowVirtualizer;
@@ -126,23 +136,22 @@ function TestTable(props) {
 
   return (
     <div className="w-full">
-      <div className="w-full bg-white py-1 flex justify-end gap-x-3">
+      <DataTableToggleBox>
         <ToggleSwitch
           title='search'
           flag={filterFlag}
           onChange={handleFilterFlag}
         />
         <RefreshIcon onMouseDown={refreshTable} />
-      </div>
+      </DataTableToggleBox>
       <DndProvider backend={HTML5Backend}>
-        <div
+        <DataTableScrollBox
           ref={tableContainerRef}
-          className="w-full h-[600px] overflow-auto"
           onScroll={e => fetchScroll(e.target)}
         >
-          <table className="w-full border-separate border-spacing-0 text-sm">
-            <thead className="sticky top-0 z-10 bg-white border-y">
-              {table.getHeaderGroups().map((headerGroups, index) => (
+          <DataTable>
+            <thead>
+              {mergeHeaderGropus.map((headerGroups, index) => (
                 <tr key={index}>
                   {headerGroups.headers.map(header => (
                     <TestTableHeader
@@ -171,14 +180,14 @@ function TestTable(props) {
                     reorderRow={reorderRow}
                   >
                     {row.getVisibleCells().map(cell => (
-                      <td key={cell.id} className="border-b whitespace-nowrap overflow-hidden">
-                        <div className="w-full flex items-center justify-center">
+                      <DataTableCell key={cell.id}>
+                        <div className="cell-box">
                           {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
                           )}
                         </div>
-                      </td>
+                      </DataTableCell>
                     ))}
                   </TestTableRow>
                 );
@@ -189,8 +198,8 @@ function TestTable(props) {
                 </tr>
               )}
             </tbody>
-          </table >
-        </div>
+          </DataTable >
+        </DataTableScrollBox>
       </DndProvider >
     </div >
   );

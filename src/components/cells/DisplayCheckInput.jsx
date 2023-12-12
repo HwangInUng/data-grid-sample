@@ -1,16 +1,19 @@
 import { memo } from "react";
-import { CellCheckInput } from "./CellCheckInput";
+import { DataTableCheckbox } from "../styles/TableStyles";
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
 };
 
-function DisplayCheckInput({ row, column, table }) {
+function DisplayCheckInput({ row, column }) {
   const { readOnly } = column.columnDef.meta;
+  const value = row.original[column.id]
   return (
-    <CellCheckInput
-      value={row.original[column.id]}
+    <DataTableCheckbox
+      type="checkbox"
+      checked={value === 'Y' ? true : false}
       readOnly={readOnly}
+      onMouseDown={e => e.stopPropagation()}
     />
   );
 };

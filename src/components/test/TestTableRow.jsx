@@ -30,7 +30,7 @@ function TestTableRow(props) {
       <tr
         ref={(node) => dropRef(dragRef(node))}
         style={{ opacity: isDragging ? 0.5 : 1 }}
-        className={selectedData === row.index ? 'bg-blue-200' : null}
+        className={selectedData === row.index ? 'bg-slate-100' : null}
         onMouseDown={handleSelected}
       >
         {children}

@@ -10,6 +10,7 @@ import TestTable from "./TestTable";
 import TestTableCell from "./TestTableCell";
 import TestStatusCell from "./TestStatusCell";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
+import { DataTableContainer } from "../styles/TableStyles";
 
 const newRow = {
   name: '',
@@ -32,12 +33,13 @@ const fetchData = (start, size) => {
 }
 
 const columnHelper = createColumnHelper();
+const throttleTimer = 200;
 
 function TestTableContainer() {
   const [
     flatData,
     fetchMoreOnBottomReached
-  ] = useInfiniteScroll(fetchData);
+  ] = useInfiniteScroll(fetchData, throttleTimer);
   const [initialData, setInitialData] = useState();
   const [selectedData, setSelectedData] = useState('');
   const defaultColumns = [
@@ -113,7 +115,7 @@ function TestTableContainer() {
   // useCallBack으로 감싸주지 않을 경우 이벤트와 연관된 버튼도 리렌더링 발생
   // 또는, 의존성 배열에 data를 추가할 경우에도 동일함
   const handleAddData = () => {
-    setInitialData(old => [...old, newRow]);
+    setInitialData(old => [newRow, ...old]);
   };
 
   // rowType이 select된 대상을 delete로 변경
@@ -169,7 +171,7 @@ function TestTableContainer() {
   }, [flatData]);
 
   return (
-    <div className="w-[1000px] h-screen">
+    <DataTableContainer>
       <ButtonContainer title="샘플" count={flatData.length}>
         <CommonButton title="추가" onClick={handleAddData} />
         <CommonButton title="삭제" onClick={handleRemoveData} />
@@ -185,7 +187,7 @@ function TestTableContainer() {
           fetchScroll={fetchMoreOnBottomReached}
         />
       }
-    </div>
+    </DataTableContainer>
   );
 };
 

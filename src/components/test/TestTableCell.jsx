@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from "react";
+import { DataTableInput, DataTableSelect, DataTableValueBox } from "../styles/TableStyles";
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
@@ -9,6 +10,7 @@ function TestTableCell({ getValue, row, column, table }) {
   const [value, setValue] = useState(initialValue);
   const columnMeta = column.columnDef.meta;
   const tableMeta = table.options.meta;
+  const { justify = "center" } = columnMeta;
 
   const handleEditValue = (e) => {
     const newValue = e.target.value;
@@ -20,6 +22,7 @@ function TestTableCell({ getValue, row, column, table }) {
   }
 
   const handleValue = (e) => {
+    console.log(e)
     setValue(e.target.value);
   }
 
@@ -31,7 +34,7 @@ function TestTableCell({ getValue, row, column, table }) {
     <>
       {
         columnMeta.type === 'select' ?
-          <select
+          <DataTableSelect
             value={value}
             name={column.id}
             onChange={handleEditValue}
@@ -40,14 +43,13 @@ function TestTableCell({ getValue, row, column, table }) {
             {columnMeta.options.map((option, index) => (
               <option key={index} value={option}>{option}</option>
             ))}
-          </select> :
+          </DataTableSelect> :
           columnMeta.readOnly ?
-            <span>
+            <DataTableValueBox justify={justify}>
               {value}
-            </span> :
-            <input
+            </DataTableValueBox> :
+            <DataTableInput
               type={columnMeta.type}
-              className="text-center invalid:border-red-500 invalid:border"
               value={value}
               required={columnMeta?.required ?? false}
               name={column.id}

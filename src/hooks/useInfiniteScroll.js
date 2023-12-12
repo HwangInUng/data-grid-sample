@@ -1,10 +1,10 @@
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { throttle } from "lodash";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 
 const fetchSize = 50;
 
-export const useInfiniteScroll = (fetchData) => {
+export const useInfiniteScroll = (fetchData, timer) => {
   const { data, fetchNextPage, isFetching } = useInfiniteQuery({
     queryKey: ['table-data'],
     queryFn: ({ pageParam }) => fetchData(pageParam * fetchSize, fetchSize),
@@ -34,7 +34,7 @@ export const useInfiniteScroll = (fetchData) => {
           fetchNextPage();
         }
       }
-    }, 200),
+    }, timer),
     [fetchNextPage, isFetching, totalFatched, totalDBRowCount]
   );
 
