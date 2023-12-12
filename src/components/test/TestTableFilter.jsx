@@ -20,7 +20,6 @@ const FilterWrapper = styled.div`
         text-sm
     `}
     right: 0px;
-    top: ${props => props.top}px;
     z-index: 50;
 `;
 
@@ -93,11 +92,11 @@ function TestTableFilter({ header, tableMeta, setOpenFilter }) {
   const getCheckListByInput = () => {
     const backupData = tableMeta.getBackupData();
 
-    return [...new Set(
+    return Array.from(new Set(
       backupData.map(data => data[column.id])
         .filter(data => data.includes(inputValue))
         .sort()
-    )];
+    ));
   };
 
   // checked 상태일 경우 필터 값 추가

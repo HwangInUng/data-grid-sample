@@ -13,9 +13,9 @@ function TestTableCell({ getValue, row, column, table }) {
   const handleEditValue = (e) => {
     const newValue = e.target.value;
     setValue(newValue);
-    
+
     if (initialValue !== newValue) {
-      tableMeta?.editValue(row.index, column.id, initialValue, newValue);
+      tableMeta?.editValue(row.index, column.id, newValue);
     }
   }
 
@@ -33,8 +33,9 @@ function TestTableCell({ getValue, row, column, table }) {
         columnMeta.type === 'select' ?
           <select
             value={value}
+            name={column.id}
             onChange={handleEditValue}
-            onClick={e => e.stopPropagation()}
+            onMouseDown={e => e.stopPropagation()}
           >
             {columnMeta.options.map((option, index) => (
               <option key={index} value={option}>{option}</option>
@@ -46,7 +47,7 @@ function TestTableCell({ getValue, row, column, table }) {
             </span> :
             <input
               type={columnMeta.type}
-              className="text-center invalid:border-red-500 border"
+              className="text-center invalid:border-red-500 invalid:border"
               value={value}
               required={columnMeta?.required ?? false}
               name={column.id}

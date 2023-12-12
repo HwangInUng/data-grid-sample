@@ -9,12 +9,11 @@ const TableHeader = styled.th`
     ${tw`
         relative
         font-bold
-        p-0
         text-sm
+        border-y
+        border-slate-300
     `}
-
     height: ${props => props.height || 35}px;
-    border: 1px solid lightgray;
 
     .content-box{
         ${tw`

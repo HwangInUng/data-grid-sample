@@ -12,7 +12,7 @@ const ToggleLabel = styled.label`
 
     &:hover{
         transition: transform 150ms linear;
-        transform: scale(1.05);
+        transform: scale(1.03);
     }
 `;
 

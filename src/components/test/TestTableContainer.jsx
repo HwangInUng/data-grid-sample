@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { makeData } from "../../js/makData";
 import { createColumnHelper } from "@tanstack/react-table";
 import { StatusIcon } from "../utils/StatusIcon";
@@ -9,6 +9,7 @@ import ButtonContainer from "../utils/ButtonContainer";
 import TestTable from "./TestTable";
 import TestTableCell from "./TestTableCell";
 import TestStatusCell from "./TestStatusCell";
+import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 
 const newRow = {
   name: '',
@@ -18,22 +19,38 @@ const newRow = {
   rowType: 'add'
 }
 
+const defaultData = makeData([2000]);
+const fetchData = (start, size) => {
+  const fetchedData = defaultData;
+
+  return {
+    data: fetchedData.slice(start, start + size),
+    meta: {
+      totalRowCount: fetchedData.length
+    }
+  };
+}
+
 const columnHelper = createColumnHelper();
 
 function TestTableContainer() {
-  const [data, setData] = useState(() => makeData([100]));
+  const [
+    flatData,
+    fetchMoreOnBottomReached
+  ] = useInfiniteScroll(fetchData);
+  const [initialData, setInitialData] = useState();
   const [selectedData, setSelectedData] = useState('');
-
   const defaultColumns = [
     columnHelper.display({
       id: 'status',
-      size: 45,
+      size: 40,
       cell: TestStatusCell,
       header: <StatusIcon />,
     }),
     columnHelper.accessor('name', {
       header: '이름',
       cell: TestTableCell,
+      size: 300,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'text',
@@ -44,6 +61,7 @@ function TestTableContainer() {
     columnHelper.accessor('age', {
       header: '나이',
       cell: TestTableCell,
+      size: 40,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'text',
@@ -54,6 +72,7 @@ function TestTableContainer() {
     columnHelper.accessor('gender', {
       header: '성별',
       cell: TestTableCell,
+      size: 40,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'select',
@@ -63,6 +82,7 @@ function TestTableContainer() {
     columnHelper.accessor('createdAt', {
       header: '생일',
       cell: TestTableCell,
+      size: 1,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'date',
@@ -72,6 +92,7 @@ function TestTableContainer() {
       id: 'auth', // row.id로 해당 키의 값을 획득
       header: '체크',
       cell: DisplayCheckInput,
+      size: 40,
       meta: {
         readOnly: true,
       }
@@ -79,6 +100,7 @@ function TestTableContainer() {
     columnHelper.display({
       id: 'button',
       header: '버튼',
+      size: 40,
       cell: DisplayButton,
       meta: {
         text: '복사',
@@ -91,7 +113,7 @@ function TestTableContainer() {
   // useCallBack으로 감싸주지 않을 경우 이벤트와 연관된 버튼도 리렌더링 발생
   // 또는, 의존성 배열에 data를 추가할 경우에도 동일함
   const handleAddData = () => {
-    setData(old => [...old, newRow]);
+    setInitialData(old => [...old, newRow]);
   };
 
   // rowType이 select된 대상을 delete로 변경
@@ -102,60 +124,67 @@ function TestTableContainer() {
       alert('삭제할 대상이 없습니다.');
       return;
     };
-    const newRow = data.map((row, index) => {
+    const newRow = initialData.map((row, index) => {
       if (selectedData === index) {
         return { ...row, rowType: 'delete' };
       }
       return row;
     });
-    setData(newRow);
+    setInitialData(newRow);
     setSelectedData('');
   };
 
   const handleSaveData = () => {
     // normal이 아닌 객체가 없다면 save를 수행하지 않아야함
-    const isEmpty = data.filter(row => row.rowType !== 'normal').length;
+    const isEmpty = initialData.filter(row => row.rowType !== 'normal').length;
     if (isEmpty === 0) {
       alert('저장할 내용이 없습니다.');
       return;
     }
 
-    const newRow = data.filter(row => row.rowType !== 'delete')
+    const newRow = initialData.filter(row => row.rowType !== 'delete')
       .map(row => ({ ...row, rowType: 'normal' }));
-    setData(newRow);
+    setInitialData(newRow);
     setSelectedData('');
   };
 
-  const handleSelectedData = (e, rowIndex) => {
+  const handleSelectedData = useCallback((e, rowIndex) => {
     if (e.button !== 0) return;
-    if (selectedData === rowIndex) {
-      setSelectedData('');
-    } else {
+    if (selectedData !== rowIndex) {
       setSelectedData(rowIndex);
+    } else {
+      setSelectedData('');
     }
-  };
+  }, [selectedData]);
 
-  // column을 정의하는 경우 hoisting을 통한 정보 전달
-  // column에서 useCallback을 사용하여 메모이제이션
   function handleDuplicate(targetRow) {
     const duplicateRow = { ...targetRow, rowType: 'add' };
-    setData(old => [...old, duplicateRow]);
+    setInitialData(old => [...old, duplicateRow]);
   };
 
+  useEffect(() => {
+    if (flatData.length > 0) {
+      setInitialData(flatData);
+    }
+  }, [flatData]);
+
   return (
-    <div className="w-full h-[600px] overflow-y-scroll">
-      <ButtonContainer title="샘플" count={data.length}>
+    <div className="w-[1000px] h-screen">
+      <ButtonContainer title="샘플" count={flatData.length}>
         <CommonButton title="추가" onClick={handleAddData} />
         <CommonButton title="삭제" onClick={handleRemoveData} />
         <CommonButton title="저장" onClick={handleSaveData} />
       </ButtonContainer>
-      <TestTable
-        initialData={data}
-        setData={setData}
-        columns={columns}
-        selectedData={selectedData}
-        setSelectedData={handleSelectedData}
-      />
+      {initialData &&
+        <TestTable
+          initialData={initialData}
+          setData={setInitialData}
+          columns={columns}
+          selectedData={selectedData}
+          setSelectedData={handleSelectedData}
+          fetchScroll={fetchMoreOnBottomReached}
+        />
+      }
     </div>
   );
 };

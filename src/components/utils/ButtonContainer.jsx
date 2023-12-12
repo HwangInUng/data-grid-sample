@@ -3,10 +3,10 @@ import tw, { styled } from "twin.macro";
 const ContainerWrapper = styled.div`
   ${tw`
     w-full
+    h-[35px]
     flex
     justify-between
-    mb-2
-    py-2
+    bg-white
   `}
 
   & div {
@@ -20,7 +20,7 @@ const ContainerWrapper = styled.div`
     ${tw`
       w-fit
       justify-start`
-    }
+  }
 
     .title{
       ${tw`px-2 font-bold`}

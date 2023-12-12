@@ -25,10 +25,10 @@ const RefreshWrapper = styled.div`
     }
 `;
 
-export const RefreshIcon = memo(({ onClick }) => {
+export const RefreshIcon = memo(({ onMouseDown }) => {
     return (
         <RefreshWrapper>
-            <BiRefresh className="refresh-icon" onClick={onClick} />
+            <BiRefresh className="refresh-icon" onMouseDown={onMouseDown} />
         </RefreshWrapper>
     );
 });
