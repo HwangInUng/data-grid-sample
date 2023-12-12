@@ -39,9 +39,16 @@ export const DataTable = styled.table`
       sticky
       top-0
       z-10
-      border-y
+      border
       bg-slate-50
     `}
+  }
+
+  & th, td{
+    ${tw`
+    `}
+    /* border
+    border-slate-200 */
   }
 `;
 
@@ -49,9 +56,8 @@ export const DataTableHeader = styled.th`
     ${tw`
         relative
         font-normal
-        border-y
-        border-slate-300
-    `}
+        pl-1
+        `}
     height: ${props => props.height || 35}px;
 
     .content-box{
@@ -59,7 +65,7 @@ export const DataTableHeader = styled.th`
             relative
             flex
             items-center
-            justify-center
+            justify-start
             m-auto
             cursor-pointer
         `}
@@ -106,23 +112,23 @@ export const DataTableHeader = styled.th`
 export const DataTableCell = styled.td`
   ${tw`
     h-[35px]
-    border-b
     whitespace-nowrap
     overflow-hidden
-  `}
+    `}
 
   .cell-box{
     ${tw`
       flex
       items-center
-      justify-center
+      justify-start
+      pl-1
     `}
   }
 `;
 
 export const DataTableInput = styled.input`
   ${tw`
-    text-center
+    text-start
     w-fit
     outline-none
     invalid:border-red-500
@@ -149,9 +155,8 @@ export const DataTableCheckbox = styled.input`
     h-[15px]
     rounded-lg
     border
-    outline-none
     border-slate-400
-    m-auto
+    outline-none
   `}
 `;
 
@@ -180,11 +185,10 @@ export const DataTableValueBox = styled.span`
   ${tw`
     w-full
     h-full
-    px-2
     overflow-hidden
     whitespace-nowrap
     flex
     items-center
   `}
-  justify-content: ${props => props.justify};
+  /* justify-content: ${props => props.justify}; */
 `;

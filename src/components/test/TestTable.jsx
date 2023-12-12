@@ -99,7 +99,7 @@ function TestTable(props) {
 
   const mergeHeaderGropus = useMergeHeaderGroups(table.getHeaderGroups());
   const memoizedRows = useMemo(() => table.getRowModel().rows, [initialData, selectedData, sorting, columnFilters, backupData]);
-
+  
   const handleFilterFlag = useCallback(() => {
     setFilterFlag(old => !old);
   }, []);
@@ -144,6 +144,7 @@ function TestTable(props) {
         />
         <RefreshIcon onMouseDown={refreshTable} />
       </DataTableToggleBox>
+
       <DndProvider backend={HTML5Backend}>
         <DataTableScrollBox
           ref={tableContainerRef}
@@ -153,7 +154,7 @@ function TestTable(props) {
             <thead>
               {mergeHeaderGropus.map((headerGroups, index) => (
                 <tr key={index}>
-                  {headerGroups.headers.map(header => (
+                  {headerGroups.map(header => (
                     <TestTableHeader
                       key={header.id}
                       header={header}

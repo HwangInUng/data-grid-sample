@@ -4,7 +4,7 @@ export const useMergeHeaderGroups = (tableHeaderGroups) => {
   const headerIds = new Set(); // 동일한 컬럼명 중복 방지
   const resultHeaderGroups = [];
 
-  if (headerGroups.length === 1) return headerGroups;
+  if (headerGroups.length === 1) return [tableHeaderGroups[0].headers];
 
   for (let i = 0; i < headerGroups.length; i++) {
     const headerGroup = i === 0 ? headerGroups[i].headers : resultHeaderGroups[i];
