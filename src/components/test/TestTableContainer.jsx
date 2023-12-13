@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { makeData } from "../../js/makData";
+import { makeData } from "../utils/makData";
 import { createColumnHelper } from "@tanstack/react-table";
-import { StatusIcon } from "../utils/StatusIcon";
-import DisplayButton from "../cells/DisplayButton";
-import DisplayCheckInput from "../cells/DisplayCheckInput";
-import CommonButton from "../common/CommonButton";
-import ButtonContainer from "../utils/ButtonContainer";
-import TestTable from "./TestTable";
-import TestTableCell from "./TestTableCell";
-import TestStatusCell from "./TestStatusCell";
+import { StatusIcon } from "../datatable/utils/StatusIcon";
+import DisplayButton from "../datatable/cells/DisplayButton";
+import DisplayCheckInput from "../datatable/cells/DisplayCheckInput";
+import CommonButton from "../CommonButton";
+import TestTable from "../datatable/Table";
+import TestTableCell from "../datatable/TableCell";
+import TestStatusCell from "../datatable/cells/StatusCell";
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
-import { DataTableContainer } from "../styles/TableStyles";
+import { DataTableContainer } from "../../components/datatable/styles/TableStyles";
+import InfoBox from "../datatable/utils/InfoBox"
 
 const newRow = {
   name: '',
@@ -172,11 +172,11 @@ function TestTableContainer() {
 
   return (
     <DataTableContainer>
-      <ButtonContainer title="샘플" count={flatData.length}>
+      <InfoBox title="샘플" count={flatData.length}>
         <CommonButton title="추가" onClick={handleAddData} />
         <CommonButton title="삭제" onClick={handleRemoveData} />
         <CommonButton title="저장" onClick={handleSaveData} />
-      </ButtonContainer>
+      </InfoBox>
       {initialData &&
         <TestTable
           initialData={initialData}

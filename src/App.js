@@ -1,6 +1,5 @@
 import { GlobalStyle } from "./GlobalStyle";
 import TestTableContainer from "./components/test/TestTableContainer";
-import { SampleTable } from "./components/sample-table";
 
 function App() {
   return (
@@ -8,7 +7,6 @@ function App() {
       <GlobalStyle />
       <div>
         <TestTableContainer />
-        {/* <SampleTable /> */}
       </div>
     </>
   );

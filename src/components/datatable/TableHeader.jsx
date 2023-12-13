@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import TestTableCell from './TestTableCell';
+import TestTableCell from './TableCell';
 import { BiCaretLeft, BiFilter } from 'react-icons/bi';
 import { flexRender } from '@tanstack/react-table';
-import TestTableFilter from './TestTableFilter';
-import { DataTableHeader } from '../styles/TableStyles';
+import TestTableFilter from './utils/HeaderFilter';
+import { DataTableHeader } from './styles/TableStyles';
 
 const headerHeight = 35;
 
-function TestTableHeader({ header, tableMeta }) {
+function TableHeader({ header, tableMeta }) {
   const { column } = header;
   const [openFilter, setOpenFilter] = useState(false);
   const canFilter = column.getCanFilter();
@@ -63,4 +63,4 @@ function TestTableHeader({ header, tableMeta }) {
   );
 };
 
-export default TestTableHeader;
+export default TableHeader;

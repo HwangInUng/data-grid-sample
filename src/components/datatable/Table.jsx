@@ -12,17 +12,17 @@ import {
   useRef,
   useState
 } from "react";
-import TestTableHeader from "./TestTableHeader";
-import ToggleSwitch from "../utils/ToggleSwitch";
-import { RefreshIcon } from "../utils/RefreshIcon";
-import TestTableRow from "./TestTableRow";
+import TableHeader from "./TableHeader";
+import ToggleSwitch from "./utils/ToggleSwitch";
+import { RefreshIcon } from "./utils/RefreshIcon";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "../styles/TableStyles";
+import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
 import { useMergeHeaderGroups } from "../../hooks/useMergeHeaderGroups";
+import TableRow from "./TableRow";
 
-function TestTable(props) {
+function Table(props) {
   const {
     initialData,
     setData,
@@ -99,7 +99,7 @@ function TestTable(props) {
 
   const mergeHeaderGropus = useMergeHeaderGroups(table.getHeaderGroups());
   const memoizedRows = useMemo(() => table.getRowModel().rows, [initialData, selectedData, sorting, columnFilters, backupData]);
-  
+
   const handleFilterFlag = useCallback(() => {
     setFilterFlag(old => !old);
   }, []);
@@ -155,7 +155,7 @@ function TestTable(props) {
               {mergeHeaderGropus.map((headerGroups, index) => (
                 <tr key={index}>
                   {headerGroups.map(header => (
-                    <TestTableHeader
+                    <TableHeader
                       key={header.id}
                       header={header}
                       tableMeta={tableMeta}
@@ -173,7 +173,7 @@ function TestTable(props) {
               {virtualRows().map(virtualRow => {
                 const row = memoizedRows[virtualRow.index];
                 return (
-                  <TestTableRow
+                  <TableRow
                     key={row.id}
                     row={row}
                     selectedData={selectedData}
@@ -190,7 +190,7 @@ function TestTable(props) {
                         </div>
                       </DataTableCell>
                     ))}
-                  </TestTableRow>
+                  </TableRow>
                 );
               })}
               {paddingBottom > 0 && (
@@ -206,4 +206,4 @@ function TestTable(props) {
   );
 };
 
-export default TestTable;
+export default Table;

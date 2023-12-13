@@ -55,7 +55,7 @@ export const DataTable = styled.table`
 export const DataTableHeader = styled.th`
     ${tw`
         relative
-        font-normal
+        font-bold
         pl-1
         `}
     height: ${props => props.height || 35}px;
@@ -66,8 +66,8 @@ export const DataTableHeader = styled.th`
             flex
             items-center
             justify-start
+            text-blue-800
             m-auto
-            cursor-pointer
         `}
     }
 
@@ -157,6 +157,7 @@ export const DataTableCheckbox = styled.input`
     border
     border-slate-400
     outline-none
+    cursor-pointer
   `}
 `;
 
@@ -191,4 +192,52 @@ export const DataTableValueBox = styled.span`
     items-center
   `}
   /* justify-content: ${props => props.justify}; */
+`;
+
+export const InfoContainer = styled.div`
+    ${tw`
+    w-full
+    h-[35px]
+    flex
+    justify-between
+    bg-white
+  `}
+
+  & div {
+    ${tw`
+      flex
+      items-center
+    `}
+  }
+
+  .info-box{
+    ${tw`
+      w-fit
+      justify-start`
+  }
+
+    .title{
+      ${tw`px-2 font-bold`}
+    }
+    .count-box{
+      ${tw`
+        text-sm
+        text-slate-600
+      `}
+    }
+    .count {
+      ${tw`
+        text-blue-500
+        font-bold
+        ml-2
+      `}
+    }
+  }
+
+  .button-box{
+    ${tw`
+      w-fit
+      justify-end   
+    `}
+  }
 `;

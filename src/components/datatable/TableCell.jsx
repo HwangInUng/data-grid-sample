@@ -1,16 +1,15 @@
 import { memo, useEffect, useState } from "react";
-import { DataTableInput, DataTableSelect, DataTableValueBox } from "../styles/TableStyles";
+import { DataTableInput, DataTableSelect, DataTableValueBox } from "./styles/TableStyles";
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
 }
 
-function TestTableCell({ getValue, row, column, table }) {
+function TableCell({ getValue, row, column, table }) {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
   const columnMeta = column.columnDef.meta;
   const tableMeta = table.options.meta;
-  const { justify = "center" } = columnMeta;
 
   const handleEditValue = (e) => {
     const newValue = e.target.value;
@@ -34,6 +33,7 @@ function TestTableCell({ getValue, row, column, table }) {
     <>
       {
         columnMeta.type === 'select' ?
+
           <DataTableSelect
             value={value}
             name={column.id}
@@ -44,10 +44,13 @@ function TestTableCell({ getValue, row, column, table }) {
               <option key={index} value={option}>{option}</option>
             ))}
           </DataTableSelect> :
+
           columnMeta.readOnly ?
-            <DataTableValueBox justify={justify}>
+
+            <DataTableValueBox>
               {value}
             </DataTableValueBox> :
+
             <DataTableInput
               type={columnMeta.type}
               value={value}
@@ -70,4 +73,4 @@ function TestTableCell({ getValue, row, column, table }) {
   );
 };
 
-export default memo(TestTableCell, isEqual);
+export default memo(TableCell, isEqual);

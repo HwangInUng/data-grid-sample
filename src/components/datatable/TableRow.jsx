@@ -1,6 +1,6 @@
 import { useDrag, useDrop } from "react-dnd";
 
-function TestTableRow(props) {
+function TableRow(props) {
   const {
     row,
     children,
@@ -39,4 +39,4 @@ function TestTableRow(props) {
   );
 };
 
-export default TestTableRow;
+export default TableRow;

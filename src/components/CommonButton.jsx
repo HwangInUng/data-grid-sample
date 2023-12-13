@@ -4,17 +4,17 @@ import tw, { styled } from 'twin.macro';
 const Button = styled.button`
     ${tw`
         rounded-lg
-        py-[3px]
-        px-[10px]
+        py-[0.2rem]
+        px-[0.5rem]
         ml-[5px]
         text-white
-        text-sm
+        text-[0.8rem]
     `}
     background-color: ${props => props.color || '#040e68'};
     opacity: 0.85;
     &:hover{
-        transition: transform 0.2s linear;
-        transform: scale(1.05);
+        transition: transform 150ms linear;
+        transform: scale(1.01);
         background-color: ${props => props.color || '#040e68'};
         opacity: 1;
     }

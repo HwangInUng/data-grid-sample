@@ -5,7 +5,7 @@ import {
   BiSortDown,
   BiSortUp
 } from "react-icons/bi";
-import CommonButton from '../common/CommonButton';
+import CommonButton from '../../CommonButton';
 
 const FilterWrapper = styled.div`
     ${tw`
@@ -84,7 +84,7 @@ const sortData = [
   { icon: <BiAlignJustify />, title: 'Normal', type: 'normal' },
 ];
 
-function TestTableFilter({ header, tableMeta, setOpenFilter }) {
+function HeaderFilter({ header, tableMeta, setOpenFilter }) {
   const { column } = header;
   const [filterCheckList, setFilterCheckList] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -207,4 +207,4 @@ function TestTableFilter({ header, tableMeta, setOpenFilter }) {
   );
 };
 
-export default TestTableFilter;
+export default HeaderFilter;
