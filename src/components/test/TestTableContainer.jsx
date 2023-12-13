@@ -185,6 +185,7 @@ function TestTableContainer() {
           selectedData={selectedData}
           setSelectedData={handleSelectedData}
           fetchScroll={fetchMoreOnBottomReached}
+          draggable={true}
         />
       }
     </DataTableContainer>

@@ -21,6 +21,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
 import TableRow from "./TableRow";
 import { getMergeHeaderGroups } from "../../utils/getMergeHeaderGroups";
+import DraggableRow from "./utils/DraggableRow";
 
 function Table(props) {
   const {
@@ -29,7 +30,8 @@ function Table(props) {
     columns,
     selectedData,
     setSelectedData,
-    fetchScroll
+    fetchScroll,
+    draggable = false
   } = props;
   const [backupData,] = useState(initialData);
   const [sorting, setSorting] = useState([]);
@@ -173,24 +175,20 @@ function Table(props) {
               {virtualRows().map(virtualRow => {
                 const row = memoizedRows[virtualRow.index];
                 return (
-                  <TableRow
-                    key={row.id}
-                    row={row}
-                    selectedData={selectedData}
-                    setSelectedData={setSelectedData}
-                    reorderRow={reorderRow}
-                  >
-                    {row.getVisibleCells().map(cell => (
-                      <DataTableCell key={cell.id}>
-                        <div className="cell-box">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </div>
-                      </DataTableCell>
-                    ))}
-                  </TableRow>
+                  draggable ?
+                    <DraggableRow
+                      key={row.id}
+                      row={row}
+                      selectedData={selectedData}
+                      setSelectedData={setSelectedData}
+                      reorderRow={reorderRow}
+                    /> :
+                    <TableRow
+                      key={row.id}
+                      row={row}
+                      selectedData={selectedData}
+                      setSelectedData={setSelectedData}
+                    />
                 );
               })}
               {paddingBottom > 0 && (
