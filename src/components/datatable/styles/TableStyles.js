@@ -68,6 +68,12 @@ export const DataTableCell = styled.td`
       pl-1
     `}
   }
+  & svg{
+    ${tw`
+      w-[15px]
+      h-[15px]
+    `}
+  }
 `;
 // Table.jsx Style end
 
@@ -135,12 +141,17 @@ export const DataTableInput = styled.input`
     text-start
     w-fit
     outline-none
-    invalid:border-red-500
-    invalid:border
     rounded-lg
     p-0.5
+    transform
+    duration-150
+
+    invalid:bg-red-50
+    invalid:border-red-500
+    invalid:border
+    focus:invalid:border-red-500
     focus:border
-    focus:border-slate-400
+    focus:border-blue-300
   `}
 `;
 
@@ -182,8 +193,7 @@ export const DataTableButton = styled.button`
     duration-100
     whitespace-nowrap
 
-    hover:border-slate-500
-    hover:bg-blue-950
+    hover:bg-blue-800
     hover:text-white
   `}
 `;

@@ -1,5 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { DataTableInput, DataTableSelect, DataTableValueBox } from "./styles/TableStyles";
+import { pattern } from '../../utils/pettern'
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
@@ -55,8 +56,10 @@ function TableCell({ getValue, row, column, table }) {
               type={columnMeta.type}
               style={{ width: columnSize }}
               value={value}
-              required={columnMeta?.required ?? false}
+              required={columnMeta.required ?? false}
               name={column.id}
+              pattern={columnMeta.pattern ? pattern[columnMeta.pattern] : null}
+              autoComplete="off"
               onFocus={e => e.target.select()}
               onChange={
                 columnMeta.type === 'text' ?

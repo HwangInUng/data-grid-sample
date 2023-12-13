@@ -1,13 +1,18 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
 import { makeData } from "../../utils/makData";
 import { createColumnHelper } from "@tanstack/react-table";
 import { StatusIcon } from "../datatable/utils/StatusIcon";
 import DisplayButton from "../datatable/cells/DisplayButton";
 import DisplayCheckInput from "../datatable/cells/DisplayCheckInput";
 import CommonButton from "../CommonButton";
-import TestTable from "../datatable/Table";
-import TestTableCell from "../datatable/TableCell";
-import TestStatusCell from "../datatable/cells/StatusCell";
+import Table from "../datatable/Table";
+import TableCell from "../datatable/TableCell";
+import StatusCell from "../datatable/cells/StatusCell"
 import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
 import { DataTableContainer } from "../../components/datatable/styles/TableStyles";
 import InfoBox from "../datatable/utils/InfoBox"
@@ -45,13 +50,13 @@ function TestTableContainer() {
   const defaultColumns = [
     columnHelper.display({
       id: 'status',
-      size: 40,
-      cell: TestStatusCell,
+      size: 20,
+      cell: StatusCell,
       header: <StatusIcon />,
     }),
     columnHelper.accessor('name', {
       header: '이름',
-      cell: TestTableCell,
+      cell: TableCell,
       size: 300,
       filterFn: 'arrIncludesSome',
       meta: {
@@ -62,18 +67,18 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('age', {
       header: '나이',
-      cell: TestTableCell,
+      cell: TableCell,
       size: 40,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'text',
         required: true,
-        justify: 'right', // 가로 방향
+        pattern: 'number'
       }
     }),
     columnHelper.accessor('gender', {
       header: '성별',
-      cell: TestTableCell,
+      cell: TableCell,
       size: 40,
       filterFn: 'arrIncludesSome',
       meta: {
@@ -83,7 +88,7 @@ function TestTableContainer() {
     }),
     columnHelper.accessor('createdAt', {
       header: '생일',
-      cell: TestTableCell,
+      cell: TableCell,
       size: 100,
       filterFn: 'arrIncludesSome',
       meta: {
@@ -94,7 +99,7 @@ function TestTableContainer() {
       id: 'auth', // row.id로 해당 키의 값을 획득
       header: '체크',
       cell: DisplayCheckInput,
-      size: 40,
+      size: 30,
       meta: {
         readOnly: true,
       }
@@ -161,7 +166,7 @@ function TestTableContainer() {
 
   function handleDuplicate(targetRow) {
     const duplicateRow = { ...targetRow, rowType: 'add' };
-    setInitialData(old => [...old, duplicateRow]);
+    setInitialData(old => [duplicateRow, ...old]);
   };
 
   useEffect(() => {
@@ -178,7 +183,7 @@ function TestTableContainer() {
         <CommonButton title="저장" onClick={handleSaveData} />
       </InfoBox>
       {initialData &&
-        <TestTable
+        <Table
           initialData={initialData}
           setData={setInitialData}
           columns={columns}

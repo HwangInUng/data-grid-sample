@@ -1,5 +1,4 @@
 import {
-  flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
@@ -18,7 +17,7 @@ import { RefreshIcon } from "./utils/RefreshIcon";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
+import { DataTable, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
 import TableRow from "./TableRow";
 import { getMergeHeaderGroups } from "../../utils/getMergeHeaderGroups";
 import DraggableRow from "./utils/DraggableRow";

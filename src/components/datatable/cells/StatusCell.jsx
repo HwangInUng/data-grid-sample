@@ -15,7 +15,7 @@ const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
 }
 
-function TestStatusCell({ row }) {
+function StatusCell({ row }) {
   const { original } = row;
   const Icon = () => icons[original.rowType];
   return (
@@ -25,4 +25,4 @@ function TestStatusCell({ row }) {
   );
 };
 
-export default memo(TestStatusCell, isEqual);
+export default memo(StatusCell, isEqual);
