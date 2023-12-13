@@ -1,4 +1,3 @@
-import tw, { styled } from 'twin.macro';
 import { useEffect, useState } from "react";
 import {
   BiAlignJustify,
@@ -6,77 +5,7 @@ import {
   BiSortUp
 } from "react-icons/bi";
 import CommonButton from '../../CommonButton';
-
-const FilterWrapper = styled.div`
-    ${tw`
-        absolute
-        w-[200px]
-        bg-white
-        border
-        border-slate-400
-        rounded-xl
-        py-2
-        px-2
-        text-sm
-    `}
-    right: 0px;
-    z-index: 50;
-`;
-
-const FilterInput = styled.input`
-    ${tw`
-        appearance-none
-        border
-        border-gray-400
-        w-full
-        h-[30px]
-        outline-none
-        rounded-lg
-        px-2
-        font-normal
-        text-sm
-    `}
-
-    &:focus-visible{
-        border: 1px solid gray;
-    }
-`;
-
-const SortBox = styled.div`
-    ${tw`
-        flex
-        items-center
-        mb-1
-        hover:bg-slate-300
-        rounded-md
-        p-1
-        cursor-pointer
-    `}
-`;
-
-const DataListBox = styled.div`
-    ${tw`
-        p-1
-        h-[150px]
-        overflow-scroll
-        text-sm
-    `}
-
-    & div{
-        ${tw`
-            flex
-            items-center
-        `}
-    }
-
-    .list-checkbox {
-        ${tw`
-            mr-2
-            w-[15px]
-            h-[15px]  
-        `}
-    }
-`;
+import { FilterInput, FilterListBox, FilterWrapper, SortBox } from "../styles/TableUtilStyles";
 
 const sortData = [
   { icon: <BiSortUp />, title: 'A to Z', type: 'asc' },
@@ -182,7 +111,7 @@ function HeaderFilter({ header, tableMeta, setOpenFilter }) {
           onChange={handleInputValue}
         />
       </div>
-      <DataListBox>
+      <FilterListBox onScroll={e => e.stopPropagation()}>
         {filterCheckList.map((data, index) => (
           <div key={index} className="w-fit">
             <input
@@ -195,7 +124,7 @@ function HeaderFilter({ header, tableMeta, setOpenFilter }) {
             <span className="whitespace-nowrap">{data}</span>
           </div>
         ))}
-      </DataListBox>
+      </FilterListBox>
       <div className="w-full mt-3">
         <CommonButton
           title="X"

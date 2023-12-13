@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { makeData } from "../utils/makData";
+import { makeData } from "../../utils/makData";
 import { createColumnHelper } from "@tanstack/react-table";
 import { StatusIcon } from "../datatable/utils/StatusIcon";
 import DisplayButton from "../datatable/cells/DisplayButton";
@@ -20,7 +20,7 @@ const newRow = {
   rowType: 'add'
 }
 
-const defaultData = makeData([2000]);
+const defaultData = makeData([500]);
 const fetchData = (start, size) => {
   const fetchedData = defaultData;
 
@@ -84,7 +84,7 @@ function TestTableContainer() {
     columnHelper.accessor('createdAt', {
       header: '생일',
       cell: TestTableCell,
-      size: 1,
+      size: 100,
       filterFn: 'arrIncludesSome',
       meta: {
         type: 'date',

@@ -1,5 +1,5 @@
 
-export const useMergeHeaderGroups = (tableHeaderGroups) => {
+export const getMergeHeaderGroups = (tableHeaderGroups) => {
   const headerGroups = tableHeaderGroups;
   const headerIds = new Set(); // 동일한 컬럼명 중복 방지
   const resultHeaderGroups = [];

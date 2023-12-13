@@ -19,8 +19,8 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { DataTable, DataTableCell, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
-import { useMergeHeaderGroups } from "../../hooks/useMergeHeaderGroups";
 import TableRow from "./TableRow";
+import { getMergeHeaderGroups } from "../../utils/getMergeHeaderGroups";
 
 function Table(props) {
   const {
@@ -97,7 +97,7 @@ function Table(props) {
   });
   const tableMeta = table.options.meta;
 
-  const mergeHeaderGropus = useMergeHeaderGroups(table.getHeaderGroups());
+  const mergeHeaderGropus = getMergeHeaderGroups(table.getHeaderGroups());
   const memoizedRows = useMemo(() => table.getRowModel().rows, [initialData, selectedData, sorting, columnFilters, backupData]);
 
   const handleFilterFlag = useCallback(() => {

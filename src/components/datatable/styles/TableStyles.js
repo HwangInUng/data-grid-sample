@@ -7,6 +7,7 @@ export const DataTableContainer = styled.div`
   `}
 `;
 
+// Table.jsx Style start
 export const DataTableToggleBox = styled.div`
   ${tw`
     w-full
@@ -52,13 +53,32 @@ export const DataTable = styled.table`
   }
 `;
 
+export const DataTableCell = styled.td`
+  ${tw`
+    h-[35px]
+    whitespace-nowrap
+    overflow-hidden
+    `}
+
+  .cell-box{
+    ${tw`
+      flex
+      items-center
+      justify-start
+      pl-1
+    `}
+  }
+`;
+// Table.jsx Style end
+
+// TableHeader.jsx Style start
 export const DataTableHeader = styled.th`
     ${tw`
         relative
         font-bold
         pl-1
         `}
-    height: ${props => props.height || 35}px;
+    height: ${props => props.height || 30}px;
 
     .content-box{
         ${tw`
@@ -89,8 +109,8 @@ export const DataTableHeader = styled.th`
         ${tw`
             p-0
             m-0
-            w-[20px]
-            h-[20px]
+            w-[15px]
+            h-[15px]
         `}
     }
 
@@ -98,34 +118,18 @@ export const DataTableHeader = styled.th`
         ${tw`
             absolute
             right-1
-            border
-            border-slate-400
-            rounded-lg
+            rounded-[50%]
             bg-white
             p-[3px]
-            hover:bg-blue-950
+            hover:bg-blue-800
             hover:text-white
+            cursor-pointer
         `}
     }
 `;
+// TableHeader.jsx Style end
 
-export const DataTableCell = styled.td`
-  ${tw`
-    h-[35px]
-    whitespace-nowrap
-    overflow-hidden
-    `}
-
-  .cell-box{
-    ${tw`
-      flex
-      items-center
-      justify-start
-      pl-1
-    `}
-  }
-`;
-
+// TableCell.jsx Style start
 export const DataTableInput = styled.input`
   ${tw`
     text-start
@@ -135,6 +139,8 @@ export const DataTableInput = styled.input`
     invalid:border
     rounded-lg
     p-0.5
+    focus:border
+    focus:border-slate-400
   `}
 `;
 
@@ -193,51 +199,4 @@ export const DataTableValueBox = styled.span`
   `}
   /* justify-content: ${props => props.justify}; */
 `;
-
-export const InfoContainer = styled.div`
-    ${tw`
-    w-full
-    h-[35px]
-    flex
-    justify-between
-    bg-white
-  `}
-
-  & div {
-    ${tw`
-      flex
-      items-center
-    `}
-  }
-
-  .info-box{
-    ${tw`
-      w-fit
-      justify-start`
-  }
-
-    .title{
-      ${tw`px-2 font-bold`}
-    }
-    .count-box{
-      ${tw`
-        text-sm
-        text-slate-600
-      `}
-    }
-    .count {
-      ${tw`
-        text-blue-500
-        font-bold
-        ml-2
-      `}
-    }
-  }
-
-  .button-box{
-    ${tw`
-      w-fit
-      justify-end   
-    `}
-  }
-`;
+// TableCell.jsx Style end

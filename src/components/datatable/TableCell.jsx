@@ -9,6 +9,7 @@ function TableCell({ getValue, row, column, table }) {
   const initialValue = getValue();
   const [value, setValue] = useState(initialValue);
   const columnMeta = column.columnDef.meta;
+  const columnSize = column.columnDef.size;
   const tableMeta = table.options.meta;
 
   const handleEditValue = (e) => {
@@ -18,12 +19,11 @@ function TableCell({ getValue, row, column, table }) {
     if (initialValue !== newValue) {
       tableMeta?.editValue(row.index, column.id, newValue);
     }
-  }
+  };
 
   const handleValue = (e) => {
-    console.log(e)
     setValue(e.target.value);
-  }
+  };
 
   useEffect(() => {
     setValue(initialValue);
@@ -53,6 +53,7 @@ function TableCell({ getValue, row, column, table }) {
 
             <DataTableInput
               type={columnMeta.type}
+              style={{ width: columnSize }}
               value={value}
               required={columnMeta?.required ?? false}
               name={column.id}

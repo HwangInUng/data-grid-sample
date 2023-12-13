@@ -1,4 +1,4 @@
-import { InfoContainer } from "../styles/TableStyles";
+import { InfoContainer } from "../styles/TableUtilStyles";
 
 function InfoBox({ title, count, children }) {
   return (
