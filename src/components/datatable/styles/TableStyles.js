@@ -35,7 +35,7 @@ export const DataTable = styled.table`
     text-[0.8rem]
   `}
 
-  & thead{
+  & thead {
     ${tw`
       sticky
       top-0
@@ -45,10 +45,10 @@ export const DataTable = styled.table`
     `}
   }
 
-  & th, td{
+  & th,
+  td {
     ${tw`
-    `}
-    /* border
+    `}/* border
     border-slate-200 */
   }
 `;
@@ -60,7 +60,7 @@ export const DataTableCell = styled.td`
     overflow-hidden
     `}
 
-  .cell-box{
+  .cell-box {
     ${tw`
       flex
       items-center
@@ -68,7 +68,7 @@ export const DataTableCell = styled.td`
       pl-1
     `}
   }
-  & svg{
+  & svg {
     ${tw`
       w-[15px]
       h-[15px]
@@ -79,15 +79,15 @@ export const DataTableCell = styled.td`
 
 // TableHeader.jsx Style start
 export const DataTableHeader = styled.th`
-    ${tw`
+  ${tw`
         relative
         font-bold
         pl-1
         `}
-    height: ${props => props.height || 30}px;
+  height: ${props => props.height || 30}px;
 
-    .content-box{
-        ${tw`
+  .content-box {
+    ${tw`
             relative
             flex
             items-center
@@ -95,10 +95,10 @@ export const DataTableHeader = styled.th`
             text-blue-800
             m-auto
         `}
-    }
+  }
 
-    .required-icon{
-        ${tw`
+  .required-icon {
+    ${tw`
             absolute
             top-[-3px]
             left-[-3px]
@@ -109,19 +109,19 @@ export const DataTableHeader = styled.th`
             rotate-45
             text-red-600
         `}
-    }
+  }
 
-    .filter-icon{
-        ${tw`
+  .filter-icon {
+    ${tw`
             p-0
             m-0
             w-[15px]
             h-[15px]
         `}
-    }
+  }
 
-    .filter-box {
-        ${tw`
+  .filter-box {
+    ${tw`
             absolute
             right-1
             rounded-[50%]
@@ -131,7 +131,7 @@ export const DataTableHeader = styled.th`
             hover:text-white
             cursor-pointer
         `}
-    }
+  }
 `;
 // TableHeader.jsx Style end
 
@@ -206,7 +206,6 @@ export const DataTableValueBox = styled.span`
     whitespace-nowrap
     flex
     items-center
-  `}
-  /* justify-content: ${props => props.justify}; */
+  `}/* justify-content: ${props => props.justify}; */
 `;
 // TableCell.jsx Style end

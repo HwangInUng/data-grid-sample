@@ -1,22 +1,17 @@
-import { flexRender } from "@tanstack/react-table";
-import { useDrag, useDrop } from "react-dnd";
-import { DataTableCell } from "../styles/TableStyles";
+import { flexRender } from '@tanstack/react-table';
+import { useDrag, useDrop } from 'react-dnd';
+import { DataTableCell } from '../styles/TableStyles';
 
 function DraggableRow(props) {
-  const {
-    row,
-    selectedData,
-    setSelectedData,
-    reorderRow
-  } = props;
+  const { row, selectedData, setSelectedData, reorderRow } = props;
 
-  const handleSelected = (e) => {
+  const handleSelected = e => {
     setSelectedData(e, row.index);
   };
 
   const [, dropRef] = useDrop({
     accept: 'row',
-    drop: (draggedRow) => reorderRow(draggedRow.index, row.index)
+    drop: draggedRow => reorderRow(draggedRow.index, row.index),
   });
 
   const [{ isDragging }, dragRef] = useDrag({
@@ -24,18 +19,18 @@ function DraggableRow(props) {
       isDragging: monitor.isDragging(),
     }),
     item: () => row,
-    type: 'row'
+    type: 'row',
   });
   return (
     <tr
-      ref={(node) => dropRef(dragRef(node))}
+      ref={node => dropRef(dragRef(node))}
       style={{ opacity: isDragging ? 0.5 : 1 }}
       className={selectedData === row.index ? 'bg-slate-100' : null}
       onMouseDown={handleSelected}
     >
       {row.getVisibleCells().map(cell => (
         <DataTableCell key={cell.id}>
-          <div className="cell-box">
+          <div className='cell-box'>
             {flexRender(
               cell.column.columnDef.cell,
               cell.getContext()
@@ -45,6 +40,6 @@ function DraggableRow(props) {
       ))}
     </tr>
   );
-};
+}
 
 export default DraggableRow;

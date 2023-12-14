@@ -10,16 +10,14 @@ const isEqual = (prevProps, nextProps) => {
 function DisplayButton({ row, column }) {
   const { text, onClick } = column.columnDef.meta;
 
-  const handleOnClick = (e) => {
+  const handleOnClick = e => {
     e.stopPropagation();
     onClick(row.original);
   };
 
-  return <DataTableButton
-    onClick={handleOnClick}
-  >
-    {text}
-  </DataTableButton>
-};
+  return (
+    <DataTableButton onClick={handleOnClick}>{text}</DataTableButton>
+  );
+}
 
 export default memo(DisplayButton, isEqual);

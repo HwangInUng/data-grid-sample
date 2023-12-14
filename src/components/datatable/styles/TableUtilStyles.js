@@ -2,7 +2,7 @@ import tw, { styled } from 'twin.macro';
 
 // HeaderFilter.jsx Style start
 export const FilterWrapper = styled.div`
-    ${tw`
+  ${tw`
         absolute
         w-[200px]
         bg-white
@@ -18,7 +18,7 @@ export const FilterWrapper = styled.div`
 `;
 
 export const FilterInput = styled.input`
-    ${tw`
+  ${tw`
         appearance-none
         border
         border-gray-400
@@ -31,13 +31,13 @@ export const FilterInput = styled.input`
         text-sm
     `}
 
-    &:focus-visible{
-        border: 1px solid gray;
-    }
+  &:focus-visible {
+    border: 1px solid gray;
+  }
 `;
 
 export const SortBox = styled.div`
-    ${tw`
+  ${tw`
         flex
         items-center
         mb-1
@@ -49,33 +49,33 @@ export const SortBox = styled.div`
 `;
 
 export const FilterListBox = styled.div`
-    ${tw`
+  ${tw`
         p-1
         h-[150px]
         overflow-scroll
         text-sm
     `}
 
-    & div{
-        ${tw`
+  & div {
+    ${tw`
             flex
             items-center
         `}
-    }
+  }
 
-    .list-checkbox {
-        ${tw`
+  .list-checkbox {
+    ${tw`
             mr-2
             w-[15px]
             h-[15px]  
         `}
-    }
+  }
 `;
 // HeaderFilter.jsx Style end
 
 // InfoBox.jsx Style start
 export const InfoContainer = styled.div`
-    ${tw`
+  ${tw`
     w-full
     h-[35px]
     flex
@@ -90,16 +90,15 @@ export const InfoContainer = styled.div`
     `}
   }
 
-  .info-box{
+  .info-box {
     ${tw`
       w-fit
-      justify-start`
-  }
+      justify-start`}
 
-    .title{
+    .title {
       ${tw`px-2 font-bold`}
     }
-    .count-box{
+    .count-box {
       ${tw`
         text-sm
         text-slate-600
@@ -114,7 +113,7 @@ export const InfoContainer = styled.div`
     }
   }
 
-  .button-box{
+  .button-box {
     ${tw`
       w-fit
       justify-end   
@@ -125,7 +124,7 @@ export const InfoContainer = styled.div`
 
 // ToggleBox Style start
 export const RefreshWrapper = styled.div`
-    ${tw`
+  ${tw`
         rounded-[50%]
         bg-gray-500
         p-[2px]
@@ -133,32 +132,32 @@ export const RefreshWrapper = styled.div`
         transform duration-150
     `}
 
-    &:hover{
-        ${tw`
+  &:hover {
+    ${tw`
             bg-blue-800
         `}
-        transform: scale(1.03);
-    }
+    transform: scale(1.03);
+  }
 
-    .refresh-icon {
-        width: 1.2em;
-        height: 1.2em;
-        cursor: pointer;
-    }
+  .refresh-icon {
+    width: 1.2em;
+    height: 1.2em;
+    cursor: pointer;
+  }
 `;
 
 export const ToggleLabel = styled.label`
-    ${tw`
+  ${tw`
         inline-flex
         items-center
         gap-[0.5rem]
         cursor-pointer
     `}
 
-    &:hover{
-        transition: transform 150ms linear;
-        transform: scale(1.03);
-    }
+  &:hover {
+    transition: transform 150ms linear;
+    transform: scale(1.03);
+  }
 `;
 
 export const ToggleInput = styled.input`
@@ -169,54 +168,54 @@ export const ToggleInput = styled.input`
     h-[1.25em]
     cursor-pointer
   `}
-    border: max(2px, 0.1em) solid gray;
-    border-radius: 1.25em;
-    background-color: gray;
+  border: max(2px, 0.1em) solid gray;
+  border-radius: 1.25em;
+  background-color: gray;
 
-    &::before{
-        content: "";
-        position: absolute;
-        left: 0;
-        width: 1em;
-        height: 1em;
-        border-radius: 50%;
-        transform: scale(0.8);
-        background-color: white;
-        transition: left 250ms linear;
-    }
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    transform: scale(0.8);
+    background-color: white;
+    transition: left 250ms linear;
+  }
 
-    &:checked{
-      ${tw`
+  &:checked {
+    ${tw`
         bg-blue-800
         border-blue-800
       `}
-        &::before{
-            background-color: white;
-            left: 1.25em;
-        }
+    &::before {
+      background-color: white;
+      left: 1.25em;
+    }
+  }
+
+  &:disabled {
+    border-color: lightgray;
+    opacity: 0.7;
+    cursor: not-allowed;
+    &::before {
+      border-color: lightgray;
     }
 
-    &:disabled{
-        border-color: lightgray;
-        opacity: 0.7;
-        cursor: not-allowed;
-        &::before{
-            border-color: lightgray;
-        }
-
-        & + span{
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
+    & + span {
+      opacity: 0.7;
+      cursor: not-allowed;
     }
+  }
 
-    &:focus-visible{
-        outline-offset: max(2px, 0.1em);
-        outline: max(2px, 0.1em) solid darkblue;
-    }
+  &:focus-visible {
+    outline-offset: max(2px, 0.1em);
+    outline: max(2px, 0.1em) solid darkblue;
+  }
 
-    &:enabled:hover{
-        box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
-    }
+  &:enabled:hover {
+    box-shadow: 0 0 0 max(4px, 0.2em) lightgray;
+  }
 `;
 // ToggleBox Style end

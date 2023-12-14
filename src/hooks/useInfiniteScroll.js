@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from "@tanstack/react-query"
-import { throttle } from "lodash";
-import { useCallback, useMemo } from "react";
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { throttle } from 'lodash';
+import { useCallback, useMemo } from 'react';
 
 const fetchSize = 50;
 
@@ -22,7 +22,7 @@ export const useInfiniteScroll = (fetchData, timer) => {
 
   const fetchMoreOnBottomReached = useCallback(
     // 이벤트 대상 컨테이너 요소
-    throttle((containerRefElement) => {
+    throttle(containerRefElement => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
         // 테이블 하단 지정된 px 이내로 스크롤 할 경우 데이터 패치
@@ -39,4 +39,4 @@ export const useInfiniteScroll = (fetchData, timer) => {
   );
 
   return [flatData, fetchMoreOnBottomReached];
-}
+};

@@ -1,19 +1,19 @@
-import { memo } from "react";
+import { memo } from 'react';
 import {
   BiSolidAddToQueue,
   BiSolidEditAlt,
-  BiSolidMinusSquare
-} from "react-icons/bi";
+  BiSolidMinusSquare,
+} from 'react-icons/bi';
 
 const icons = {
-  add: <BiSolidAddToQueue className="text-green-600" />,
-  update: <BiSolidEditAlt className="text-blue-600" />,
-  delete: <BiSolidMinusSquare className="text-red-600" />
+  add: <BiSolidAddToQueue className='text-green-600' />,
+  update: <BiSolidEditAlt className='text-blue-600' />,
+  delete: <BiSolidMinusSquare className='text-red-600' />,
 };
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
-}
+};
 
 function StatusCell({ row }) {
   const { original } = row;
@@ -23,6 +23,6 @@ function StatusCell({ row }) {
       <Icon />
     </>
   );
-};
+}
 
 export default memo(StatusCell, isEqual);
