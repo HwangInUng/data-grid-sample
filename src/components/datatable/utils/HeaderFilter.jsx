@@ -4,7 +4,7 @@ import {
   BiSortDown,
   BiSortUp
 } from "react-icons/bi";
-import CommonButton from '../../CommonButton';
+import CommonButton from 'components/CommonButton';
 import { FilterInput, FilterListBox, FilterWrapper, SortBox } from "../styles/TableUtilStyles";
 
 const sortData = [

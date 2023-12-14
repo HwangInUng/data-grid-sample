@@ -6,13 +6,12 @@ const isEqual = (prevProps, nextProps) => {
 };
 
 function DisplayCheckInput({ row, column }) {
-  const { readOnly } = column.columnDef.meta;
-  const value = row.original[column.id]
+  const value = row.original[column.id];
   return (
     <DataTableCheckbox
       type="checkbox"
       checked={value === 'Y' ? true : false}
-      readOnly={readOnly}
+      readOnly
       onMouseDown={e => e.stopPropagation()}
     />
   );

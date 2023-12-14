@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import TestTableCell from './TableCell';
 import { BiCaretLeft, BiFilter } from 'react-icons/bi';
 import { flexRender } from '@tanstack/react-table';
-import TestTableFilter from './utils/HeaderFilter';
+import HeaderFilter from './utils/HeaderFilter';
 import { DataTableHeader } from './styles/TableStyles';
 
 const headerHeight = 35;
@@ -51,7 +51,7 @@ function TableHeader({ header, tableMeta }) {
         </div>
         {
           canFilter && openFilter ?
-            <TestTableFilter
+            <HeaderFilter
               header={header}
               tableMeta={tableMeta}
               setOpenFilter={setOpenFilter}

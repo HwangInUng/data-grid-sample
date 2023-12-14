@@ -1,16 +1,5 @@
-import {
-  getCoreRowModel,
-  getFilteredRowModel,
-  getSortedRowModel,
-  useReactTable
-} from "@tanstack/react-table";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState
-} from "react";
+import { getCoreRowModel, getFilteredRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import TableHeader from "./TableHeader";
 import ToggleSwitch from "./utils/ToggleSwitch";
 import { RefreshIcon } from "./utils/RefreshIcon";
@@ -19,8 +8,10 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { DataTable, DataTableScrollBox, DataTableToggleBox } from "./styles/TableStyles";
 import TableRow from "./TableRow";
-import { getMergeHeaderGroups } from "../../utils/getMergeHeaderGroups";
+import { getMergeHeaderGroups } from "utils/getMergeHeaderGroups";
 import DraggableRow from "./utils/DraggableRow";
+
+const rowHeight = 35;
 
 function Table(props) {
   const {
@@ -122,7 +113,7 @@ function Table(props) {
   const rowVirtualizer = useVirtualizer({
     getScrollElement: () => tableContainerRef.current,
     count: memoizedRows.length,
-    estimateSize: () => 35,
+    estimateSize: () => rowHeight,
     overscan: 10,
   });
   const { getVirtualItems: virtualRows, getTotalSize: totalSize } = rowVirtualizer;

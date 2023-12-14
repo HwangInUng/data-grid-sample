@@ -1,5 +1,5 @@
-import { GlobalStyle } from "./GlobalStyle";
-import TestTableContainer from "./components/test/TestTableContainer";
+import { TestTableContainer } from "components";
+import { GlobalStyle } from "GlobalStyle";
 
 function App() {
   return (

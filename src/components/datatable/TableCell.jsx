@@ -1,6 +1,6 @@
 import { memo, useEffect, useState } from "react";
 import { DataTableInput, DataTableSelect, DataTableValueBox } from "./styles/TableStyles";
-import { pattern } from '../../utils/pettern'
+import { pattern } from 'utils/pettern'
 
 const isEqual = (prevProps, nextProps) => {
   return prevProps.row.original === nextProps.row.original;
@@ -42,7 +42,12 @@ function TableCell({ getValue, row, column, table }) {
             onMouseDown={e => e.stopPropagation()}
           >
             {columnMeta.options.map((option, index) => (
-              <option key={index} value={option}>{option}</option>
+              <option
+                key={index}
+                value={option}
+              >
+                {option}
+              </option>
             ))}
           </DataTableSelect> :
 

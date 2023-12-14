@@ -1,21 +1,9 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
-import { makeData } from "../../utils/makData";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { makeData } from "utils/makData";
 import { createColumnHelper } from "@tanstack/react-table";
-import { StatusIcon } from "../datatable/utils/StatusIcon";
-import DisplayButton from "../datatable/cells/DisplayButton";
-import DisplayCheckInput from "../datatable/cells/DisplayCheckInput";
+import { StatusIcon, DisplayButton, DisplayCheckInput, Table, TableCell, StatusCell, DataTableContainer, InfoBox } from "components/datatable";
 import CommonButton from "../CommonButton";
-import Table from "../datatable/Table";
-import TableCell from "../datatable/TableCell";
-import StatusCell from "../datatable/cells/StatusCell"
-import { useInfiniteScroll } from "../../hooks/useInfiniteScroll";
-import { DataTableContainer } from "../../components/datatable/styles/TableStyles";
-import InfoBox from "../datatable/utils/InfoBox"
+import { useInfiniteScroll } from "hooks/useInfiniteScroll";
 
 const newRow = {
   name: '',
@@ -100,9 +88,6 @@ function TestTableContainer() {
       header: '체크',
       cell: DisplayCheckInput,
       size: 30,
-      meta: {
-        readOnly: true,
-      }
     }),
     columnHelper.display({
       id: 'button',
