@@ -12,7 +12,8 @@ function TableHeader({ header, tableMeta }) {
   const [openFilter, setOpenFilter] = useState(false);
   const canFilter = column.getCanFilter();
   const isStatusCell = column.id === 'status';
-  const isRequired = column.columnDef.cell === TestTableCell &&
+  const isRequired =
+    column.columnDef.cell === TestTableCell &&
     column.columnDef.meta.required;
 
   useEffect(() => {
@@ -30,37 +31,35 @@ function TableHeader({ header, tableMeta }) {
         rowSpan={header.rowSpan}
         colSpan={header.colSpan}
       >
-        {isRequired ? <BiCaretLeft className="required-icon" /> : null}
-        <div className="content-box">
-          {header.isPlaceholder ?
-            null :
-            flexRender(
-              column.columnDef.header,
-              header.getContext()
-            )
-          }
-          {canFilter ?
-            <div className="filter-box">
+        {isRequired ? (
+          <BiCaretLeft className='required-icon' />
+        ) : null}
+        <div className='content-box'>
+          {header.isPlaceholder
+            ? null
+            : flexRender(
+                column.columnDef.header,
+                header.getContext()
+              )}
+          {canFilter ? (
+            <div className='filter-box'>
               <BiFilter
-                className="filter-icon"
+                className='filter-icon'
                 onClick={() => setOpenFilter(old => !old)}
               />
-            </div> :
-            null
-          }
+            </div>
+          ) : null}
         </div>
-        {
-          canFilter && openFilter ?
-            <HeaderFilter
-              header={header}
-              tableMeta={tableMeta}
-              setOpenFilter={setOpenFilter}
-            /> :
-            null
-        }
-      </DataTableHeader >
+        {canFilter && openFilter ? (
+          <HeaderFilter
+            header={header}
+            tableMeta={tableMeta}
+            setOpenFilter={setOpenFilter}
+          />
+        ) : null}
+      </DataTableHeader>
     </>
   );
-};
+}
 
 export default TableHeader;

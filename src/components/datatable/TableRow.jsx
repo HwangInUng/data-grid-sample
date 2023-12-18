@@ -1,13 +1,9 @@
-import { flexRender } from "@tanstack/react-table";
-import { DataTableCell } from "./styles/TableStyles";
+import { flexRender } from '@tanstack/react-table';
+import { DataTableCell } from './styles/TableStyles';
 function TableRow(props) {
-  const {
-    row,
-    selectedData,
-    setSelectedData,
-  } = props;
+  const { row, selectedData, setSelectedData } = props;
 
-  const handleSelected = (e) => {
+  const handleSelected = e => {
     setSelectedData(e, row.index);
   };
 
@@ -19,7 +15,7 @@ function TableRow(props) {
       >
         {row.getVisibleCells().map(cell => (
           <DataTableCell key={cell.id}>
-            <div className="cell-box">
+            <div className='cell-box'>
               {flexRender(
                 cell.column.columnDef.cell,
                 cell.getContext()
@@ -30,6 +26,6 @@ function TableRow(props) {
       </tr>
     </>
   );
-};
+}
 
 export default TableRow;

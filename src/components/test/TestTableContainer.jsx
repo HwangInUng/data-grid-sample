@@ -35,7 +35,7 @@ const fetchData = (start, size) => {
 };
 
 const columnHelper = createColumnHelper();
-const throttleTimer = 200;
+const throttleTimer = 200; // 단위 ms
 
 function TestTableContainer() {
   const [flatData, fetchMoreOnBottomReached] = useInfiniteScroll(

@@ -77,7 +77,7 @@ export const FilterListBox = styled.div`
 export const InfoContainer = styled.div`
   ${tw`
     w-full
-    h-[35px]
+    h-[30px]
     flex
     justify-between
     bg-white
@@ -93,14 +93,19 @@ export const InfoContainer = styled.div`
   .info-box {
     ${tw`
       w-fit
-      justify-start`}
+      justify-start
+    `}
 
     .title {
-      ${tw`px-2 font-bold`}
+      ${tw`
+        px-2
+        text-sm
+        font-semibold
+      `}
     }
     .count-box {
       ${tw`
-        text-sm
+        text-xs
         text-slate-600
       `}
     }

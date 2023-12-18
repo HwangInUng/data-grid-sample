@@ -2,7 +2,7 @@ import tw, { styled } from 'twin.macro';
 
 export const DataTableContainer = styled.div`
   ${tw`
-    w-[1000px]
+    w-[1350px]
     h-screen
   `}
 `;
@@ -21,9 +21,11 @@ export const DataTableToggleBox = styled.div`
 
 export const DataTableScrollBox = styled.div`
   ${tw`
-    w-full
-    h-[600px]
+    w-[1350px]
+    h-[580px]
     overflow-auto
+    border
+    border-slate-200
   `}
 `;
 
@@ -48,8 +50,10 @@ export const DataTable = styled.table`
   & th,
   td {
     ${tw`
-    `}/* border
-    border-slate-200 */
+    border-r
+    border-b
+    border-slate-200
+    `}
   }
 `;
 
